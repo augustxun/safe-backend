@@ -1,5 +1,6 @@
 package com.augustxun.safe.model.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -17,7 +18,7 @@ public class Customer implements Serializable {
     /**
      * 
      */
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer cid;
 
     /**
@@ -55,7 +56,7 @@ public class Customer implements Serializable {
      */
     private String cstate;
 
-
+    private String phone;
     private String password;
 
 
