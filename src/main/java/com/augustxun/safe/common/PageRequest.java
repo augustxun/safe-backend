@@ -1,6 +1,6 @@
 package com.augustxun.safe.common;
 
-import com.yupi.project.constant.CommonConstant;
+import com.augustxun.safe.constant.CommonConstant;
 import lombok.Data;
 
 /**

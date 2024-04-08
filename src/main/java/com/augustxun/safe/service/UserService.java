@@ -1,8 +1,6 @@
 package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
-import com.augustxun.safe.model.dto.LoginFormDTO;
-import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -16,12 +14,12 @@ import javax.servlet.http.HttpSession;
  */
 public interface UserService extends IService<User> {
     /**
-     * 
      * @param userPhone
      * @param session
      * @return
      */
     BaseResponse<String> sendCode(String userPhone, HttpSession session);
+
     /**
      * 用户注册
      *
@@ -33,14 +31,23 @@ public interface UserService extends IService<User> {
     long userRegister(String userAccount, String userPassword, String checkPassword);
 
     /**
-     * 用户登录
+     * 账号密码形式登录
      *
      * @param userAccount  用户账户
      * @param userPassword 用户密码
      * @param request
      * @return 脱敏后的用户信息
      */
-    User userLogin(String userAccount, String userPassword, HttpServletRequest request);
+    User accountLogin(String userAccount, String userPassword, HttpServletRequest request);
+
+    /**
+     *
+     * @param userAccount
+     * @param smsCode
+     * @param request
+     * @return
+     */
+    User mobileLogin(String userAccount, String smsCode, HttpServletRequest request);
 
     /**
      * 获取当前登录用户

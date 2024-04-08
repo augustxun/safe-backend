@@ -1,9 +1,6 @@
 package com.augustxun.safe.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -31,7 +28,10 @@ public class User implements Serializable {
      * 密码
      */
     private String userPassword;
-
+    /**
+     * 手机号
+     */
+    private String userPhone;
     /**
      * 微信开放平台id
      */
@@ -85,6 +85,7 @@ public class User implements Serializable {
     /**
      * 是否删除
      */
+    @TableLogic
     private Integer isDelete;
 
     @TableField(exist = false)

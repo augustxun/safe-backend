@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Configuration
-@MapperScan("com.yupi.project.mapper")
+@MapperScan("com.augustxun.safe.mapper")
 public class MyBatisPlusConfig {
 
     /**
