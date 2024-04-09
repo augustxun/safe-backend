@@ -2,6 +2,7 @@ package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.LoginUserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,24 +31,15 @@ public interface UserService extends IService<User> {
      */
     long userRegister(String userAccount, String userPassword, String checkPassword);
 
-    /**
-     * 账号密码形式登录
-     *
-     * @param userAccount  用户账户
-     * @param userPassword 用户密码
-     * @param request
-     * @return 脱敏后的用户信息
-     */
-    User accountLogin(String userAccount, String userPassword, HttpServletRequest request);
 
     /**
-     *
+     * 用户登陆
      * @param userAccount
-     * @param smsCode
+     * @param userPassword
      * @param request
      * @return
      */
-    User mobileLogin(String userAccount, String smsCode, HttpServletRequest request);
+    User userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
     /**
      * 获取当前登录用户
@@ -73,4 +65,10 @@ public interface UserService extends IService<User> {
      */
     boolean userLogout(HttpServletRequest request);
 
+    /**
+     * 获取脱敏的已登录用户信息
+     * @param user
+     * @return
+     */
+    LoginUserVO getLoginUserVO(User user);
 }

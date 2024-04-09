@@ -26,6 +26,8 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
 mybatis-plus:
   type-aliases-package: com.augustxun.safe.model.entity  # 别名扫描包
+  configuration:
+    map-underscore-to-camel-case: false
 logging:
   level:
     com.augustxun.safe: debug

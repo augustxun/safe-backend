@@ -7,6 +7,7 @@ import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.model.dto.user.UserLoginRequest;
 import com.augustxun.safe.model.dto.user.UserRegisterRequest;
 import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.LoginUserVO;
 import com.augustxun.safe.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpSession;
 @RestController
 @RestControllerAdvice(basePackages = "com.augustxun.safe,controller")
 @RequestMapping("/user")
-@Api(tags = "用户控制")
+@Api(tags = "UserController")
 @Slf4j
 public class UserController {
 
@@ -35,7 +36,7 @@ public class UserController {
      * @return
      */
     @Operation(summary = "发送验证码接口")
-    @GetMapping("/sendCode")
+    @GetMapping("/send")
     public BaseResponse<String> send(@RequestParam("phone") String phone, HttpSession session) {
         if (phone == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -73,7 +74,7 @@ public class UserController {
      */
     @Operation(summary = "账号登录接口")
     @PostMapping("/account/login")
-    public BaseResponse<User> accountLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
+    public BaseResponse<User> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -82,31 +83,40 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.accountLogin(userAccount, userPassword, request);
+        User user = userService.userLogin(userAccount, userPassword, request);
         return ResultUtils.success(user);
     }
 
+
+
     /**
+     * 用户注销
      *
-     * @param userLoginRequest
      * @param request
      * @return
      */
-    @Operation(summary = "验证码登录接口")
-    @PostMapping("/mobile/login")
-    BaseResponse<User> mobileLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
-        if (userLoginRequest == null) {
+    @Operation(summary = "用户退出接口")
+    @PostMapping("/logout")
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
+        if (request == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        String userPhone= userLoginRequest.getUserPhone();
-        String smsCode = userLoginRequest.getSmsCode();
-        if (StringUtils.isAnyBlank(userPhone, smsCode)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        User user = userService.mobileLogin(userPhone, smsCode, request);
-        return ResultUtils.success(user);
+        boolean result = userService.userLogout(request);
+        return ResultUtils.success(result);
     }
 
+    /**
+     * 获取当前登录用户
+     *
+     * @param request
+     * @return
+     */
+    @Operation(summary = "获取当前登录用户接口")
+    @GetMapping("/get/login")
+    public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
+        User user = userService.getLoginUser(request);
+        return ResultUtils.success(userService.getLoginUserVO(user));
+    }
 
     // region 增删改查
 

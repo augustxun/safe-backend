@@ -8,12 +8,14 @@ import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.mapper.UserMapper;
 import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.LoginUserVO;
 import com.augustxun.safe.service.UserService;
 import com.augustxun.safe.utils.RegexUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
@@ -97,8 +99,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
-            user.setAccessKey(accessKey);
-            user.setSecretKey(secretKey);
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
@@ -108,7 +108,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public User accountLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -136,34 +136,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return user;
     }
 
-    @Override
-    public User mobileLogin(String userPhone, String smsCode, HttpServletRequest request) {
-        // 1. 校验
-        if (StringUtils.isAnyBlank(userPhone, smsCode)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
-        }
-        if (userPhone.length() < 4) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号错误");
-        }
-        if (smsCode.length() < 8) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码错误");
-        }
-        // 2. 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + smsCode).getBytes());
-        // 查询用户是否存在
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("userPhone", userPhone);
-        queryWrapper.eq("smsCode", encryptPassword);
-        User user = userMapper.selectOne(queryWrapper);
-        // 用户不存在
-        if (user == null) {
-            log.info("user login failed, userPhone cannot match smsCode");
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
-        }
-        // 3. 记录用户的登录态
-        request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return user;
-    }
 
     @Override
     public User getLoginUser(HttpServletRequest request) {
@@ -200,7 +172,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         return true;
     }
 
-
+    @Override
+    public LoginUserVO getLoginUserVO(User user) {
+        if (user == null) {
+            return null;
+        }
+        LoginUserVO loginUserVO = new LoginUserVO();
+        BeanUtils.copyProperties(user, loginUserVO);
+        return loginUserVO;
+    }
 }
 
 

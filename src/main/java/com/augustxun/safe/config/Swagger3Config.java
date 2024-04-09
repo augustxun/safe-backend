@@ -122,8 +122,6 @@ public class Swagger3Config {
                 .termsOfServiceUrl("NO terms of service")
                 // 描述
                 .description("这是SWAGGER_3生成的接口文档")
-                // 作者信息
-                .contact(new Contact("rongrong", "https://www.cnblogs.com/longronglang/", "rongrong@gmail.com"))
                 // 版本
                 .version("版本号:V1.0")
                 //协议
