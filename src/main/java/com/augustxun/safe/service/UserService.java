@@ -3,6 +3,7 @@ package com.augustxun.safe.service;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.LoginUserVO;
+import com.augustxun.safe.model.vo.UserVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public interface UserService extends IService<User> {
      * @param request
      * @return
      */
-    User userLogin(String userAccount, String userPassword, HttpServletRequest request);
+    LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request);
 
     /**
      * 获取当前登录用户

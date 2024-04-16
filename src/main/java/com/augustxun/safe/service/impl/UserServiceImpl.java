@@ -1,5 +1,8 @@
 package com.augustxun.safe.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.augustxun.safe.common.BaseResponse;
@@ -24,10 +27,11 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.augustxun.safe.constant.RedisConstant.LOGIN_CODE_KEY;
-import static com.augustxun.safe.constant.RedisConstant.LOGIN_CODE_TTL;
+import static com.augustxun.safe.constant.RedisConstant.*;
 import static com.augustxun.safe.constant.UserConstant.ADMIN_ROLE;
 import static com.augustxun.safe.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -108,7 +112,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
-    public User userLogin(String userAccount, String userPassword, HttpServletRequest request) {
+    public LoginUserVO userLogin(String userAccount, String userPassword, HttpServletRequest request) {
         // 1. 校验
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "参数为空");
@@ -132,20 +136,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 3. 记录用户的登录态
+        log.debug("登陆时的 Session:", request.getSession());
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        return user;
+        return this.getLoginUserVO(user);
     }
 
 
     @Override
     public User getLoginUser(HttpServletRequest request) {
         // 先判断是否已登录
+        log.debug("判断时的 Session:", request.getSession());
         Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         if (currentUser == null || currentUser.getId() == null) {
             throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
         }
-        // 从数据库查询（追求性能的话可以注释，直接走缓存）
+        // 从 Redis 查询（追求性能的话可以注释，直接走缓存）
         long userId = currentUser.getId();
         currentUser = this.getById(userId);
         if (currentUser == null) {
