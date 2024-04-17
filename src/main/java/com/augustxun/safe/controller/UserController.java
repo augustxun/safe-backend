@@ -83,6 +83,7 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        System.err.println(userAccount);
         User user = userService.userLogin(userAccount, userPassword, request);
         return ResultUtils.success(user);
     }
