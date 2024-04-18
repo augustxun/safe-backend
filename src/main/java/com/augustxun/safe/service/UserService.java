@@ -1,9 +1,11 @@
 package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.LoginUserVO;
 import com.augustxun.safe.model.vo.UserVO;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,4 +74,12 @@ public interface UserService extends IService<User> {
      * @return
      */
     LoginUserVO getLoginUserVO(User user);
+
+    /**
+     * 获取查询条件
+     *
+     * @param userQueryRequest
+     * @return
+     */
+    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 }

@@ -8,12 +8,15 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
+import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.mapper.UserMapper;
+import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.LoginUserVO;
 import com.augustxun.safe.service.UserService;
 import com.augustxun.safe.utils.RegexUtils;
+import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +50,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     /**
      * 盐值，混淆密码
      */
-    private static final String SALT = "augustxun";
+    public static final String SALT = "safe";
+
     @Autowired
     StringRedisTemplate stringRedisTemplate;
     @Resource
@@ -186,6 +190,26 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
         return loginUserVO;
+    }
+
+    @Override
+    public QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest) {
+        if (userQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        Long id = userQueryRequest.getId();
+
+        String userName = userQueryRequest.getUserName();
+        String userRole = userQueryRequest.getUserRole();
+        String sortField = userQueryRequest.getSortField();
+        String sortOrder = userQueryRequest.getSortOrder();
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(id != null, "id", id);
+        queryWrapper.eq(StringUtils.isNotBlank(userRole), "userRole", userRole);
+        queryWrapper.like(StringUtils.isNotBlank(userName), "userName", userName);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+                sortField);
+        return queryWrapper;
     }
 }
 
