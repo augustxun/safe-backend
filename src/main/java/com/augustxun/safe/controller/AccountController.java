@@ -46,7 +46,7 @@ public class AccountController {
      * @param request
      * @return
      */
-    @Operation(summary = "创建账户接口")
+    @Operation(summary = "创建账户接口（用户/管理员）")
     @PostMapping("/add")
     public BaseResponse<Long> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
         if (accountAddRequest == null) {
@@ -56,7 +56,6 @@ public class AccountController {
         BeanUtils.copyProperties(accountAddRequest, account);
         // 校验
         accountService.validAccount(account, true);
-        // TODO:加入用户的 userId
         User loginUser = userService.getLoginUser(request);
         account.setUserId(loginUser.getId());
         boolean result = accountService.save(account);
@@ -74,6 +73,7 @@ public class AccountController {
      * @param request
      * @return
      */
+    @Operation(summary = "删除账户接口（用户/管理员）")
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteAccount(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
@@ -93,11 +93,12 @@ public class AccountController {
     }
 
     /**
-     * 更新（仅管理员）
+     * 更新
      *
      * @param accountUpdateRequest
      * @return
      */
+    @Operation(summary = "更新账户接口（用户/管理员）")
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateAccount(@RequestBody AccountUpdateRequest accountUpdateRequest) {

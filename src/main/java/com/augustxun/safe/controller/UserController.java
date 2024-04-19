@@ -12,8 +12,6 @@ import com.augustxun.safe.model.dto.user.*;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.LoginUserVO;
 import com.augustxun.safe.service.UserService;
-import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
-
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,6 +25,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
+
 @RestController
 @RequestMapping("/user")
 @Api(tags = "UserController")
@@ -38,11 +38,12 @@ public class UserController {
 
     /**
      * 发送手机验证码
+     *
      * @param phone
      * @param session
      * @return
      */
-    @Operation(summary = "发送验证码接口")
+    @Operation(summary = "发送验证码接口（系统）")
     @GetMapping("/send")
     public BaseResponse<String> send(@RequestParam("phone") String phone, HttpSession session) {
         if (phone == null) {
@@ -53,10 +54,11 @@ public class UserController {
 
     /**
      * 用户注册
+     *
      * @param userRegisterRequest
      * @return
      */
-    @Operation(summary = "用户注册接口")
+    @Operation(summary = "用户注册接口（系统）")
     @PostMapping("/register")
     public BaseResponse<Long> userRegister(@RequestBody UserRegisterRequest userRegisterRequest) {
         if (userRegisterRequest == null) {
@@ -75,11 +77,12 @@ public class UserController {
 
     /**
      * 用户登陆
+     *
      * @param userLoginRequest
      * @param request
      * @return
      */
-    @Operation(summary = "账号登录接口")
+    @Operation(summary = "账号登录接口（系统）")
     @PostMapping("/account/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         if (userLoginRequest == null) {
@@ -101,7 +104,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @Operation(summary = "用户退出接口")
+    @Operation(summary = "用户退出接口（系统）")
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         if (request == null) {
@@ -117,7 +120,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @Operation(summary = "获取当前登录用户接口")
+    @Operation(summary = "获取当前登录用户接口（系统）")
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
@@ -134,7 +137,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @Operation(summary = "创建用户接口")
+    @Operation(summary = "创建用户接口（仅管理员）")
     @PostMapping("/add")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
@@ -159,7 +162,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @Operation(summary = "删除用户接口")
+    @Operation(summary = "删除用户接口（管理员）")
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
@@ -177,9 +180,8 @@ public class UserController {
      * @param request
      * @return
      */
-    @Operation(summary = "更新用户接口")
+    @Operation(summary = "更新用户接口（用户/管理员）")
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
                                             HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
@@ -199,7 +201,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @Operation(summary = "根据 ID 查询用户接口")
+    @Operation(summary = "根据 ID 查询用户接口(仅管理员)")
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(@RequestParam long id, HttpServletRequest request) {
@@ -221,12 +223,10 @@ public class UserController {
     @Operation(summary = "分页获取用户列表接口（仅管理员）")
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-                                                   HttpServletRequest request) {
+    public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest, HttpServletRequest request) {
         long current = userQueryRequest.getCurrent();
         long size = userQueryRequest.getPageSize();
-        Page<User> userPage = userService.page(new Page<>(current, size),
-                userService.getQueryWrapper(userQueryRequest));
+        Page<User> userPage = userService.page(new Page<>(current, size), userService.getQueryWrapper(userQueryRequest));
         return ResultUtils.success(userPage);
     }
 }

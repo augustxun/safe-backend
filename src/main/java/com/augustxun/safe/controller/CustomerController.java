@@ -2,6 +2,7 @@ package com.augustxun.safe.controller;
 
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.common.DeleteRequest;
 import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.UserConstant;
@@ -14,6 +15,7 @@ import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.service.CustomerService;
 import com.augustxun.safe.service.UserService;
 import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +47,9 @@ public class CustomerController {
      * @param request
      * @return
      */
+    @Operation(summary = "增加客户接口（仅管理员）")
     @PostMapping("/add")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Long> addCustomer(@RequestBody CustomerAddRequest customerAddRequest, HttpServletRequest request) {
         if (customerAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -54,8 +58,6 @@ public class CustomerController {
         BeanUtils.copyProperties(customerAddRequest, customer);
         // 校验
         customerService.validCustomer(customer, true);
-        User loginUser = userService.getLoginUser(request);
-        customer.setUserId(loginUser.getId());
         boolean result = customerService.save(customer);
         if (!result) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR);
@@ -71,18 +73,16 @@ public class CustomerController {
      * @param request
      * @return
      */
+    @Operation(summary = "删除客户接口（仅管理员）")
     @PostMapping("/delete")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteCustomer(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        User user = userService.getLoginUser(request);
         long id = deleteRequest.getId();
-        // 判断是否存在
-        Customer oldCustomer = customerService.getById(id);
-        ThrowUtils.throwIf(oldCustomer == null, ErrorCode.NOT_FOUND_ERROR);
-        // 仅本人或管理员可删除
-        if (!oldCustomer.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
+        // 仅管理员可删除
+        if (!userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
         boolean b = customerService.removeById(id);
@@ -95,6 +95,7 @@ public class CustomerController {
      * @param customerUpdateRequest
      * @return
      */
+    @Operation(summary = "更新客户接口（仅管理员）")
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateCustomer(@RequestBody CustomerUpdateRequest customerUpdateRequest) {

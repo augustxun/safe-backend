@@ -33,16 +33,6 @@ public class User implements Serializable {
      */
     private String userPhone;
     /**
-     * 微信开放平台id
-     */
-    private String unionId;
-
-    /**
-     * 公众号openId
-     */
-    private String mpOpenId;
-
-    /**
      * 用户昵称
      */
     private String userName;
@@ -72,6 +62,11 @@ public class User implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 客户主键
+     */
+    private Long customerId;
 
     /**
      * 是否删除

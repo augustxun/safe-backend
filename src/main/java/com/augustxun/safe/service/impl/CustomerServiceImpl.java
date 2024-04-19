@@ -24,16 +24,13 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
         }
         String firstName = customer.getFirstName();
         String lastName = customer.getLastName();
-        // 创建时，参数不能为空
         // 创建时，所有参数必须非空
         if (add) {
             if (StringUtils.isAnyBlank(firstName) || StringUtils.isAnyBlank(lastName) ) {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR);
             }
         }
-        if (StringUtils.isNotBlank(firstName) && firstName.length() > 50) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "名称过长");
-        }
+
     }
 }
 

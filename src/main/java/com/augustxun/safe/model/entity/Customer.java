@@ -33,8 +33,6 @@ public class Customer implements Serializable {
 
     private String state;
 
-
-
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

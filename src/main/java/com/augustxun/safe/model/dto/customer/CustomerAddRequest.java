@@ -17,9 +17,9 @@ import java.util.List;
 @Data
 public class CustomerAddRequest implements Serializable {
 
-    private String lastname;
+    private String lastName;
 
-    private String firstname;
+    private String firstName;
 
     private String zipcode;
 
