@@ -2,6 +2,7 @@ package com.augustxun.safe.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
@@ -33,6 +34,12 @@ public class Account implements Serializable {
     private String type;
 
     private Long userId;
+
+    /**
+     * 是否删除
+     */
+    @TableLogic
+    private Integer isDelete;
 
     private static final long serialVersionUID = 1L;
 }

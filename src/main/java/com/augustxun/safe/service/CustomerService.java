@@ -1,6 +1,10 @@
 package com.augustxun.safe.service;
 
+import com.augustxun.safe.model.dto.customer.CustomerQueryRequest;
+import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.entity.Customer;
+import com.augustxun.safe.model.entity.User;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface CustomerService extends IService<Customer> {
     public void validCustomer(Customer customer, boolean add);
+    public QueryWrapper<Customer> getQueryWrapper(CustomerQueryRequest customerQueryRequest);
 }

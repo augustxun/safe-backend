@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 
 /**
@@ -24,4 +25,6 @@ public class CustomerUpdateRequest implements Serializable {
     private String street;
     private String city;
     private String state;
+    @TableLogic
+    private Integer isDelete;
 }

@@ -7,6 +7,7 @@ CREATE TABLE customer
     unit      VARCHAR(15),
     street    VARCHAR(30) NOT NULL,
     city      VARCHAR(20) NOT NULL,
+    isDelete     tinyint      default 0                 not null comment '是否删除',
     state     VARCHAR(20) NOT NULL
 ) comment '客户';
 
@@ -39,6 +40,7 @@ CREATE TABLE account
     state      VARCHAR(30)                        NOT NULL,
     dateOpened DATETIME DEFAULT CURRENT_TIMESTAMP not null comment '创建时间',
     type       VARCHAR(1)                         NOT NULL,
+    isDelete     tinyint      default 0                 not null comment '是否删除',
     userId     BIGINT                             NOT NULL
 ) comment '账户' collate = utf8mb4_unicode_ci;
 ALTER TABLE account
