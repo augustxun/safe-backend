@@ -1,27 +1,22 @@
 package com.augustxun.safe.model.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
+import java.util.Date;
 import lombok.Data;
 
-import java.io.Serializable;
-
 /**
- * 
- * @TableName customer
+ * @TableName account
  */
-@TableName(value ="customer")
+@TableName(value ="account")
 @Data
-public class Customer implements Serializable {
+public class Account implements Serializable {
     @TableId(type = IdType.AUTO)
-    private Integer id;
+    private Integer acctNo;
 
-
-    private String lastName;
-
-    private String firstName;
+    private String acctName;
 
     private String zipcode;
 
@@ -33,8 +28,11 @@ public class Customer implements Serializable {
 
     private String state;
 
+    private Date dateOpened;
 
+    private String type;
 
-    @TableField(exist = false)
+    private Long userId;
+
     private static final long serialVersionUID = 1L;
 }

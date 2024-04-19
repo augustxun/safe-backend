@@ -1,6 +1,7 @@
 package com.augustxun.safe.model.dto.customer;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
@@ -16,20 +17,22 @@ import java.util.List;
 @Data
 public class CustomerAddRequest implements Serializable {
 
-    private String clastname;
+    private String lastname;
 
-    private String cfirstname;
+    private String firstname;
 
-    private String czipcode;
+    private String zipcode;
 
-    private String cunit;
+    private String unit;
 
-    private String cstreet;
+    private String street;
 
-    private String ccity;
+    private String city;
 
-    private String cstate;
+    private String state;
 
-    private String phone;
-    private String password;
+
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
 }

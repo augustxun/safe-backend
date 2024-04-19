@@ -1,13 +1,10 @@
-package com.augustxun.safe.model.dto.customer;
-
-import java.io.Serializable;
-import java.util.List;
+package com.augustxun.safe.model.dto.account;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import org.springframework.data.domain.PageRequest;
+
+import java.io.Serializable;
 
 /**
  * 查询请求
@@ -16,7 +13,7 @@ import org.springframework.data.domain.PageRequest;
  * @from <a href="https://yupi.icu">编程导航知识星球</a>
  */
 @Data
-public class CustomerQueryRequest implements Serializable {
+public class AccountQueryRequest implements Serializable {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -30,4 +27,6 @@ public class CustomerQueryRequest implements Serializable {
     private String city;
 
     private String state;
+
+    private Long userId;
 }

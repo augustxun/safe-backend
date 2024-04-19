@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
-@RestControllerAdvice(basePackages = "com.augustxun.safe,controller")
 @RequestMapping("/user")
 @Api(tags = "UserController")
 @Slf4j

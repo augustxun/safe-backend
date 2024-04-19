@@ -61,15 +61,14 @@
                 </ModuleInfoGo>
               </list>
             </option>
-            <option name="needsComment" value="true" />
             <option name="needsModel" value="true" />
             <option name="relativePackage" value="domain" />
             <option name="superClass" value="" />
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="User" />
-                  <option name="tableName" value="user" />
+                  <option name="className" value="Account" />
+                  <option name="tableName" value="account" />
                 </TableUIInfo>
               </list>
             </option>

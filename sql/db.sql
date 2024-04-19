@@ -1,6 +1,6 @@
 CREATE TABLE account
 (
-    acctno      DECIMAL(8)  NOT NULL,
+    acctNo      DECIMAL(8)  NOT NULL,
     acctname    VARCHAR(30) NOT NULL,
     azipcode    VARCHAR(15) NOT NULL,
     aunit       VARCHAR(15),
@@ -12,14 +12,14 @@ CREATE TABLE account
 );
 
 ALTER TABLE account
-    ADD CONSTRAINT account_pk PRIMARY KEY (acctno);
+    ADD CONSTRAINT account_pk PRIMARY KEY (acctNo);
 ALTER TABLE account
     ADD CONSTRAINT account__un UNIQUE (acctname);
 
 
 CREATE TABLE checking
 (
-    acctno     DECIMAL(8) NOT NULL,
+    acctNo     DECIMAL(8) NOT NULL,
     servicefee DECIMAL(8) NOT NULL,
     cid        DECIMAL(8) NOT NULL
 );
@@ -43,7 +43,7 @@ create table if not exists user
 ) comment '用户' collate = utf8mb4_unicode_ci;
 
 ALTER TABLE checking
-    ADD CONSTRAINT checking_pk PRIMARY KEY (acctno);
+    ADD CONSTRAINT checking_pk PRIMARY KEY (acctNo);
 
 CREATE TABLE customer
 (
@@ -63,16 +63,16 @@ ALTER TABLE customer
 
 CREATE TABLE home
 (
-    acctno        DECIMAL(8)    NOT NULL COMMENT 'account number',
+    acctNo        DECIMAL(8)    NOT NULL COMMENT 'account number',
     builtyear     DECIMAL(4)    NOT NULL,
-    insureacctno  DECIMAL(8)    NOT NULL,
+    insureacctNo  DECIMAL(8)    NOT NULL,
     yearlypremium DECIMAL(7, 2) NOT NULL,
     iid           DECIMAL(8)
 );
 
 
 ALTER TABLE home
-    ADD CONSTRAINT home_pk PRIMARY KEY (acctno);
+    ADD CONSTRAINT home_pk PRIMARY KEY (acctNo);
 
 CREATE TABLE insure_com
 (
@@ -91,7 +91,7 @@ ALTER TABLE insure_com
 
 CREATE TABLE loan
 (
-    acctno   DECIMAL(8)     NOT NULL,
+    acctNo   DECIMAL(8)     NOT NULL,
     lrate    DECIMAL(5, 2)  NOT NULL,
     lamount  DECIMAL(10, 2) NOT NULL,
     lmonths  INTEGER        NOT NULL,
@@ -104,11 +104,11 @@ ALTER TABLE loan
     ADD CONSTRAINT ch_inh_loan CHECK ( ltype IN ('H', 'P', 'S') );
 
 ALTER TABLE loan
-    ADD CONSTRAINT loan_pk PRIMARY KEY (acctno);
+    ADD CONSTRAINT loan_pk PRIMARY KEY (acctNo);
 
 CREATE TABLE personal
 (
-    acctno      DECIMAL(8)     NOT NULL,
+    acctNo      DECIMAL(8)     NOT NULL,
     income      DECIMAL(10, 2) NOT NULL,
     creditscore DECIMAL(3)     NOT NULL,
     purpose     TEXT           NOT NULL
@@ -117,11 +117,11 @@ CREATE TABLE personal
 
 
 ALTER TABLE personal
-    ADD CONSTRAINT personal_pk PRIMARY KEY (acctno);
+    ADD CONSTRAINT personal_pk PRIMARY KEY (acctNo);
 
 CREATE TABLE savings
 (
-    acctno       DECIMAL(8)    NOT NULL,
+    acctNo       DECIMAL(8)    NOT NULL,
     interestrate DECIMAL(5, 2) NOT NULL,
     cid          DECIMAL(8)    NOT NULL
 );
@@ -129,11 +129,11 @@ CREATE TABLE savings
 
 
 ALTER TABLE savings
-    ADD CONSTRAINT savings_pk PRIMARY KEY (acctno);
+    ADD CONSTRAINT savings_pk PRIMARY KEY (acctNo);
 
 CREATE TABLE student
 (
-    acctno         DECIMAL(8)  NOT NULL,
+    acctNo         DECIMAL(8)  NOT NULL,
     universityname VARCHAR(30) NOT NULL,
     stuid          VARCHAR(30) NOT NULL,
     gradmonth      DECIMAL(2)  NOT NULL,
@@ -142,27 +142,27 @@ CREATE TABLE student
 
 
 ALTER TABLE student
-    ADD CONSTRAINT student_pk PRIMARY KEY (acctno);
+    ADD CONSTRAINT student_pk PRIMARY KEY (acctNo);
 
 ALTER TABLE checking
-    ADD CONSTRAINT checking_account_fk FOREIGN KEY (acctno)
-        REFERENCES account (acctno);
+    ADD CONSTRAINT checking_account_fk FOREIGN KEY (acctNo)
+        REFERENCES account (acctNo);
 
 ALTER TABLE checking
     ADD CONSTRAINT checking_customer_fk FOREIGN KEY (cid)
         REFERENCES customer (cid);
 
 ALTER TABLE home
-    ADD CONSTRAINT home_loan_fk FOREIGN KEY (acctno)
-        REFERENCES loan (acctno);
+    ADD CONSTRAINT home_loan_fk FOREIGN KEY (acctNo)
+        REFERENCES loan (acctNo);
 
 ALTER TABLE home
     ADD CONSTRAINT home_insure_com_fk FOREIGN KEY (iid)
         REFERENCES insure_com (iid);
 
 ALTER TABLE loan
-    ADD CONSTRAINT loan_account_fk FOREIGN KEY (acctno)
-        REFERENCES account (acctno);
+    ADD CONSTRAINT loan_account_fk FOREIGN KEY (acctNo)
+        REFERENCES account (acctNo);
 
 ALTER TABLE loan
     ADD CONSTRAINT loan_customer_fk FOREIGN KEY (cid)
@@ -172,17 +172,17 @@ ALTER TABLE personal
     ADD CONSTRAINT check_credit_score CHECK (creditscore >= 0 AND creditscore <= 100);
 
 ALTER TABLE personal
-    ADD CONSTRAINT personal_loan_fk FOREIGN KEY (acctno)
-        REFERENCES loan (acctno);
+    ADD CONSTRAINT personal_loan_fk FOREIGN KEY (acctNo)
+        REFERENCES loan (acctNo);
 
 ALTER TABLE savings
-    ADD CONSTRAINT savings_account_fk FOREIGN KEY (acctno)
-        REFERENCES account (acctno);
+    ADD CONSTRAINT savings_account_fk FOREIGN KEY (acctNo)
+        REFERENCES account (acctNo);
 
 ALTER TABLE savings
     ADD CONSTRAINT savings_customer_fk FOREIGN KEY (cid)
         REFERENCES customer (cid);
 
 ALTER TABLE student
-    ADD CONSTRAINT student_loan_fk FOREIGN KEY (acctno)
-        REFERENCES loan (acctno);
+    ADD CONSTRAINT student_loan_fk FOREIGN KEY (acctNo)
+        REFERENCES loan (acctNo);

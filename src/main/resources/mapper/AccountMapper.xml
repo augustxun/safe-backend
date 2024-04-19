@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augustxun.safe.mapper.AccountMapper">
+
+    <resultMap id="BaseResultMap" type="com.augustxun.safe.model.entity.Account">
+            <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
+            <result property="acctName" column="acctName" jdbcType="VARCHAR"/>
+            <result property="zipcode" column="zipcode" jdbcType="VARCHAR"/>
+            <result property="unit" column="unit" jdbcType="VARCHAR"/>
+            <result property="street" column="street" jdbcType="VARCHAR"/>
+            <result property="city" column="city" jdbcType="VARCHAR"/>
+            <result property="state" column="state" jdbcType="VARCHAR"/>
+            <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        acctNo,acctname,azipcode,
+        unit,street,city,
+        state,dateopened,type
+    </sql>
+</mapper>

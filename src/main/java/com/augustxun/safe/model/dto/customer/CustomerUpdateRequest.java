@@ -2,6 +2,9 @@ package com.augustxun.safe.model.dto.customer;
 
 import java.io.Serializable;
 import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 /**
@@ -13,25 +16,21 @@ import lombok.Data;
 @Data
 public class CustomerUpdateRequest implements Serializable {
 
-    /**
-     * id
-     */
-    private Long id;
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
-    /**
-     * 标题
-     */
-    private String title;
 
-    /**
-     * 内容
-     */
-    private String content;
+    private String lastname;
 
-    /**
-     * 标签列表
-     */
-    private List<String> tags;
+    private String firstname;
 
-    private static final long serialVersionUID = 1L;
+    private String zipcode;
+
+    private String unit;
+
+    private String street;
+
+    private String city;
+
+    private String state;
 }
