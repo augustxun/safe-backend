@@ -1,6 +1,8 @@
 package com.augustxun.safe.service;
 
+import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.entity.Account;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -10,4 +12,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface AccountService extends IService<Account> {
     public void validAccount(Account account, boolean add);
+
+    public QueryWrapper<Account> getQueryWrapper(AccountQueryRequest accountQueryRequest);
 }

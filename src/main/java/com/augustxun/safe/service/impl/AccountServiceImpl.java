@@ -1,8 +1,15 @@
 package com.augustxun.safe.service.impl;
 
+import co.elastic.clients.elasticsearch.sql.QueryRequest;
 import com.augustxun.safe.common.ErrorCode;
+import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.model.dto.account.AccountQueryRequest;
+import com.augustxun.safe.model.dto.customer.CustomerQueryRequest;
 import com.augustxun.safe.model.entity.Account;
+import com.augustxun.safe.model.entity.Customer;
+import com.augustxun.safe.utils.SqlUtils;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.mapper.AccountMapper;
@@ -32,6 +39,20 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account>
         if (StringUtils.isNotBlank(name) && name.length() > 50) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "名称过长");
         }
+    }
+
+    @Override
+    public QueryWrapper<Account> getQueryWrapper(AccountQueryRequest accountQueryRequest) {
+        if (accountQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        String acctName = accountQueryRequest.getAcctName();
+        String sortField = accountQueryRequest.getSortField();
+        String sortOrder = accountQueryRequest.getSortOrder();
+        QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like(StringUtils.isNotBlank(acctName), "acctName", acctName);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
+        return queryWrapper;
     }
 }
 

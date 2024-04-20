@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 创建请求
@@ -15,10 +16,8 @@ import java.io.Serializable;
  */
 @Data
 public class AccountAddRequest implements Serializable {
-
-    private String lastname;
-
-    private String firstname;
+    private Long acctNo;
+    private String acctName;
 
     private String zipcode;
 
@@ -29,7 +28,12 @@ public class AccountAddRequest implements Serializable {
     private String city;
 
     private String state;
+
+    private Date dateOpened;
+
     private String type;
+
+    private Long userId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

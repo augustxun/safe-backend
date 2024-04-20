@@ -9,11 +9,15 @@ import com.augustxun.safe.constant.UserConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
+import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
+import com.augustxun.safe.model.dto.customer.CustomerQueryRequest;
 import com.augustxun.safe.model.entity.Account;
+import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.UserService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -102,18 +106,34 @@ public class AccountController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateAccount(@RequestBody AccountUpdateRequest accountUpdateRequest) {
-        if (accountUpdateRequest == null || accountUpdateRequest.getId() <= 0) {
+        if (accountUpdateRequest == null || accountUpdateRequest.getAcctNo() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Account account = new Account();
         BeanUtils.copyProperties(accountUpdateRequest, account);
         // 参数校验
         accountService.validAccount(account, false);
-        long id = accountUpdateRequest.getId();
+        long acctNo = accountUpdateRequest.getAcctNo();
         // 判断是否存在
-        Account oldAccount = accountService.getById(id);
+        Account oldAccount = accountService.getById(acctNo);
         ThrowUtils.throwIf(oldAccount == null, ErrorCode.NOT_FOUND_ERROR);
         boolean result = accountService.updateById(account);
         return ResultUtils.success(result);
+    }
+
+    /**
+     * 分页获取列表（仅管理员）
+     *
+     * @param accountQueryRequest
+     * @return
+     */
+    @Operation(summary = "分页获取账户列表（仅管理员）")
+    @PostMapping("/list/page")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Page<Account>> listAccountByPage(@RequestBody AccountQueryRequest accountQueryRequest) {
+        long current = accountQueryRequest.getCurrent();
+        long size = accountQueryRequest.getPageSize();
+        Page<Account> customerPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
+        return ResultUtils.success(customerPage);
     }
 }
