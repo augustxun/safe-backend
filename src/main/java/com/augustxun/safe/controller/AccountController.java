@@ -11,10 +11,9 @@ import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
-import com.augustxun.safe.model.dto.customer.CustomerQueryRequest;
 import com.augustxun.safe.model.entity.Account;
-import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.AccountVO;
 import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.UserService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -135,5 +134,24 @@ public class AccountController {
         long size = accountQueryRequest.getPageSize();
         Page<Account> customerPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
         return ResultUtils.success(customerPage);
+    }
+
+    /**
+     * 根据当前 loginUser 获取分页列表（用户使用）
+     *
+     * @param accountQueryRequest
+     * @return
+     */
+    @Operation(summary = "根据当前用户 ID 分页获取账户列表")
+    @PostMapping("/list/page/vo")
+    public BaseResponse<Page<AccountVO>> listAccountVOByPage(@RequestBody AccountQueryRequest accountQueryRequest, HttpServletRequest httpServletRequest) {
+        Long id=  accountQueryRequest.getUserId();
+        if (!id.equals(userService.getLoginUser(httpServletRequest).getId())) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        long current = accountQueryRequest.getCurrent();
+        long size = accountQueryRequest.getPageSize();
+        Page<Account> customerPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
+        return ResultUtils.success(accountService.getAccountVOPage(customerPage));
     }
 }

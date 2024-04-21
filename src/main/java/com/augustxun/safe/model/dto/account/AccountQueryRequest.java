@@ -19,8 +19,6 @@ public class AccountQueryRequest extends PageRequest implements Serializable {
 
     private String acctName;
 
-    private String street;
-
     private String city;
 
     private String state;

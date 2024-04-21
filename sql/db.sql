@@ -1,14 +1,14 @@
 CREATE TABLE customer
 (
     id        bigint auto_increment comment 'id' primary key,
-    lastName  VARCHAR(30) NOT NULL,
-    firstName VARCHAR(30) NOT NULL,
-    zipcode   VARCHAR(15) NOT NULL,
+    lastName  VARCHAR(30)       NOT NULL,
+    firstName VARCHAR(30)       NOT NULL,
+    zipcode   VARCHAR(15)       NOT NULL,
     unit      VARCHAR(15),
-    street    VARCHAR(30) NOT NULL,
-    city      VARCHAR(20) NOT NULL,
-    isDelete     tinyint      default 0                 not null comment '是否删除',
-    state     VARCHAR(20) NOT NULL
+    street    VARCHAR(30)       NOT NULL,
+    city      VARCHAR(20)       NOT NULL,
+    isDelete  tinyint default 0 not null comment '是否删除',
+    state     VARCHAR(20)       NOT NULL
 ) comment '客户';
 
 create table if not exists user
@@ -24,7 +24,7 @@ create table if not exists user
     createTime   datetime     default CURRENT_TIMESTAMP not null comment '创建时间',
     updateTime   datetime     default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete     tinyint      default 0                 not null comment '是否删除',
-    customerId   BIGINT NULL COMMENT 'customer id'
+    customerId   BIGINT                                 NULL COMMENT 'customer id'
 ) comment '用户' collate = utf8mb4_unicode_ci;
 ALTER TABLE user
     ADD CONSTRAINT user_customer_fk FOREIGN KEY (customerId) REFERENCES customer (id);
@@ -40,8 +40,9 @@ CREATE TABLE account
     state      VARCHAR(30)                        NOT NULL,
     dateOpened DATETIME DEFAULT CURRENT_TIMESTAMP not null comment '创建时间',
     type       VARCHAR(1)                         NOT NULL,
-    isDelete     tinyint      default 0                 not null comment '是否删除',
-    userId     BIGINT                             NOT NULL
+    isDelete   tinyint  default 0                 not null comment '是否删除',
+    userId     BIGINT                             NOT NULL,
+    balance    DECIMAL(12, 2)                       NOT NULL comment '存款'
 ) comment '账户' collate = utf8mb4_unicode_ci;
 ALTER TABLE account
     ADD CONSTRAINT account__un UNIQUE (acctName);
