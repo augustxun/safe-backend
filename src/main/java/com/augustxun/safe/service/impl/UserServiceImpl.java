@@ -12,11 +12,15 @@ import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.mapper.UserMapper;
 import com.augustxun.safe.model.dto.user.UserQueryRequest;
+import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.CustomerVO;
 import com.augustxun.safe.model.vo.LoginUserVO;
+import com.augustxun.safe.service.CustomerService;
 import com.augustxun.safe.service.UserService;
 import com.augustxun.safe.utils.RegexUtils;
 import com.augustxun.safe.utils.SqlUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -53,9 +57,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     public static final String SALT = "safe";
 
     @Autowired
-    StringRedisTemplate stringRedisTemplate;
+    private StringRedisTemplate stringRedisTemplate;
     @Resource
-    UserMapper userMapper;
+    private UserMapper userMapper;
+
+    @Resource
+    private CustomerService customerService;
+
+
 
     @Override
     public BaseResponse<String> sendCode(String phone, HttpSession session) {
@@ -187,8 +196,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         if (user == null) {
             return null;
         }
+        Long customerId = user.getCustomerId();
+        Customer customer = customerService.query().eq("id", customerId).one();
+        CustomerVO customerVO=CustomerVO.objToVo(customer);
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
+        loginUserVO.setCustomerInfo(customerVO);
+
         return loginUserVO;
     }
 

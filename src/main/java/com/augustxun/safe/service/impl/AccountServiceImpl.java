@@ -51,11 +51,19 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account>
         }
         String acctName = accountQueryRequest.getAcctName();
         Long userId = accountQueryRequest.getUserId();
+        String city = accountQueryRequest.getCity();
+        String state = accountQueryRequest.getState();
+        String type = accountQueryRequest.getType();
         String sortField = accountQueryRequest.getSortField();
         String sortOrder = accountQueryRequest.getSortOrder();
         QueryWrapper<Account> queryWrapper = new QueryWrapper<>();
+
+
         queryWrapper.like(StringUtils.isNotBlank(acctName), "acctName", acctName);
-        queryWrapper.eq(userId > 0, "userId", userId);
+        queryWrapper.like(StringUtils.isNotBlank(city), "city", city);
+        queryWrapper.like(StringUtils.isNotBlank(state), "city", state);
+        queryWrapper.like(StringUtils.isNotBlank(type), "type", type);
+        queryWrapper.eq((userId != null) && (userId > 0), "userId", userId);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
     }

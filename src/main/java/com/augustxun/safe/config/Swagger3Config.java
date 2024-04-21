@@ -20,12 +20,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * @author rongrong
- * @version 1.0
- * @description Swagger3配置
- * @date 2021/01/12 21:00
- */
 @Configuration
 @EnableOpenApi
 @EnableSwaggerBootstrapUI
