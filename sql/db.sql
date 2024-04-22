@@ -27,6 +27,9 @@ create table if not exists user
     customerId   BIGINT                                 NULL COMMENT 'customer id'
 ) comment '用户' collate = utf8mb4_unicode_ci;
 
+ALTER TABLE user
+    ADD CONSTRAINT user__un UNIQUE (userAccount);
+
 ALTER TABLE customer
     ADD CONSTRAINT customer_user_fk FOREIGN KEY (userId) REFERENCES user (id);
 

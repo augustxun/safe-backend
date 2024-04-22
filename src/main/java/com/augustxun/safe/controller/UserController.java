@@ -147,8 +147,13 @@ public class UserController {
         User user = new User();
         BeanUtils.copyProperties(userAddRequest, user);
         // 默认密码 12345678
-        String defaultPassword = "12345678";
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + defaultPassword).getBytes());
+        String encryptPassword;
+        if(StringUtils.isAnyBlank(user.getUserPassword())) {
+            String defaultPassword = "12345678";
+            encryptPassword = DigestUtils.md5DigestAsHex((SALT + defaultPassword).getBytes());
+        } else {
+            encryptPassword = DigestUtils.md5DigestAsHex((SALT + user.getUserPassword()).getBytes());
+        }
         user.setUserPassword(encryptPassword);
         boolean result = userService.save(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
