@@ -15,8 +15,8 @@ import lombok.Data;
 @TableName(value ="account")
 @Data
 public class Account implements Serializable {
-    @TableId(type = IdType.AUTO)
-    private Integer acctNo;
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long acctNo;
 
     private String acctName;
 
@@ -35,7 +35,7 @@ public class Account implements Serializable {
     private String type;
 
     private Long userId;
-    private BigDecimal balance;
+
 
     /**
      * 是否删除

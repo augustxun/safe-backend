@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augustxun.safe.mapper.CheckingMapper">
+
+    <resultMap id="BaseResultMap" type="com.augustxun.safe.model.entity.Checking">
+            <id property="acctNo" column="acctNo" jdbcType="BIGINT"/>
+            <result property="serviceFee" column="serviceFee" jdbcType="DECIMAL"/>
+            <result property="customerId" column="customerId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        acctNo,serviceFee,customerId
+    </sql>
+</mapper>

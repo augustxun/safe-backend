@@ -25,6 +25,4 @@ public class CustomerUpdateRequest implements Serializable {
     private String street;
     private String city;
     private String state;
-    @TableLogic
-    private Integer isDelete;
 }

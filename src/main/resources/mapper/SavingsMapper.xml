@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augustxun.safe.mapper.SavingsMapper">
+
+    <resultMap id="BaseResultMap" type="com.augustxun.safe.model.entity.Savings">
+            <id property="acctNo" column="acctNo" jdbcType="BIGINT"/>
+            <result property="interestRate" column="interestRate" jdbcType="DECIMAL"/>
+            <result property="customerId" column="customerId" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        acctNo,interestRate,customerId
+    </sql>
+</mapper>

@@ -8,9 +8,9 @@ CREATE TABLE customer
     street    VARCHAR(30)       NOT NULL,
     city      VARCHAR(20)       NOT NULL,
     isDelete  tinyint default 0 not null comment '是否删除',
-    state     VARCHAR(20)       NOT NULL
+    state     VARCHAR(20)       NOT NULL,
+    userId    bigint
 ) comment '客户';
-
 create table if not exists user
 (
     id           bigint auto_increment comment 'id' primary key,
@@ -26,6 +26,11 @@ create table if not exists user
     isDelete     tinyint      default 0                 not null comment '是否删除',
     customerId   BIGINT                                 NULL COMMENT 'customer id'
 ) comment '用户' collate = utf8mb4_unicode_ci;
+
+ALTER TABLE customer
+    ADD CONSTRAINT customer_user_fk FOREIGN KEY (userId) REFERENCES user (id);
+
+
 ALTER TABLE user
     ADD CONSTRAINT user_customer_fk FOREIGN KEY (customerId) REFERENCES customer (id);
 
@@ -41,8 +46,7 @@ CREATE TABLE account
     dateOpened DATETIME DEFAULT CURRENT_TIMESTAMP not null comment '创建时间',
     type       VARCHAR(1)                         NOT NULL,
     isDelete   tinyint  default 0                 not null comment '是否删除',
-    userId     BIGINT                             NOT NULL,
-    balance    DECIMAL(12, 2)                       NOT NULL comment '存款'
+    userId     BIGINT                             NOT NULL
 ) comment '账户' collate = utf8mb4_unicode_ci;
 ALTER TABLE account
     ADD CONSTRAINT account__un UNIQUE (acctName);
@@ -53,8 +57,10 @@ ALTER TABLE account
 CREATE TABLE checking
 (
     acctNo     bigint auto_increment comment 'Account Number' PRIMARY KEY,
-    serviceFee DECIMAL(8) NOT NULL,
-    customerId BIGINT     NOT NULL
+    balance    DECIMAL(12, 2) default 0 NOT NULL comment '存款',
+    serviceFee DECIMAL(8, 2)            NOT NULL,
+    customerId BIGINT                   NOT NULL,
+    isDelete   tinyint        default 0 not null comment '是否删除'
 ) comment '账户' collate = utf8mb4_unicode_ci;
 ALTER TABLE checking
     ADD CONSTRAINT checking_account_fk FOREIGN KEY (acctNo) REFERENCES account (acctNo);
@@ -64,8 +70,10 @@ ALTER TABLE checking
 CREATE TABLE savings
 (
     acctNo       bigint auto_increment comment 'id' primary key,
-    interestRate DECIMAL(5, 2) NOT NULL,
-    customerId   BIGINT        NOT NULL
+    balance      DECIMAL(12, 2) default 0 NOT NULL comment '存款',
+    isDelete     tinyint        default 0 not null comment '是否删除',
+    interestRate DECIMAL(5, 2)            NOT NULL,
+    customerId   BIGINT                   NOT NULL
 );
 ALTER TABLE savings
     ADD CONSTRAINT savings_account_fk FOREIGN KEY (acctNo) REFERENCES account (acctNo);
@@ -75,38 +83,41 @@ ALTER TABLE savings
 CREATE TABLE loan
 (
     acctNo     bigint auto_increment comment 'id' primary key,
-    rate       DECIMAL(5, 2)  NOT NULL,
-    amount     DECIMAL(10, 2) NOT NULL,
-    months     INTEGER        NOT NULL,
-    payment    DECIMAL(7, 2)  NOT NULL,
-    type       VARCHAR(1)     NOT NULL,
-    customerId BIGINT         NOT NULL
+    rate       DECIMAL(5, 2)     NOT NULL,
+    amount     DECIMAL(10, 2)    NOT NULL,
+    months     INTEGER           NOT NULL,
+    payment    DECIMAL(7, 2)     NOT NULL,
+    loanType   VARCHAR(1)        NOT NULL,
+    customerId BIGINT            NOT NULL,
+    isDelete   tinyint default 0 not null comment '是否删除'
 );
 ALTER TABLE loan
     ADD CONSTRAINT loan_account_fk FOREIGN KEY (acctNo) REFERENCES account (acctNo);
 ALTER TABLE loan
     ADD CONSTRAINT loan_customer_fk FOREIGN KEY (customerId) REFERENCES customer (id);
 ALTER TABLE loan
-    ADD CONSTRAINT ch_inh_loan CHECK ( type IN ('H', 'P', 'S') );
+    ADD CONSTRAINT ch_inh_loan CHECK ( loan.loanType IN ('H', 'P', 'S') );
 
 CREATE TABLE insure_com
 (
-    id      bigint auto_increment comment 'id' primary key,
-    name    VARCHAR(30) NOT NULL,
-    zipcode VARCHAR(15) NOT NULL,
-    unit    VARCHAR(15),
-    street  VARCHAR(30) NOT NULL,
-    city    VARCHAR(20) NOT NULL,
-    state   VARCHAR(20) NOT NULL
+    id       bigint auto_increment comment 'id' primary key,
+    name     VARCHAR(30)       NOT NULL,
+    zipcode  VARCHAR(15)       NOT NULL,
+    unit     VARCHAR(15),
+    street   VARCHAR(30)       NOT NULL,
+    city     VARCHAR(20)       NOT NULL,
+    state    VARCHAR(20)       NOT NULL,
+    isDelete tinyint default 0 not null comment '是否删除'
 );
 
 CREATE TABLE home
 (
     acctNo        bigint auto_increment comment 'id' primary key,
-    builtYear     DECIMAL(4)    NOT NULL,
-    insureAcctNo  DECIMAL(8)    NOT NULL,
-    yearlyPremium DECIMAL(7, 2) NOT NULL,
-    InsureComId   BIGINT        NOT NULL
+    builtYear     DECIMAL(4)        NOT NULL,
+    insureAcctNo  DECIMAL(8)        NOT NULL,
+    yearlyPremium DECIMAL(7, 2)     NOT NULL,
+    InsureComId   BIGINT            NOT NULL,
+    isDelete      tinyint default 0 not null comment '是否删除'
 );
 ALTER TABLE home
     ADD CONSTRAINT home_loan_fk FOREIGN KEY (acctNo) REFERENCES loan (acctNo);
@@ -116,9 +127,10 @@ ALTER TABLE home
 CREATE TABLE personal
 (
     acctNo      bigint auto_increment comment 'id' primary key,
-    income      DECIMAL(10, 2) NOT NULL,
-    creditScore DECIMAL(3)     NOT NULL,
-    purpose     TEXT           NOT NULL
+    income      DECIMAL(10, 2)    NOT NULL,
+    creditScore DECIMAL(5, 2)     NOT NULL,
+    purpose     TEXT              NOT NULL,
+    isDelete    tinyint default 0 not null comment '是否删除'
 );
 ALTER TABLE personal
     ADD CONSTRAINT check_credit_score CHECK (creditscore >= 0 AND creditscore <= 100);
@@ -128,10 +140,11 @@ ALTER TABLE personal
 CREATE TABLE student
 (
     acctNo         bigint auto_increment comment 'id' primary key,
-    universityName VARCHAR(30) NOT NULL,
-    stuId          VARCHAR(30) NOT NULL,
-    gradMonth      DECIMAL(2)  NOT NULL,
-    gradYear       DECIMAL(4)  NOT NULL
+    universityName VARCHAR(30)       NOT NULL,
+    stuId          VARCHAR(30)       NOT NULL,
+    gradMonth      DECIMAL(2)        NOT NULL,
+    gradYear       DECIMAL(4)        NOT NULL,
+    isDelete       tinyint default 0 not null comment '是否删除'
 );
 ALTER TABLE student
     ADD CONSTRAINT student_loan_fk FOREIGN KEY (acctNo) REFERENCES loan (acctNo);

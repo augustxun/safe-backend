@@ -49,4 +49,8 @@ public class ResultUtils {
     public static BaseResponse error(ErrorCode errorCode, String message) {
         return new BaseResponse(errorCode.getCode(), null, message);
     }
+
+    public static BaseResponse<Boolean> error(ErrorCode errorCode, Boolean result, String message) {
+        return new BaseResponse<Boolean>(errorCode.getCode(), result, message);
+    }
 }

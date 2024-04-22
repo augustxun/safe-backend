@@ -82,7 +82,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @Operation(summary = "账号登录接口（系统）")
+    @Operation(summary = "用户登录接口（系统）")
     @PostMapping("/account/login")
     public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest, HttpServletRequest request) {
         if (userLoginRequest == null) {

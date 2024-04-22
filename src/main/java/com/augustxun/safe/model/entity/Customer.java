@@ -12,8 +12,8 @@ import java.io.Serializable;
 @TableName(value ="customer")
 @Data
 public class Customer implements Serializable {
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @TableId(type = IdType.ASSIGN_ID)
+    private Long id;
 
 
     private String lastName;
@@ -29,7 +29,7 @@ public class Customer implements Serializable {
     private String city;
 
     private String state;
-
+private Long userId;
     /**
      * 是否删除
      */

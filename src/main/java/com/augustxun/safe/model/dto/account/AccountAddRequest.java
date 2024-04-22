@@ -16,7 +16,6 @@ import java.util.Date;
  */
 @Data
 public class AccountAddRequest implements Serializable {
-    private Long acctNo;
     private String acctName;
 
     private String zipcode;
@@ -29,11 +28,7 @@ public class AccountAddRequest implements Serializable {
 
     private String state;
 
-    private Date dateOpened;
-
     private String type;
-
-    private Long userId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
