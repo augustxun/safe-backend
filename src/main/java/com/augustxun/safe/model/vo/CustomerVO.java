@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
 import org.springframework.beans.BeanUtils;
@@ -12,8 +14,8 @@ import org.springframework.beans.BeanUtils;
 @Data
 public class CustomerVO {
     @TableId(type = IdType.AUTO)
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
-    private String idString;
 
     private String lastName;
 

@@ -98,10 +98,11 @@ public class CustomerController {
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteCustomer(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        if (deleteRequest == null || deleteRequest.getId() <= 0) {
+        long id = Long.parseLong(deleteRequest.getId());
+
+        if (deleteRequest == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        long id = deleteRequest.getId();
         // 仅管理员可删除
         if (!userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
@@ -119,14 +120,16 @@ public class CustomerController {
     @Operation(summary = "更新客户接口")
     @PostMapping("/update")
     public BaseResponse<Boolean> updateCustomer(@RequestBody CustomerUpdateRequest customerUpdateRequest) {
-        if (customerUpdateRequest == null || customerUpdateRequest.getId() <= 0) {
+        long id = Long.parseLong(customerUpdateRequest.getId());
+        if (customerUpdateRequest == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerUpdateRequest, customer);
+        customer.setId(id);
         // 参数校验
         customerService.validCustomer(customer, false);
-        long id = customerUpdateRequest.getId();
+
         // 判断是否存在
         Customer oldCustomer = customerService.getById(id);
         ThrowUtils.throwIf(oldCustomer == null, ErrorCode.NOT_FOUND_ERROR);

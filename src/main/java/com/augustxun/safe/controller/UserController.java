@@ -171,10 +171,11 @@ public class UserController {
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        if (deleteRequest == null || deleteRequest.getId() <= 0) {
+        long id = Long.parseLong(deleteRequest.getId());
+        if (deleteRequest == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean b = userService.removeById(deleteRequest.getId());
+        boolean b = userService.removeById(id);
         return ResultUtils.success(b);
     }
 
@@ -194,6 +195,8 @@ public class UserController {
         }
         User user = new User();
         BeanUtils.copyProperties(userUpdateRequest, user);
+        // 将 String 转为 Long
+        user.setId(Long.parseLong(userUpdateRequest.getId()));
         boolean result = userService.updateById(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
@@ -202,14 +205,15 @@ public class UserController {
     /**
      * 根据 id 获取用户（仅管理员）
      *
-     * @param id
+     * @param userId
      * @param request
      * @return
      */
     @Operation(summary = "根据 ID 查询用户接口(仅管理员)")
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<User> getUserById(@RequestParam long id, HttpServletRequest request) {
+    public BaseResponse<User> getUserById(@RequestParam String userId, HttpServletRequest request) {
+        long id = Long.parseLong(userId);
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

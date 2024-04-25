@@ -16,8 +16,7 @@ import java.util.Date;
 @Data
 public class AccountUpdateRequest implements Serializable {
 
-    @TableId(type = IdType.AUTO)
-    private Integer acctNo;
+    private String acctNo;
 
     private String acctName;
 

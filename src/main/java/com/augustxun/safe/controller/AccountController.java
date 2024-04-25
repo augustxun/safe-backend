@@ -82,7 +82,7 @@ public class AccountController {
                 return ResultUtils.error(ErrorCode.OPERATION_ERROR, "每个用户最多一个 Checking 账户");
             }
             boolean result = accountService.save(account);
-            Long newAccountId = accountService.getOne(new QueryWrapper<Account>().eq("userId", loginUser.getId()).eq("type",type)).getAcctNo();
+            Long newAccountId = accountService.getOne(new QueryWrapper<Account>().eq("userId", loginUser.getId()).eq("type", type)).getAcctNo();
             if (!result) {
                 throw new BusinessException(ErrorCode.OPERATION_ERROR);
             }
@@ -98,7 +98,7 @@ public class AccountController {
                 return ResultUtils.error(ErrorCode.OPERATION_ERROR, "每个用户最多一个 Savings 账户");
             }
             boolean result = accountService.save(account);
-            Long newAccountId = accountService.getOne(new QueryWrapper<Account>().eq("userId", loginUser.getId()).eq("type",type)).getAcctNo();
+            Long newAccountId = accountService.getOne(new QueryWrapper<Account>().eq("userId", loginUser.getId()).eq("type", type)).getAcctNo();
             if (!result) {
                 throw new BusinessException(ErrorCode.OPERATION_ERROR);
             }
@@ -131,11 +131,11 @@ public class AccountController {
     @Operation(summary = "删除账户接口（用户/管理员）")
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteAccount(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        if (deleteRequest == null || deleteRequest.getId() <= 0) {
+        long id = Long.parseLong(deleteRequest.getId());
+        if (deleteRequest == null || id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         User user = userService.getLoginUser(request);
-        long id = deleteRequest.getId();
         // 判断是否存在
         Account oldAccount = accountService.getById(id);
         ThrowUtils.throwIf(oldAccount == null, ErrorCode.NOT_FOUND_ERROR);
@@ -157,14 +157,16 @@ public class AccountController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateAccount(@RequestBody AccountUpdateRequest accountUpdateRequest) {
-        if (accountUpdateRequest == null || accountUpdateRequest.getAcctNo() <= 0) {
+        long acctNo = Long.parseLong(accountUpdateRequest.getAcctNo());
+
+        if (accountUpdateRequest == null || acctNo <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Account account = new Account();
         BeanUtils.copyProperties(accountUpdateRequest, account);
+        account.setAcctNo(acctNo);
         // 参数校验
         accountService.validAccount(account, false);
-        long acctNo = accountUpdateRequest.getAcctNo();
         // 判断是否存在
         Account oldAccount = accountService.getById(acctNo);
         ThrowUtils.throwIf(oldAccount == null, ErrorCode.NOT_FOUND_ERROR);

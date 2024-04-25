@@ -16,8 +16,7 @@ import lombok.Data;
  */
 @Data
 public class CustomerUpdateRequest implements Serializable {
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    private String id;
     private String lastName;
     private String firstName;
     private String zipcode;
