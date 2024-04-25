@@ -202,7 +202,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
         loginUserVO.setCustomerInfo(customerVO);
-
         return loginUserVO;
     }
 

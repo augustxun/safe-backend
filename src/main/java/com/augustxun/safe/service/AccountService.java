@@ -13,9 +13,19 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @createDate 2024-04-18 21:41:29
  */
 public interface AccountService extends IService<Account> {
+    /**
+     * 校验参数
+     * @param account
+     * @param add
+     */
     public void validAccount(Account account, boolean add);
 
     public QueryWrapper<Account> getQueryWrapper(AccountQueryRequest accountQueryRequest);
 
+    /**
+     * 获取账户数据视图
+     * @param accountPage
+     * @return
+     */
     public Page<AccountVO> getAccountVOPage(Page<Account> accountPage);
 }

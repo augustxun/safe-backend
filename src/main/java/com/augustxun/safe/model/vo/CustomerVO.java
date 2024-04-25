@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
+import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
 import org.springframework.beans.BeanUtils;
 
 @Data
 public class CustomerVO {
     @TableId(type = IdType.AUTO)
-    private Integer id;
-
+    private Long id;
 
     private String lastName;
 
