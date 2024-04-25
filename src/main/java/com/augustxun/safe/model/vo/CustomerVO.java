@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 public class CustomerVO {
     @TableId(type = IdType.AUTO)
     private Long id;
+    private String idString;
 
     private String lastName;
 
