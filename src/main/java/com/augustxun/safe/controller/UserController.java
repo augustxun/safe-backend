@@ -1,5 +1,6 @@
 package com.augustxun.safe.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.DeleteRequest;
@@ -18,6 +19,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.expression.spel.ast.NullLiteral;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -237,5 +239,39 @@ public class UserController {
         long size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size), userService.getQueryWrapper(userQueryRequest));
         return ResultUtils.success(userPage);
+    }
+
+    @Operation(summary = "修改密码接口")
+    @PostMapping("/update/pwd")
+    public BaseResponse<String> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest, HttpServletRequest request) {
+        if (passwordUpdateRequest == null) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"修改失败");
+        }
+        String oldPassword = passwordUpdateRequest.getOldPassword(); // 旧密码
+        String newPassword = passwordUpdateRequest.getNewPassword(); // 新密码
+        String checkPassword = passwordUpdateRequest.getCheckPassword(); // 用于核对的密码
+        if (StrUtil.isBlank(oldPassword)) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"旧密码不可为空");
+        }
+        if (StrUtil.isBlank(newPassword)) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"新密码不可为空");
+        }
+        if (StrUtil.isBlank(checkPassword)) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"请再次确认新密码");
+        }
+        User loginUser = userService.getLoginUser(request);
+        long id = loginUser.getId();
+        User user = userService.getById(id);
+        String encryptOldPassword = DigestUtils.md5DigestAsHex((SALT + oldPassword).getBytes());
+        if (!encryptOldPassword.equals(user.getUserPassword())) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR,"旧密码错误");
+        }
+        if (!newPassword.equals((checkPassword))) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR,"两次输入密码不一致");
+        }
+        String encryptPassword = DigestUtils.md5DigestAsHex(((SALT + newPassword).getBytes()));
+        user.setUserPassword(encryptPassword);
+        userService.updateById(user);
+        return ResultUtils.success("密码修改成功");
     }
 }

@@ -1,8 +1,5 @@
 package com.augustxun.safe.service.impl;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.augustxun.safe.common.BaseResponse;
@@ -34,11 +31,10 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static com.augustxun.safe.constant.RedisConstant.*;
+import static com.augustxun.safe.constant.RedisConstant.LOGIN_CODE_KEY;
+import static com.augustxun.safe.constant.RedisConstant.LOGIN_CODE_TTL;
 import static com.augustxun.safe.constant.UserConstant.ADMIN_ROLE;
 import static com.augustxun.safe.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -63,7 +59,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private CustomerService customerService;
-
 
 
     @Override
@@ -198,7 +193,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         Long customerId = user.getCustomerId();
         Customer customer = customerService.query().eq("id", customerId).one();
-        CustomerVO customerVO=CustomerVO.objToVo(customer);
+        CustomerVO customerVO = CustomerVO.objToVo(customer);
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
         loginUserVO.setCustomerInfo(customerVO);
@@ -217,10 +212,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(StringUtils.isNotBlank(userRole), "userRole", userRole);
         queryWrapper.like(StringUtils.isNotBlank(userName), "userName", userName);
-        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
-                sortField);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
     }
+
+
 }
 
 
