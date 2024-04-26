@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController("AdminCustomerController")
 @RequestMapping("admin/customer")
-@Api(tags = "客户管理接口")
+@Api(tags = "B端-客户管理接口")
 @Slf4j
 public class CustomerController {
     @Resource
@@ -48,7 +48,7 @@ public class CustomerController {
      * @param request
      * @return
      */
-    @Operation(summary = "增加客户)")
+    @Operation(summary = "增加客户")
     @PostMapping("/add")
     public BaseResponse<String> addCustomer(@RequestBody CustomerAddRequest customerAddRequest, HttpServletRequest request) {
         if (customerAddRequest == null) {
@@ -153,16 +153,4 @@ public class CustomerController {
         return ResultUtils.success(customerPage);
     }
 
-    @Operation(summary = "检查 loginUser(仅用户)是否已填写个人信息")
-    @GetMapping("/get")
-    public BaseResponse<Boolean> getCustomer(HttpServletRequest httpServletRequest) {
-        User loginUser = userService.getLoginUser(httpServletRequest);
-        if (loginUser == null) return ResultUtils.error(ErrorCode.OPERATION_ERROR, "请先登录");
-        String role = loginUser.getUserRole();
-        Long customerId = loginUser.getCustomerId();
-        if (role.equals("user") && customerId == null) {
-            return ResultUtils.error(ErrorCode.OPERATION_ERROR, Boolean.FALSE, "请填写个人信息");
-        }
-        return ResultUtils.success(Boolean.TRUE);
-    }
 }

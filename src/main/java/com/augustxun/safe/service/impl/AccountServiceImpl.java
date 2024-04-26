@@ -67,7 +67,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
         }
         String acctName = accountQueryRequest.getAcctName();
-        Long userId = accountQueryRequest.getUserId();
+        Long userId = Long.parseLong(accountQueryRequest.getUserId());
         String city = accountQueryRequest.getCity();
         String state = accountQueryRequest.getState();
         String type = accountQueryRequest.getType();

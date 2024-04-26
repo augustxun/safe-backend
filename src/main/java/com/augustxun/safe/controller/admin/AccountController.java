@@ -32,7 +32,7 @@ import java.math.BigDecimal;
 
 @RestController("AdminAccountController")
 @RequestMapping("admin/account")
-@Api(tags = "账户管理接口")
+@Api(tags = "B端-账户管理接口")
 @Slf4j
 public class AccountController {
     @Resource
@@ -176,7 +176,7 @@ public class AccountController {
     }
 
     /**
-     * 分页获取列表（仅管理员）
+     * 账户信息分页查询
      *
      * @param accountQueryRequest
      * @return
@@ -191,22 +191,4 @@ public class AccountController {
         return ResultUtils.success(customerPage);
     }
 
-    /**
-     * 根据当前 loginUser 获取分页列表（用户使用）
-     *
-     * @param accountQueryRequest
-     * @return
-     */
-    @Operation(summary = "根据当前用户 ID 分页获取账户列表")
-    @PostMapping("/list/page/vo")
-    public BaseResponse<Page<AccountVO>> listAccountVOByPage(@RequestBody AccountQueryRequest accountQueryRequest, HttpServletRequest httpServletRequest) {
-        Long id = accountQueryRequest.getUserId();
-        if (!id.equals(userService.getLoginUser(httpServletRequest).getId())) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        long current = accountQueryRequest.getCurrent();
-        long size = accountQueryRequest.getPageSize();
-        Page<Account> customerPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
-        return ResultUtils.success(accountService.getAccountVOPage(customerPage));
-    }
 }

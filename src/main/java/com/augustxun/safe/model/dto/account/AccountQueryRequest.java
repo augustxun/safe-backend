@@ -19,5 +19,5 @@ public class AccountQueryRequest extends PageRequest implements Serializable {
 
     private String type;
 
-    private Long userId;
+    private String userId;
 }

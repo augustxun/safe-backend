@@ -59,7 +59,7 @@ public class AccountController {
      * @param request
      * @return
      */
-    @Operation(summary = "创建账户接口（用户/管理员）")
+    @Operation(summary = "新建账户")
     @PostMapping("/add")
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
         if (accountAddRequest == null) {
@@ -128,7 +128,7 @@ public class AccountController {
      * @param request
      * @return
      */
-    @Operation(summary = "删除账户接口（用户/管理员）")
+    @Operation(summary = "删除账户")
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteAccount(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         long id = Long.parseLong(deleteRequest.getId());
@@ -153,7 +153,7 @@ public class AccountController {
      * @param accountUpdateRequest
      * @return
      */
-    @Operation(summary = "更新账户接口（用户/管理员）")
+    @Operation(summary = "更新账户")
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateAccount(@RequestBody AccountUpdateRequest accountUpdateRequest) {
@@ -174,32 +174,17 @@ public class AccountController {
         return ResultUtils.success(result);
     }
 
-    /**
-     * 分页获取列表（仅管理员）
-     *
-     * @param accountQueryRequest
-     * @return
-     */
-    @Operation(summary = "分页获取账户列表（仅管理员）")
-    @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<Account>> listAccountByPage(@RequestBody AccountQueryRequest accountQueryRequest) {
-        long current = accountQueryRequest.getCurrent();
-        long size = accountQueryRequest.getPageSize();
-        Page<Account> customerPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
-        return ResultUtils.success(customerPage);
-    }
 
     /**
-     * 根据当前 loginUser 获取分页列表（用户使用）
+     * 根据当前 loginUser 获取账户列表
      *
      * @param accountQueryRequest
      * @return
      */
-    @Operation(summary = "根据当前用户 ID 分页获取账户列表")
+    @Operation(summary = "获取账户列表")
     @PostMapping("/list/page/vo")
     public BaseResponse<Page<AccountVO>> listAccountVOByPage(@RequestBody AccountQueryRequest accountQueryRequest, HttpServletRequest httpServletRequest) {
-        Long id = accountQueryRequest.getUserId();
+        Long id = Long.parseLong(accountQueryRequest.getUserId());
         if (!id.equals(userService.getLoginUser(httpServletRequest).getId())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }

@@ -49,7 +49,7 @@ public class CustomerController {
      * @param request
      * @return
      */
-    @Operation(summary = "增加客户)")
+    @Operation(summary = "新建客户信息")
     @PostMapping("/add")
     public BaseResponse<String> addCustomer(@RequestBody CustomerAddRequest customerAddRequest, HttpServletRequest request) {
         if (customerAddRequest == null) {
@@ -88,36 +88,12 @@ public class CustomerController {
     }
 
     /**
-     * 删除
-     *
-     * @param deleteRequest
-     * @param request
-     * @return
-     */
-    @Operation(summary = "删除客户")
-    @PostMapping("/delete")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> deleteCustomer(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        long id = Long.parseLong(deleteRequest.getId());
-
-        if (deleteRequest == null || id <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        // 仅管理员可删除
-        if (!userService.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-        }
-        boolean b = customerService.removeById(id);
-        return ResultUtils.success(b);
-    }
-
-    /**
      * 更新
      *
      * @param customerUpdateRequest
      * @return
      */
-    @Operation(summary = "更新客户")
+    @Operation(summary = "更新客户信息")
     @PostMapping("/update")
     public BaseResponse<Boolean> updateCustomer(@RequestBody CustomerUpdateRequest customerUpdateRequest) {
         long id = Long.parseLong(customerUpdateRequest.getId());
@@ -135,35 +111,5 @@ public class CustomerController {
         ThrowUtils.throwIf(oldCustomer == null, ErrorCode.NOT_FOUND_ERROR);
         boolean result = customerService.updateById(customer);
         return ResultUtils.success(result);
-    }
-
-
-    /**
-     * 分页获取列表（仅管理员）
-     *
-     * @param customerQueryRequest
-     * @return
-     */
-    @Operation(summary = "客户信息分页查询")
-    @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<Customer>> listCustomerByPage(@RequestBody CustomerQueryRequest customerQueryRequest) {
-        long current = customerQueryRequest.getCurrent();
-        long size = customerQueryRequest.getPageSize();
-        Page<Customer> customerPage = customerService.page(new Page<>(current, size), customerService.getQueryWrapper(customerQueryRequest));
-        return ResultUtils.success(customerPage);
-    }
-
-    @Operation(summary = "检查 loginUser(仅用户)是否已填写个人信息")
-    @GetMapping("/get")
-    public BaseResponse<Boolean> getCustomer(HttpServletRequest httpServletRequest) {
-        User loginUser = userService.getLoginUser(httpServletRequest);
-        if (loginUser == null) return ResultUtils.error(ErrorCode.OPERATION_ERROR, "请先登录");
-        String role = loginUser.getUserRole();
-        Long customerId = loginUser.getCustomerId();
-        if (role.equals("user") && customerId == null) {
-            return ResultUtils.error(ErrorCode.OPERATION_ERROR, Boolean.FALSE, "请填写个人信息");
-        }
-        return ResultUtils.success(Boolean.TRUE);
     }
 }

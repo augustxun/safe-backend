@@ -30,7 +30,7 @@ import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
 @Slf4j
 @RestController
 @RequestMapping("admin/user")
-@Api(tags = "用户管理接口")
+@Api(tags = "B端-用户管理接口")
 public class AdminUserController {
     @Resource
     private UserService userService;
