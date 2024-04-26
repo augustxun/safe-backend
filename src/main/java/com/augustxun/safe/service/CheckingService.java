@@ -1,5 +1,6 @@
 package com.augustxun.safe.service;
 
+import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.entity.Checking;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -9,5 +10,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @createDate 2024-04-21 11:59:05
  */
 public interface CheckingService extends IService<Checking> {
-
+    /**
+     * 新建一个 Checking 账户
+     * @param acctNo
+     * @return
+     */
+    public BaseResponse<String> addCheckingAccount(Long acctNo);
 }

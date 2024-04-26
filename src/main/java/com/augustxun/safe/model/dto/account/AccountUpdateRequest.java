@@ -16,20 +16,10 @@ import java.util.Date;
 public class AccountUpdateRequest implements Serializable {
 
     private String acctNo;
-
     private String acctName;
-
     private String zipcode;
-
     private String unit;
-
     private String street;
-
     private String city;
-
     private String state;
-
-    private Date dateOpened;
-
-    private String type;
 }

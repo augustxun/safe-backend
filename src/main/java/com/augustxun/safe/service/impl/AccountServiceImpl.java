@@ -1,7 +1,9 @@
 package com.augustxun.safe.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.ErrorCode;
+import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.mapper.AccountMapper;
@@ -11,19 +13,19 @@ import com.augustxun.safe.model.entity.Checking;
 import com.augustxun.safe.model.entity.Loan;
 import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.model.vo.AccountVO;
-import com.augustxun.safe.service.AccountService;
-import com.augustxun.safe.service.CheckingService;
-import com.augustxun.safe.service.LoanService;
-import com.augustxun.safe.service.SavingsService;
+import com.augustxun.safe.service.*;
 import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.common.recycler.Recycler;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +45,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     @Resource
     private LoanService loanService;
+
+    @Resource
+    private AccountService accountService;
+    @Resource
+    private UserService userService;
 
     public void validAccount(Account account, boolean add) {
         if (account == null) {
@@ -85,47 +92,12 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return queryWrapper;
     }
 
-    @Override
-    public Page<AccountVO> getAccountVOPage(Page<Account> accountPage) {
-        List<Account> accountList = accountPage.getRecords();
-        Page<AccountVO> accountVOPage = new Page<>(accountPage.getCurrent(), accountPage.getSize(), accountPage.getTotal());
-        if (CollUtil.isEmpty(accountList)) {
-            return accountVOPage;
-        }
-        // 填充信息
-        List<AccountVO> accountVOList = accountList.stream().map(account -> {
-            String type = account.getType();
-            AccountVO accountVO = AccountVO.objToVo(account);
-            Long acctNo = account.getAcctNo();
-            if (type.equals("C")) {
-                Checking checking = checkingService.getById(acctNo);
-                if (checking == null) {
-                    throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-                }
-                BeanUtils.copyProperties(checking, accountVO);
-                return accountVO;
-            }
-            if (type.equals("S")) {
-                Savings savings = savingsService.getById(acctNo);
-                if (savings == null) {
-                    throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-                }
-                BeanUtils.copyProperties(savings, accountVO);
-                return accountVO;
-            }
-            if (type.equals("L")) {
-                Loan loan = loanService.getById(acctNo);
-                if (loan == null) {
-                    throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
-                }
-                BeanUtils.copyProperties(loan, accountVO);
-                return accountVO;
-            }
-            return accountVO;
-        }).collect(Collectors.toList());
-        accountVOPage.setRecords(accountVOList);
-        return accountVOPage;
-    }
+
+
+
+
+
+
 }
 
 
