@@ -1,12 +1,26 @@
 package com.augustxun.safe.service.impl;
 
+import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.common.ErrorCode;
+import com.augustxun.safe.common.ResultUtils;
+import com.augustxun.safe.constant.CommonConstant;
+import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.model.dto.personal.PersonalQueryRequest;
-import com.augustxun.safe.model.entity.Personal;
+import com.augustxun.safe.model.entity.*;
+import com.augustxun.safe.model.vo.PersonalLoanVO;
+import com.augustxun.safe.model.vo.PersonalLoanVO;
+import com.augustxun.safe.service.AccountService;
+import com.augustxun.safe.service.LoanService;
+import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.augustxun.safe.service.PersonalService;
 import com.augustxun.safe.mapper.PersonalMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
 
 /**
 * @author augustxun
@@ -16,10 +30,46 @@ import org.springframework.stereotype.Service;
 @Service
 public class PersonalServiceImpl extends ServiceImpl<PersonalMapper, Personal>
     implements PersonalService{
-
+@Resource
+private AccountService accountService;
+@Resource
+private LoanService loanService;
     @Override
     public QueryWrapper<Personal> getQueryWrapper(PersonalQueryRequest personalQueryRequest) {
-        return null;
+        if (personalQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        String sortField =personalQueryRequest.getSortField();
+        String sortOrder = personalQueryRequest.getSortOrder();
+        QueryWrapper<Personal> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
+        return queryWrapper;
+    }
+
+    @Override
+    public PersonalLoanVO getPersonalLoanVO(Long userId) {
+        Account account = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C"));
+        if (account != null) {
+            Long acctNo = account.getAcctNo();
+            Loan loan = loanService.getById(acctNo);
+            Personal personal = this.getById(acctNo);
+            PersonalLoanVO personalLoanVO = new PersonalLoanVO();
+            BeanUtils.copyProperties(account, personalLoanVO);
+            BeanUtils.copyProperties(loan, personalLoanVO);
+            BeanUtils.copyProperties(personal, personalLoanVO);
+            return personalLoanVO;
+        } else return null;
+    }
+
+    @Override
+    public BaseResponse<String> addPersonalAccount(Long newAccountNo) {
+        Personal personal = new Personal();
+        personal.setAcctNo(newAccountNo);
+        personal.setIncome(new BigDecimal("0.0"));
+        personal.setPurpose("I apply this loan for ...");
+        personal.setCreditScore(new BigDecimal("0.0"));
+        this.save(personal);
+        return ResultUtils.success("创建成功");
     }
 }
 

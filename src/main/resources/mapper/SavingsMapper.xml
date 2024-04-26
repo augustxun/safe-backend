@@ -7,10 +7,9 @@
     <resultMap id="BaseResultMap" type="com.augustxun.safe.model.entity.Savings">
             <id property="acctNo" column="acctNo" jdbcType="BIGINT"/>
             <result property="interestRate" column="interestRate" jdbcType="DECIMAL"/>
-            <result property="customerId" column="customerId" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        acctNo,interestRate,customerId
+        acctNo,interestRate
     </sql>
 </mapper>

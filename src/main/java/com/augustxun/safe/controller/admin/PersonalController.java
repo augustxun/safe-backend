@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@Api(tags = "B端-Personal账户管理接口")
+@Api(tags = "B端-PersonalLoan账户管理接口")
 @RequestMapping("admin/personal")
 public class PersonalController {
     @Resource

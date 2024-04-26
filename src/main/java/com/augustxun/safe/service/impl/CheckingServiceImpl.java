@@ -1,7 +1,10 @@
 package com.augustxun.safe.service.impl;
 
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
+import com.augustxun.safe.constant.CommonConstant;
+import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.mapper.CheckingMapper;
 import com.augustxun.safe.model.dto.checking.CheckingQueryRequest;
 import com.augustxun.safe.model.entity.Account;
@@ -10,8 +13,11 @@ import com.augustxun.safe.model.vo.CheckingAccountVO;
 import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.CheckingService;
 import com.augustxun.safe.service.UserService;
+import com.augustxun.safe.utils.SqlUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +59,14 @@ public class CheckingServiceImpl extends ServiceImpl<CheckingMapper, Checking>
 
     @Override
     public QueryWrapper<Checking> getQueryWrapper(CheckingQueryRequest checkingQueryRequest) {
-        return null;
+        if (checkingQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        String sortField = checkingQueryRequest.getSortField();
+        String sortOrder = checkingQueryRequest.getSortOrder();
+        QueryWrapper<Checking> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
+        return queryWrapper;
     }
 }
 

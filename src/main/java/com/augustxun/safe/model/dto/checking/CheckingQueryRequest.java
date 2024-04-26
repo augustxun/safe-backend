@@ -12,6 +12,7 @@ public class CheckingQueryRequest extends PageRequest implements Serializable {
     private static final long serialVersionUID = 1L;
     private BigDecimal serviceFee;
     private BigDecimal balance;
+
     /**
      * 是否删除
      */

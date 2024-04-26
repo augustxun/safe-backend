@@ -5,6 +5,7 @@ import com.augustxun.safe.model.dto.home.HomeQueryRequest;
 import com.augustxun.safe.model.dto.student.StudentQueryRequest;
 import com.augustxun.safe.model.entity.Home;
 import com.augustxun.safe.model.entity.Student;
+import com.augustxun.safe.model.vo.StudentLoanVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -19,7 +20,7 @@ public interface StudentService extends IService<Student> {
      * @param acctNo
      * @return
      */
-    public BaseResponse<String> addStudentAccount(Long acctNo);
+    public BaseResponse<String> addStudentLoanAccount(Long acctNo);
 
     /**
      * Student账户查询条件
@@ -28,4 +29,11 @@ public interface StudentService extends IService<Student> {
      * @return
      */
     public QueryWrapper<Student> getQueryWrapper(StudentQueryRequest studentQueryRequest);
+
+    /**
+     * 根据 userId 获取 StudentLoan 账户视图
+     * @param userId
+     * @return
+     */
+    public StudentLoanVO getStudentLoanVO(Long userId);
 }

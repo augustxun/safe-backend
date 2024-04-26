@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
-@Api(tags = "B端-Student账户管理接口")
+@Api(tags = "B端-StudentLoan账户管理接口")
 @RequestMapping("admin/student")
 public class StudentController {
     @Resource

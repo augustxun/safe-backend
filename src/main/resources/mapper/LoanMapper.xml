@@ -10,13 +10,12 @@
             <result property="amount" column="amount" jdbcType="DECIMAL"/>
             <result property="months" column="months" jdbcType="INTEGER"/>
             <result property="payment" column="payment" jdbcType="DECIMAL"/>
-            <result property="type" column="type" jdbcType="VARCHAR"/>
-            <result property="customerId" column="customerId" jdbcType="BIGINT"/>
+            <result property="loanType" column="type" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
         acctNo,rate,amount,
-        months,payment,type,
+        months,payment,loanType,
         customerId
     </sql>
 </mapper>

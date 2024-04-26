@@ -1,5 +1,6 @@
 package com.augustxun.safe.controller.user;
 
+import cn.hutool.core.util.StrUtil;
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.DeleteRequest;
@@ -10,10 +11,9 @@ import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
-import com.augustxun.safe.model.entity.*;
-import com.augustxun.safe.model.vo.CheckingAccountVO;
-import com.augustxun.safe.model.vo.LoanAccountVO;
-import com.augustxun.safe.model.vo.SavingsAccountVO;
+import com.augustxun.safe.model.entity.Account;
+import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.*;
 import com.augustxun.safe.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -21,12 +21,15 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.augustxun.safe.constant.AccountConstants.*;
 
 @RestController
 @RequestMapping("user/account")
@@ -43,7 +46,12 @@ public class AccountController {
 
     @Resource
     private LoanService loanService;
-
+    @Resource
+    private PersonalService personalService;
+    @Resource
+    private StudentService studentService;
+    @Resource
+    private HomeService homeService;
     @Resource
     private UserService userService;
 
@@ -58,6 +66,7 @@ public class AccountController {
      */
     @Operation(summary = "新建账户")
     @PostMapping("/add")
+    @Transactional
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
         if (accountAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -81,12 +90,24 @@ public class AccountController {
         account.setUserId(userId);
         accountService.save(account); // 保存账户信息到 account 表
         Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C")).getAcctNo();
-        if (type.equals("C")) {
+        if (type.equals(CHECKING_ACCOUNT)) {
             return checkingService.addCheckingAccount(newAccountNo);
-        } else if (type.equals("S")) {
+        } else if (type.equals(SAVINGS_ACCOUNT)) {
             return savingsService.addSavingsAccount(newAccountNo);
         } else {
-            return loanService.addLoanAccount(newAccountNo);
+
+            String loanType = accountAddRequest.getLoanType();
+            if (StrUtil.isBlank(loanType)) {
+                return ResultUtils.error(ErrorCode.OPERATION_ERROR, "请选择贷款类型");
+            }
+            loanService.addLoanAccount(newAccountNo, loanType);
+            if (loanType.equals(STUDENT_LOAN)) {
+                return studentService.addStudentLoanAccount(newAccountNo);
+            } else if (loanType.equals(HOME_LOAN)) {
+                return homeService.addHomeAccount(newAccountNo);
+            } else {
+                return personalService.addPersonalAccount(newAccountNo);
+            }
         }
     }
 
@@ -152,14 +173,35 @@ public class AccountController {
      */
     @Operation(summary = "获取账户列表")
     @GetMapping("/list/vo")
-    public BaseResponse<List<Object>> listAccountVOByPage(HttpServletRequest httpServletRequest) {
+    public BaseResponse<List<Object>> getAccountVOList(HttpServletRequest httpServletRequest) {
         Long userId = userService.getLoginUser(httpServletRequest).getId();
-        List<Object> accountList = new ArrayList<>();
-        CheckingAccountVO checkingAccountVO = checkingService.getCheckingVO(userId);
-        SavingsAccountVO savingsAccountVO = savingsService.getSavingsVO((userId));
-
-
-
-        return ResultUtils.success(accountList);
+        List<Object> accountVOList = new ArrayList<>();
+        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper();
+        lambdaQueryWrapper.eq(Account::getUserId, userId);
+        List<Account> list = accountService.list(lambdaQueryWrapper);
+        for (Account account : list) {
+            String type = account.getType();
+            if (type.equals(CHECKING_ACCOUNT)) {
+                CheckingAccountVO checkingAccountVO = checkingService.getCheckingVO(userId);
+                accountVOList.add(checkingAccountVO);
+            } else if (type.equals(SAVINGS_ACCOUNT)) {
+                SavingsAccountVO savingsAccountVO = savingsService.getSavingsVO(userId);
+                accountVOList.add(savingsAccountVO);
+            } else {
+                Long acctNo = account.getAcctNo();
+                String loanType = loanService.getById(acctNo).getLoanType();
+                if (loanType.equals(PERSONAL_LOAN)) {
+                    PersonalLoanVO personalLoanVO = personalService.getPersonalLoanVO(acctNo);
+                    accountVOList.add(personalLoanVO);
+                } else if (loanType.equals(STUDENT_LOAN)) {
+                    StudentLoanVO studentLoanVO = studentService.getStudentLoanVO(acctNo);
+                    accountVOList.add(studentLoanVO);
+                } else {
+                    HomeLoanVO homeLoanVO = homeService.getHomeLoanVO((acctNo));
+                    accountVOList.add(homeLoanVO);
+                }
+            }
+        }
+        return ResultUtils.success(accountVOList);
     }
 }

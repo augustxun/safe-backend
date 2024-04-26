@@ -1,15 +1,18 @@
 package com.augustxun.safe.model.vo;
 
 import com.augustxun.safe.model.entity.Account;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class SavingsAccountVO {
+public class StudentLoanVO implements Serializable {
     private static final long serialVersionUID = 1L;
     private Integer acctNo;
     private String acctName;
@@ -21,27 +24,20 @@ public class SavingsAccountVO {
     private Date dateOpened;
     private String type;
     private Long userId;
-    // Saving 独有属性
-    private BigDecimal balance;
-    private BigDecimal interestRate;
+    // Loan 属性
+    private BigDecimal rate;
+    private BigDecimal amount;
+    private Integer months;
+    private BigDecimal payment;
+    private String loanType;
+    // Student Loan属性
+    private String universityName;
+    private String stuId;
+    private Integer gradMonth;
+    private Integer gradYear;
     /**
      * 是否删除
      */
     @TableLogic
     private Integer isDelete;
-
-    /**
-     * 对象转包装类
-     *
-     * @param account
-     * @return
-     */
-    public static SavingsAccountVO objToVo(Account account) {
-        if (account == null) {
-            return null;
-        }
-        SavingsAccountVO accountVO = new SavingsAccountVO();
-        BeanUtils.copyProperties(account, accountVO);
-        return accountVO;
-    }
 }

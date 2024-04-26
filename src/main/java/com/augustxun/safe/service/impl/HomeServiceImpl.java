@@ -1,15 +1,26 @@
 package com.augustxun.safe.service.impl;
 
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
+import com.augustxun.safe.constant.CommonConstant;
+import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.mapper.HomeMapper;
 import com.augustxun.safe.model.dto.home.HomeQueryRequest;
-import com.augustxun.safe.model.entity.Home;
+import com.augustxun.safe.model.entity.*;
+import com.augustxun.safe.model.vo.HomeLoanVO;
+import com.augustxun.safe.model.vo.HomeLoanVO;
+import com.augustxun.safe.model.vo.StudentLoanVO;
+import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.HomeService;
+import com.augustxun.safe.service.LoanService;
+import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
 
 /**
@@ -19,7 +30,10 @@ import java.math.BigDecimal;
  */
 @Service
 public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements HomeService {
-
+    @Resource
+    private AccountService accountService;
+    @Resource
+    private LoanService loanService;
     @Override
     public BaseResponse<String> addHomeAccount(Long acctNo) {
         Home home = new Home();
@@ -34,7 +48,30 @@ public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements Ho
 
     @Override
     public QueryWrapper<Home> getQueryWrapper(HomeQueryRequest homeQueryRequest) {
-        return null;
+        if (homeQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        String sortField =homeQueryRequest.getSortField();
+        String sortOrder = homeQueryRequest.getSortOrder();
+        QueryWrapper<Home> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
+        return queryWrapper;
+    }
+    
+
+    @Override
+    public HomeLoanVO getHomeLoanVO(Long userId) {
+        Account account = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C"));
+        if (account != null) {
+            Long acctNo = account.getAcctNo();
+            Loan loan = loanService.getById(acctNo);
+            Home home = this.getById(acctNo);
+            HomeLoanVO homeLoanVO = new HomeLoanVO();
+            BeanUtils.copyProperties(account, homeLoanVO);
+            BeanUtils.copyProperties(loan, homeLoanVO);
+            BeanUtils.copyProperties(home, homeLoanVO);
+            return homeLoanVO;
+        } else return null;
     }
 }
 

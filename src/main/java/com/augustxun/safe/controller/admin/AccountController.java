@@ -1,6 +1,7 @@
 package com.augustxun.safe.controller.admin;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.DeleteRequest;
@@ -31,6 +32,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import static com.augustxun.safe.constant.AccountConstants.*;
+
 @RestController("AdminAccountController")
 @RequestMapping("admin/account")
 @Api(tags = "B端-账户管理接口")
@@ -38,8 +41,6 @@ import javax.servlet.http.HttpServletRequest;
 public class AccountController {
     @Resource
     private AccountService accountService;
-    @Resource
-    private CustomerService customerService;
     @Resource
     private CheckingService checkingService;
 
@@ -51,6 +52,13 @@ public class AccountController {
 
     @Resource
     private UserService userService;
+
+    @Resource
+    private PersonalService personalService;
+    @Resource
+    private StudentService studentService;
+    @Resource
+    private HomeService homeService;
 
     // region 增删改查
 
@@ -84,15 +92,26 @@ public class AccountController {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "该用户已有" + type + "类账户，请勿重复创建");
         }
         // 3.2 未被创建，创建账户
-
+        account.setUserId(userId);
         accountService.save(account); // 保存账户信息到 account 表
         Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C")).getAcctNo();
-        if (type.equals("C")) {
+        if (type.equals(CHECKING_ACCOUNT)) {
             return checkingService.addCheckingAccount(newAccountNo);
-        } else if (type.equals("S")) {
+        } else if (type.equals(SAVINGS_ACCOUNT)) {
             return savingsService.addSavingsAccount(newAccountNo);
         } else {
-            return loanService.addLoanAccount(newAccountNo);
+            String loanType = accountAddRequest.getLoanType();
+            if (StrUtil.isBlank(loanType)) {
+                return ResultUtils.error(ErrorCode.OPERATION_ERROR, "请选择贷款类型");
+            }
+            loanService.addLoanAccount(newAccountNo, loanType);
+            if (loanType.equals(STUDENT_LOAN)) {
+                return studentService.addStudentLoanAccount(newAccountNo);
+            } else if (loanType.equals(HOME_LOAN)) {
+                return homeService.addHomeAccount(newAccountNo);
+            } else {
+                return personalService.addPersonalAccount(newAccountNo);
+            }
         }
     }
 

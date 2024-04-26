@@ -1,13 +1,18 @@
 package com.augustxun.safe.service.impl;
 
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
+import com.augustxun.safe.constant.CommonConstant;
+import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.mapper.SavingsMapper;
+import com.augustxun.safe.model.dto.savings.SavingsQueryRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.model.vo.SavingsAccountVO;
 import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.SavingsService;
+import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
@@ -25,6 +30,7 @@ import java.math.BigDecimal;
 public class SavingsServiceImpl extends ServiceImpl<SavingsMapper, Savings> implements SavingsService {
     @Resource
     private AccountService accountService;
+
     @Override
     public BaseResponse<String> addSavingsAccount(Long newAccountNo) {
         Savings savings = new Savings();
@@ -45,6 +51,18 @@ public class SavingsServiceImpl extends ServiceImpl<SavingsMapper, Savings> impl
             BeanUtils.copyProperties(savings, savingsAccountVO);
             return savingsAccountVO;
         } else return null;
+    }
+
+    @Override
+    public QueryWrapper<Savings> getQueryWrapper(SavingsQueryRequest savingsQueryRequest) {
+        if (savingsQueryRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
+        }
+        String sortField = savingsQueryRequest.getSortField();
+        String sortOrder = savingsQueryRequest.getSortOrder();
+        QueryWrapper<Savings> queryWrapper = new QueryWrapper<>();
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
+        return queryWrapper;
     }
 }
 
