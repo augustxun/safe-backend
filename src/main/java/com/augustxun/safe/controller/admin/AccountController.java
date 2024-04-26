@@ -22,6 +22,7 @@ import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,7 +55,7 @@ public class AccountController {
     // region 增删改查
 
     /**
-     * 创建
+     * 管理员端新建账户
      *
      * @param accountAddRequest
      * @param request
@@ -62,6 +63,7 @@ public class AccountController {
      */
     @Operation(summary = "新建账户")
     @PostMapping("/add")
+    @Transactional
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
         if (accountAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -82,7 +84,7 @@ public class AccountController {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "该用户已有" + type + "类账户，请勿重复创建");
         }
         // 3.2 未被创建，创建账户
-        account.setUserId(userId);
+
         accountService.save(account); // 保存账户信息到 account 表
         Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C")).getAcctNo();
         if (type.equals("C")) {
@@ -159,8 +161,8 @@ public class AccountController {
     public BaseResponse<Page<Account>> listAccountByPage(@RequestBody AccountQueryRequest accountQueryRequest) {
         long current = accountQueryRequest.getCurrent();
         long size = accountQueryRequest.getPageSize();
-        Page<Account> customerPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
-        return ResultUtils.success(customerPage);
+        Page<Account> accountPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
+        return ResultUtils.success(accountPage);
     }
 
 }

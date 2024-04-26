@@ -2,6 +2,7 @@ package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.entity.Loan;
+import com.augustxun.safe.model.vo.LoanAccountVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -16,4 +17,5 @@ public interface LoanService extends IService<Loan> {
      * @return
      */
     public BaseResponse<String> addLoanAccount(Long acctNo);
+    public LoanAccountVO getLoanAccount(Long userId);
 }

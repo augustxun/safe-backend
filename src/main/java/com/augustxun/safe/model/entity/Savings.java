@@ -19,5 +19,4 @@ public class Savings implements Serializable {
     private Long acctNo;
     private BigDecimal interestRate;
     private BigDecimal balance;
-    private Long customerId;
 }

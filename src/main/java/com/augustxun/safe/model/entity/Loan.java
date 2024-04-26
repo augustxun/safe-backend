@@ -22,5 +22,4 @@ public class Loan implements Serializable {
     private Integer months;
     private BigDecimal payment;
     private String loanType;
-    private Long customerId;
 }

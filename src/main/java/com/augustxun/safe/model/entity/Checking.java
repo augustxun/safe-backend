@@ -15,13 +15,12 @@ import java.util.Date;
  */
 @TableName(value = "checking")
 @Data
-public class Checking extends Account implements Serializable {
+public class Checking implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @TableId(type = IdType.AUTO)
     private Long acctNo;
     private BigDecimal serviceFee;
-    private Long customerId;
     private BigDecimal balance;
     /**
      * 是否删除

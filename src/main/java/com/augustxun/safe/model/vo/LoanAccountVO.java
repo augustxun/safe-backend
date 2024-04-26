@@ -9,8 +9,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class AccountVO {
-
+public class LoanAccountVO {
     private static final long serialVersionUID = 1L;
     private Integer acctNo;
     private String acctName;
@@ -22,8 +21,9 @@ public class AccountVO {
     private Date dateOpened;
     private String type;
     private Long userId;
+    // Checking 独有属性
     private BigDecimal balance;
-    private Integer customerId;
+    private BigDecimal interestRate;
     /**
      * 是否删除
      */
@@ -36,11 +36,11 @@ public class AccountVO {
      * @param account
      * @return
      */
-    public static AccountVO objToVo(Account account) {
+    public static LoanAccountVO objToVo(Account account) {
         if (account == null) {
             return null;
         }
-        AccountVO accountVO = new AccountVO();
+        LoanAccountVO accountVO = new LoanAccountVO();
         BeanUtils.copyProperties(account, accountVO);
         return accountVO;
     }

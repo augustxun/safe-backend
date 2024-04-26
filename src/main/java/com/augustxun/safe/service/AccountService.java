@@ -1,15 +1,9 @@
 package com.augustxun.safe.service;
 
-import com.augustxun.safe.common.BaseResponse;
-import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.entity.Account;
-import com.augustxun.safe.model.vo.AccountVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author augustxun

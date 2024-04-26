@@ -1,7 +1,9 @@
 package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Checking;
+import com.augustxun.safe.model.vo.CheckingAccountVO;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -16,4 +18,5 @@ public interface CheckingService extends IService<Checking> {
      * @return
      */
     public BaseResponse<String> addCheckingAccount(Long acctNo);
+    public CheckingAccountVO getCheckingVO(Long userId);
 }

@@ -62,13 +62,11 @@ CREATE TABLE checking
     acctNo     bigint auto_increment comment 'Account Number' PRIMARY KEY,
     balance    DECIMAL(12, 2) default 0 NOT NULL comment '存款',
     serviceFee DECIMAL(8, 2)            NOT NULL,
-    customerId BIGINT                   NOT NULL,
     isDelete   tinyint        default 0 not null comment '是否删除'
 ) comment '账户' collate = utf8mb4_unicode_ci;
 ALTER TABLE checking
     ADD CONSTRAINT checking_account_fk FOREIGN KEY (acctNo) REFERENCES account (acctNo);
-ALTER TABLE checking
-    ADD CONSTRAINT checking_customer_fk FOREIGN KEY (customerId) REFERENCES customer (id);
+
 
 CREATE TABLE savings
 (
@@ -76,12 +74,10 @@ CREATE TABLE savings
     balance      DECIMAL(12, 2) default 0 NOT NULL comment '存款',
     isDelete     tinyint        default 0 not null comment '是否删除',
     interestRate DECIMAL(5, 2)            NOT NULL,
-    customerId   BIGINT                   NOT NULL
 );
 ALTER TABLE savings
     ADD CONSTRAINT savings_account_fk FOREIGN KEY (acctNo) REFERENCES account (acctNo);
-ALTER TABLE savings
-    ADD CONSTRAINT savings_customer_fk FOREIGN KEY (customerId) REFERENCES customer (id);
+
 
 CREATE TABLE loan
 (
@@ -91,13 +87,10 @@ CREATE TABLE loan
     months     INTEGER           NOT NULL,
     payment    DECIMAL(7, 2)     NOT NULL,
     loanType   VARCHAR(1)        NOT NULL,
-    customerId BIGINT            NOT NULL,
     isDelete   tinyint default 0 not null comment '是否删除'
 );
 ALTER TABLE loan
     ADD CONSTRAINT loan_account_fk FOREIGN KEY (acctNo) REFERENCES account (acctNo);
-ALTER TABLE loan
-    ADD CONSTRAINT loan_customer_fk FOREIGN KEY (customerId) REFERENCES customer (id);
 ALTER TABLE loan
     ADD CONSTRAINT ch_inh_loan CHECK ( loan.loanType IN ('H', 'P', 'S') );
 
