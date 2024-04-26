@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 public class StudentLoanVO implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Integer acctNo;
+    private Long acctNo;
     private String acctName;
     private String zipcode;
     private String unit;
