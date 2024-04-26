@@ -67,16 +67,12 @@
             <option name="tableUIInfoList">
               <list>
                 <TableUIInfo>
-                  <option name="className" value="Checking" />
-                  <option name="tableName" value="checking" />
+                  <option name="className" value="Home" />
+                  <option name="tableName" value="home" />
                 </TableUIInfo>
                 <TableUIInfo>
-                  <option name="className" value="Savings" />
-                  <option name="tableName" value="savings" />
-                </TableUIInfo>
-                <TableUIInfo>
-                  <option name="className" value="Loan" />
-                  <option name="tableName" value="loan" />
+                  <option name="className" value="Student" />
+                  <option name="tableName" value="student" />
                 </TableUIInfo>
               </list>
             </option>
