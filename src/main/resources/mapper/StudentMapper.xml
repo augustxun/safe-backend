@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.augustxun.safe.mapper.StudentMapper">
+
+    <resultMap id="BaseResultMap" type="com.augustxun.safe.model.entity.Student">
+            <id property="acctNo" column="acctNo" jdbcType="BIGINT"/>
+            <result property="universityName" column="universityName" jdbcType="VARCHAR"/>
+            <result property="stuId" column="stuId" jdbcType="VARCHAR"/>
+            <result property="gradMonth" column="gradMonth" jdbcType="DECIMAL"/>
+            <result property="gradYear" column="gradYear" jdbcType="DECIMAL"/>
+            <result property="isDelete" column="isDelete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        acctNo,universityName,stuId,
+        gradMonth,gradYear,isDelete
+    </sql>
+</mapper>
