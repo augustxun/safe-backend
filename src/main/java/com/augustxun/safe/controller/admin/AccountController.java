@@ -1,4 +1,5 @@
-package com.augustxun.safe.controller;
+package com.augustxun.safe.controller.admin;
+
 
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
@@ -30,8 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
 @RestController
-@RequestMapping("/account")
-@Api(tags = "AccountController")
+@RequestMapping("admin/account")
+@Api(tags = "账户管理接口")
 @Slf4j
 public class AccountController {
     @Resource
@@ -59,7 +60,7 @@ public class AccountController {
      * @param request
      * @return
      */
-    @Operation(summary = "创建账户接口（用户/管理员）")
+    @Operation(summary = "新建账户")
     @PostMapping("/add")
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
         if (accountAddRequest == null) {
@@ -128,7 +129,7 @@ public class AccountController {
      * @param request
      * @return
      */
-    @Operation(summary = "删除账户接口（用户/管理员）")
+    @Operation(summary = "删除账户")
     @PostMapping("/delete")
     public BaseResponse<Boolean> deleteAccount(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
         long id = Long.parseLong(deleteRequest.getId());
@@ -153,7 +154,7 @@ public class AccountController {
      * @param accountUpdateRequest
      * @return
      */
-    @Operation(summary = "更新账户接口（用户/管理员）")
+    @Operation(summary = "更新账户")
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateAccount(@RequestBody AccountUpdateRequest accountUpdateRequest) {
@@ -180,7 +181,7 @@ public class AccountController {
      * @param accountQueryRequest
      * @return
      */
-    @Operation(summary = "分页获取账户列表（仅管理员）")
+    @Operation(summary = "账户信息分页查询")
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Account>> listAccountByPage(@RequestBody AccountQueryRequest accountQueryRequest) {

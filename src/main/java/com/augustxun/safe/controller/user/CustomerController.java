@@ -1,4 +1,5 @@
-package com.augustxun.safe.controller;
+package com.augustxun.safe.controller.user;
+
 
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
@@ -27,10 +28,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-
 @RestController
-@RequestMapping("/customer")
-@Api(tags = "CustomerController")
+@RequestMapping("user/customer")
+@Api(tags = "C端-客户身份接口")
 @Slf4j
 public class CustomerController {
     @Resource
@@ -49,7 +49,7 @@ public class CustomerController {
      * @param request
      * @return
      */
-    @Operation(summary = "填写客户信息(用户）增加客户/管理员)")
+    @Operation(summary = "增加客户)")
     @PostMapping("/add")
     public BaseResponse<String> addCustomer(@RequestBody CustomerAddRequest customerAddRequest, HttpServletRequest request) {
         if (customerAddRequest == null) {
@@ -94,7 +94,7 @@ public class CustomerController {
      * @param request
      * @return
      */
-    @Operation(summary = "删除客户接口（仅管理员）")
+    @Operation(summary = "删除客户")
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteCustomer(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
@@ -117,7 +117,7 @@ public class CustomerController {
      * @param customerUpdateRequest
      * @return
      */
-    @Operation(summary = "更新客户接口")
+    @Operation(summary = "更新客户")
     @PostMapping("/update")
     public BaseResponse<Boolean> updateCustomer(@RequestBody CustomerUpdateRequest customerUpdateRequest) {
         long id = Long.parseLong(customerUpdateRequest.getId());
@@ -144,7 +144,7 @@ public class CustomerController {
      * @param customerQueryRequest
      * @return
      */
-    @Operation(summary = "分页获取客户列表（仅管理员）")
+    @Operation(summary = "客户信息分页查询")
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Customer>> listCustomerByPage(@RequestBody CustomerQueryRequest customerQueryRequest) {
