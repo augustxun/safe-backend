@@ -70,7 +70,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
         }
         String acctName = accountQueryRequest.getAcctName();
-        Long userId = Long.parseLong(accountQueryRequest.getUserId());
         String city = accountQueryRequest.getCity();
         String state = accountQueryRequest.getState();
         String type = accountQueryRequest.getType();
@@ -83,7 +82,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         queryWrapper.like(StringUtils.isNotBlank(city), "city", city);
         queryWrapper.like(StringUtils.isNotBlank(state), "state", state);
         queryWrapper.like(StringUtils.isNotBlank(type), "type", type);
-        queryWrapper.eq((userId != null) && (userId > 0), "userId", userId);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
     }
