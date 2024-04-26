@@ -31,7 +31,7 @@ public class SavingsServiceImpl extends ServiceImpl<SavingsMapper, Savings> impl
         savings.setAcctNo(newAccountNo);
         savings.setInterestRate(new BigDecimal("0.05"));
         savings.setBalance(new BigDecimal("0"));
-        this.save(savings); // 保存账户信息到 checking 表
+        this.save(savings); // 保存账户信息到 CheckingQueryRequest 表
         return ResultUtils.success("创建成功");
     }
 

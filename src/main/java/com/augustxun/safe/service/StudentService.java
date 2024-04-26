@@ -1,7 +1,11 @@
 package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.model.dto.home.HomeQueryRequest;
+import com.augustxun.safe.model.dto.student.StudentQueryRequest;
+import com.augustxun.safe.model.entity.Home;
 import com.augustxun.safe.model.entity.Student;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -16,4 +20,12 @@ public interface StudentService extends IService<Student> {
      * @return
      */
     public BaseResponse<String> addStudentAccount(Long acctNo);
+
+    /**
+     * Student账户查询条件
+     *
+     * @param studentQueryRequest
+     * @return
+     */
+    public QueryWrapper<Student> getQueryWrapper(StudentQueryRequest studentQueryRequest);
 }

@@ -2,6 +2,8 @@ package com.augustxun.safe.service.impl;
 
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.ResultUtils;
+import com.augustxun.safe.model.dto.student.StudentQueryRequest;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.augustxun.safe.model.entity.Student;
 import com.augustxun.safe.service.StudentService;
@@ -27,6 +29,11 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student>
         student.setGradMonth(12);
         this.save(student);
         return ResultUtils.success("创建成功");
+    }
+
+    @Override
+    public QueryWrapper<Student> getQueryWrapper(StudentQueryRequest studentQueryRequest) {
+        return null;
     }
 }
 

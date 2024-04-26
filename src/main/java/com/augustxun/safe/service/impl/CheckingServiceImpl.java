@@ -3,6 +3,7 @@ package com.augustxun.safe.service.impl;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.mapper.CheckingMapper;
+import com.augustxun.safe.model.dto.checking.CheckingQueryRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Checking;
 import com.augustxun.safe.model.vo.CheckingAccountVO;
@@ -19,7 +20,7 @@ import java.math.BigDecimal;
 
 /**
  * @author augustxun
- * @description 针对表【checking(账户)】的数据库操作Service实现
+ * @description 针对表【CheckingQueryRequest(账户)】的数据库操作Service实现
  * @createDate 2024-04-21 11:59:05
  */
 @Service
@@ -33,8 +34,8 @@ public class CheckingServiceImpl extends ServiceImpl<CheckingMapper, Checking>
         checking.setAcctNo(newAccountNo);
         checking.setServiceFee(new BigDecimal("300.00"));
         checking.setBalance(new BigDecimal("0"));
-        //        checking.setCustomerId(userCustomerId);
-        this.save(checking); // 保存账户信息到 checking 表
+        //        CheckingQueryRequest.setCustomerId(userCustomerId);
+        this.save(checking); // 保存账户信息到 CheckingQueryRequest 表
         return ResultUtils.success("创建成功");
     }
 
@@ -48,6 +49,11 @@ public class CheckingServiceImpl extends ServiceImpl<CheckingMapper, Checking>
             BeanUtils.copyProperties(checkingAccount, checkingAccountVO);
             return checkingAccountVO;
         } else return null;
+    }
+
+    @Override
+    public QueryWrapper<Checking> getQueryWrapper(CheckingQueryRequest checkingQueryRequest) {
+        return null;
     }
 }
 

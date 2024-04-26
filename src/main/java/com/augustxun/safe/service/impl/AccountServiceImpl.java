@@ -56,7 +56,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
         queryWrapper.like(StringUtils.isNotBlank(acctName), "acctName", acctName);
         queryWrapper.like(StringUtils.isNotBlank(city), "city", city);
-        queryWrapper.like(StringUtils.isNotBlank(state), "city", state);
+        queryWrapper.like(StringUtils.isNotBlank(state), "state", state);
         queryWrapper.like(StringUtils.isNotBlank(type), "type", type);
         queryWrapper.eq((userId != null) && (userId > 0), "userId", userId);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);

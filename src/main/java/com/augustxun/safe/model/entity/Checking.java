@@ -11,9 +11,9 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * @TableName checking
+ * @TableName CheckingQueryRequest
  */
-@TableName(value = "checking")
+@TableName(value = "CheckingQueryRequest")
 @Data
 public class Checking implements Serializable {
 

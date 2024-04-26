@@ -2,6 +2,7 @@ package com.augustxun.safe.service.impl;
 
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.ResultUtils;
+import com.augustxun.safe.model.dto.loan.LoanQueryRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.vo.LoanAccountVO;
 import com.augustxun.safe.service.AccountService;
@@ -38,10 +39,11 @@ public class LoanServiceImpl extends ServiceImpl<LoanMapper, Loan>
         Loan loan = new Loan();
         loan.setAcctNo(newAccountNo);
         loan.setAmount(new BigDecimal("0.0"));
+        loan.setPayment(new BigDecimal("30"));
         loan.setMonths(12);
         loan.setRate(new BigDecimal("0.05"));
         loan.setMonths(20);
-        this.save(loan); // 保存账户信息到 checking 表
+        this.save(loan); // 保存账户信息到 CheckingQueryRequest 表
         return ResultUtils.success("创建成功");
     }
 
@@ -55,6 +57,11 @@ public class LoanServiceImpl extends ServiceImpl<LoanMapper, Loan>
             BeanUtils.copyProperties(loan, loanAccountVO);
             return loanAccountVO;
         } else return null;
+    }
+
+    @Override
+    public QueryWrapper<Loan> getQueryWrapper(LoanQueryRequest loanQueryRequest) {
+        return null;
     }
 }
 

@@ -13,6 +13,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 public interface AccountService extends IService<Account> {
     /**
      * 校验参数
+     *
      * @param account
      * @param add
      */
@@ -20,13 +21,9 @@ public interface AccountService extends IService<Account> {
 
     /**
      * 账户查询条件
+     *
      * @param accountQueryRequest
      * @return
      */
     public QueryWrapper<Account> getQueryWrapper(AccountQueryRequest accountQueryRequest);
-
-
-
-
-
 }
