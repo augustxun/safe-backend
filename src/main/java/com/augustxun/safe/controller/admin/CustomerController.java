@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-@RestController
+@RestController("AdminCustomerController")
 @RequestMapping("admin/customer")
 @Api(tags = "客户管理接口")
 @Slf4j

@@ -26,7 +26,7 @@ import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
 
 @RestController
 @RequestMapping("/user")
-@Api(tags = "UserController")
+@Api(tags = "登陆状态相关接口")
 @Slf4j
 public class UserController {
 
@@ -116,7 +116,7 @@ public class UserController {
      * @param request
      * @return
      */
-    @Operation(summary = "获取当前登录用户")
+    @Operation(summary = "获取当前用户")
     @GetMapping("/get/login")
     public BaseResponse<LoginUserVO> getLoginUser(HttpServletRequest request) {
         User user = userService.getLoginUser(request);
@@ -124,7 +124,7 @@ public class UserController {
     }
 
 
-    @Operation(summary = "修改密码接口")
+    @Operation(summary = "修改密码")
     @PostMapping("/update/pwd")
     public BaseResponse<String> updatePassword(@RequestBody PasswordUpdateRequest passwordUpdateRequest, HttpServletRequest request) {
         if (passwordUpdateRequest == null) {

@@ -30,7 +30,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 
-@RestController
+@RestController("AdminAccountController")
 @RequestMapping("admin/account")
 @Api(tags = "账户管理接口")
 @Slf4j

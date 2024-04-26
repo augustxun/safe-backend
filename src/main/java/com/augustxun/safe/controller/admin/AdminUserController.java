@@ -30,7 +30,7 @@ import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
 @Slf4j
 @RestController
 @RequestMapping("admin/user")
-@Api("用户管理接口")
+@Api(tags = "用户管理接口")
 public class AdminUserController {
     @Resource
     private UserService userService;
@@ -72,7 +72,7 @@ public class AdminUserController {
      * @param request
      * @return
      */
-    @Operation(summary = "删除用户接口（管理员）")
+    @Operation(summary = "删除用户")
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
@@ -91,7 +91,7 @@ public class AdminUserController {
      * @param request
      * @return
      */
-    @Operation(summary = "更新用户接口")
+    @Operation(summary = "更新用户")
     @PostMapping("/update")
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest, HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
@@ -113,7 +113,7 @@ public class AdminUserController {
      * @param request
      * @return
      */
-    @Operation(summary = "根据 ID 查询用户接口(仅管理员)")
+    @Operation(summary = "根据 ID 查询用户接口")
     @GetMapping("/get")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(@RequestParam String userId, HttpServletRequest request) {

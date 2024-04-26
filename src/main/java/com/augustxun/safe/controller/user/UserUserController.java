@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 @Slf4j
 @RestController
 @RequestMapping("user/user")
-@Api("C端-用户管理接口")
+@Api(tags = "C端-用户管理接口")
 public class UserUserController {
     @Resource
     private UserService userService;

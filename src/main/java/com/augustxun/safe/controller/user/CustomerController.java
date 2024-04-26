@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("user/customer")
-@Api(tags = "C端-客户身份接口")
+@Api(tags = "C端-客户管理接口")
 @Slf4j
 public class CustomerController {
     @Resource

@@ -31,7 +31,7 @@ import java.math.BigDecimal;
 
 @RestController
 @RequestMapping("/account")
-@Api(tags = "C端-账户接口")
+@Api(tags = "C端-账户管理接口")
 @Slf4j
 public class AccountController {
     @Resource
