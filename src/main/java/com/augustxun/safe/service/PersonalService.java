@@ -23,12 +23,7 @@ public interface PersonalService extends IService<Personal> {
      * @return
      */
     public QueryWrapper<Personal> getQueryWrapper(PersonalQueryRequest personalQueryRequest);
-    /**
-     * 根据 userId 获取 PersonalLoan 账户视图
-     * @param userId
-     * @return
-     */
-    public PersonalLoanVO getPersonalLoanVO(Long userId);
+
 
     BaseResponse<String> addPersonalAccount(Long newAccountNo);
 }

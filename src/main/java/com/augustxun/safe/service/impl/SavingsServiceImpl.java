@@ -28,9 +28,6 @@ import java.math.BigDecimal;
  */
 @Service
 public class SavingsServiceImpl extends ServiceImpl<SavingsMapper, Savings> implements SavingsService {
-    @Resource
-    private AccountService accountService;
-
     @Override
     public BaseResponse<String> addSavingsAccount(Long newAccountNo) {
         Savings savings = new Savings();
@@ -40,19 +37,6 @@ public class SavingsServiceImpl extends ServiceImpl<SavingsMapper, Savings> impl
         this.save(savings); // 保存账户信息到 CheckingQueryRequest 表
         return ResultUtils.success("创建成功");
     }
-
-    @Override
-    public SavingsAccountVO getSavingsVO(Long userId) {
-        Account savingsAccount = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "S"));
-        if (savingsAccount != null) {
-            Savings savings = this.getById(savingsAccount.getAcctNo());
-            SavingsAccountVO savingsAccountVO = new SavingsAccountVO();
-            BeanUtils.copyProperties(savingsAccount, savingsAccountVO);
-            BeanUtils.copyProperties(savings, savingsAccountVO);
-            return savingsAccountVO;
-        } else return null;
-    }
-
     @Override
     public QueryWrapper<Savings> getQueryWrapper(SavingsQueryRequest savingsQueryRequest) {
         if (savingsQueryRequest == null) {

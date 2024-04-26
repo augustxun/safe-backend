@@ -14,6 +14,7 @@ import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
+import com.augustxun.safe.model.entity.Loan;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -41,24 +42,12 @@ import static com.augustxun.safe.constant.AccountConstants.*;
 public class AccountController {
     @Resource
     private AccountService accountService;
-    @Resource
-    private CheckingService checkingService;
 
-    @Resource
-    private SavingsService savingsService;
-
-    @Resource
-    private LoanService loanService;
 
     @Resource
     private UserService userService;
 
-    @Resource
-    private PersonalService personalService;
-    @Resource
-    private StudentService studentService;
-    @Resource
-    private HomeService homeService;
+
 
     // region 增删改查
 
@@ -73,6 +62,10 @@ public class AccountController {
     @PostMapping("/add")
     @Transactional
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        if (loginUser == null) {
+            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先登陆");
+        }
         if (accountAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -80,64 +73,45 @@ public class AccountController {
         Account account = new Account();
         BeanUtils.copyProperties(accountAddRequest, account);
         accountService.validAccount(account, true);
-        // 2.添加账户
+        // 2.创建账户
         String type = account.getType(); // 账户类型
-        Long userId = userService.getLoginUser(request).getId(); // 账户 userId
-        // 3.检查该类型账户是否已经被创建
+        // 2.1 检查该类型账户是否已经被创建
+        Long userId = Long.parseLong(accountAddRequest.getUserId());
+
+        if (userId == null) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR, "请指定账户所属用户");
+        }
+        User user = userService.getById(userId);
+        if (user == null) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR, "用户不存在");
+        }
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Account::getUserId, userId).eq(Account::getType, type);
         Account accountServiceOne = accountService.getOne(queryWrapper);
-        // 3.1 已被创建，返回失败
+        // 已被创建，操作失败
         if (accountServiceOne != null) {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "该用户已有" + type + "类账户，请勿重复创建");
         }
-        // 3.2 未被创建，创建账户
-        account.setUserId(userId);
+        // 未被创建，创建账户
+        account.setUserId(userId); // 保存指定的用户 UserId 到 Account 中
         accountService.save(account); // 保存账户信息到 account 表
-        Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C")).getAcctNo();
-        if (type.equals(CHECKING_ACCOUNT)) {
-            return checkingService.addCheckingAccount(newAccountNo);
-        } else if (type.equals(SAVINGS_ACCOUNT)) {
-            return savingsService.addSavingsAccount(newAccountNo);
-        } else {
-            String loanType = accountAddRequest.getLoanType();
-            if (StrUtil.isBlank(loanType)) {
-                return ResultUtils.error(ErrorCode.OPERATION_ERROR, "请选择贷款类型");
-            }
-            loanService.addLoanAccount(newAccountNo, loanType);
-            if (loanType.equals(STUDENT_LOAN)) {
-                return studentService.addStudentLoanAccount(newAccountNo);
-            } else if (loanType.equals(HOME_LOAN)) {
-                return homeService.addHomeAccount(newAccountNo);
-            } else {
-                return personalService.addPersonalAccount(newAccountNo);
-            }
-        }
+        Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", CHECKING_ACCOUNT)).getAcctNo();
+        return accountService.saveAccounts(newAccountNo, type, accountAddRequest);
     }
+
+
 
     /**
      * 删除
      *
      * @param deleteRequest
-     * @param request
      * @return
      */
     @Operation(summary = "删除账户")
     @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteAccount(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        long id = Long.parseLong(deleteRequest.getId());
-        if (deleteRequest == null || id <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        User user = userService.getLoginUser(request);
-        // 判断是否存在
-        Account oldAccount = accountService.getById(id);
-        ThrowUtils.throwIf(oldAccount == null, ErrorCode.NOT_FOUND_ERROR);
-        // 仅本人或管理员可删除
-        if (!oldAccount.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
-        }
-        boolean b = accountService.removeById(id);
+    @Transactional
+    public BaseResponse<Boolean> deleteAccount(@RequestBody DeleteRequest deleteRequest) {
+        boolean b = accountService.deleteAccounts(deleteRequest);
         return ResultUtils.success(b);
     }
 

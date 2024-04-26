@@ -21,7 +21,6 @@ public interface CheckingService extends IService<Checking> {
      * @return
      */
     public BaseResponse<String> addCheckingAccount(Long acctNo);
-    public CheckingAccountVO getCheckingVO(Long userId);
     /**
      * Checking账户查询条件
      *

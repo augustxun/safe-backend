@@ -30,10 +30,7 @@ import java.math.BigDecimal;
 @Service
 public class PersonalServiceImpl extends ServiceImpl<PersonalMapper, Personal>
     implements PersonalService{
-@Resource
-private AccountService accountService;
-@Resource
-private LoanService loanService;
+
     @Override
     public QueryWrapper<Personal> getQueryWrapper(PersonalQueryRequest personalQueryRequest) {
         if (personalQueryRequest == null) {
@@ -44,21 +41,6 @@ private LoanService loanService;
         QueryWrapper<Personal> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
-    }
-
-    @Override
-    public PersonalLoanVO getPersonalLoanVO(Long userId) {
-        Account account = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C"));
-        if (account != null) {
-            Long acctNo = account.getAcctNo();
-            Loan loan = loanService.getById(acctNo);
-            Personal personal = this.getById(acctNo);
-            PersonalLoanVO personalLoanVO = new PersonalLoanVO();
-            BeanUtils.copyProperties(account, personalLoanVO);
-            BeanUtils.copyProperties(loan, personalLoanVO);
-            BeanUtils.copyProperties(personal, personalLoanVO);
-            return personalLoanVO;
-        } else return null;
     }
 
     @Override

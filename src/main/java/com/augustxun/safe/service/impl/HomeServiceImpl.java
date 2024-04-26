@@ -9,7 +9,7 @@ import com.augustxun.safe.mapper.HomeMapper;
 import com.augustxun.safe.model.dto.home.HomeQueryRequest;
 import com.augustxun.safe.model.entity.*;
 import com.augustxun.safe.model.vo.HomeLoanVO;
-import com.augustxun.safe.model.vo.HomeLoanVO;
+import com.augustxun.safe.model.vo.PersonalLoanVO;
 import com.augustxun.safe.model.vo.StudentLoanVO;
 import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.HomeService;
@@ -30,10 +30,6 @@ import java.math.BigDecimal;
  */
 @Service
 public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements HomeService {
-    @Resource
-    private AccountService accountService;
-    @Resource
-    private LoanService loanService;
     @Override
     public BaseResponse<String> addHomeAccount(Long acctNo) {
         Home home = new Home();
@@ -45,7 +41,6 @@ public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements Ho
         this.save(home);
         return ResultUtils.success("创建成功");
     }
-
     @Override
     public QueryWrapper<Home> getQueryWrapper(HomeQueryRequest homeQueryRequest) {
         if (homeQueryRequest == null) {
@@ -56,22 +51,6 @@ public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements Ho
         QueryWrapper<Home> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
-    }
-    
-
-    @Override
-    public HomeLoanVO getHomeLoanVO(Long userId) {
-        Account account = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C"));
-        if (account != null) {
-            Long acctNo = account.getAcctNo();
-            Loan loan = loanService.getById(acctNo);
-            Home home = this.getById(acctNo);
-            HomeLoanVO homeLoanVO = new HomeLoanVO();
-            BeanUtils.copyProperties(account, homeLoanVO);
-            BeanUtils.copyProperties(loan, homeLoanVO);
-            BeanUtils.copyProperties(home, homeLoanVO);
-            return homeLoanVO;
-        } else return null;
     }
 }
 

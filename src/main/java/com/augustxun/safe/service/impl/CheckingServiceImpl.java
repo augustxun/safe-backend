@@ -32,8 +32,6 @@ import java.math.BigDecimal;
 @Service
 public class CheckingServiceImpl extends ServiceImpl<CheckingMapper, Checking>
         implements CheckingService {
-    @Resource
-    private AccountService accountService;
     @Override
     public BaseResponse<String> addCheckingAccount(Long newAccountNo) {
         Checking checking = new Checking();
@@ -44,19 +42,6 @@ public class CheckingServiceImpl extends ServiceImpl<CheckingMapper, Checking>
         this.save(checking); // 保存账户信息到 CheckingQueryRequest 表
         return ResultUtils.success("创建成功");
     }
-
-    @Override
-    public CheckingAccountVO getCheckingVO(Long userId) {
-        Account checkingAccount = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", "C"));
-        if (checkingAccount != null) {
-            Checking checking = this.getById(checkingAccount.getAcctNo());
-            CheckingAccountVO checkingAccountVO = new CheckingAccountVO();
-            BeanUtils.copyProperties(checking, checkingAccountVO);
-            BeanUtils.copyProperties(checkingAccount, checkingAccountVO);
-            return checkingAccountVO;
-        } else return null;
-    }
-
     @Override
     public QueryWrapper<Checking> getQueryWrapper(CheckingQueryRequest checkingQueryRequest) {
         if (checkingQueryRequest == null) {

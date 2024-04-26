@@ -43,7 +43,6 @@ public class LoanServiceImpl extends ServiceImpl<LoanMapper, Loan>
         this.save(loan); // 保存账户信息到 CheckingQueryRequest 表
         return ResultUtils.success("创建成功");
     }
-
     @Override
     public QueryWrapper<Loan> getQueryWrapper(LoanQueryRequest loanQueryRequest) {
         if (loanQueryRequest == null) {

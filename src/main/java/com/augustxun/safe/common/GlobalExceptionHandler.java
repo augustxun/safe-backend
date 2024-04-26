@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
         // 判断是否包含Duplicate entry 关键字
         if (e.getMessage().contains("Duplicate entry")) {
             String[] split = e.getMessage().split(" ");
-            String msg = split[2] + "已存在";
+            String msg = split[2] + "名称已存在";
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, msg);
         }
         return ResultUtils.error(ErrorCode.OPERATION_ERROR, "未知错误");

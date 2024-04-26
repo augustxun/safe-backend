@@ -13,7 +13,7 @@ import java.util.Date;
 /**
  * @TableName CheckingQueryRequest
  */
-@TableName(value = "CheckingQueryRequest")
+@TableName(value = "checking")
 @Data
 public class Checking implements Serializable {
 

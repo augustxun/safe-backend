@@ -35,5 +35,4 @@ public interface StudentService extends IService<Student> {
      * @param userId
      * @return
      */
-    public StudentLoanVO getStudentLoanVO(Long userId);
 }

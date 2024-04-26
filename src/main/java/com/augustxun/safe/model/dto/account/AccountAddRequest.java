@@ -22,6 +22,7 @@ public class AccountAddRequest implements Serializable {
     private String state;
     private String type;
     private String loanType;
+    private String userId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

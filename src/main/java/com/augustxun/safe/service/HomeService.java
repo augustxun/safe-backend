@@ -31,10 +31,4 @@ public interface HomeService extends IService<Home> {
      */
     public QueryWrapper<Home> getQueryWrapper(HomeQueryRequest homeQueryRequest);
 
-    /**
-     * 根据 userId 获取 HomeLoan 账户视图
-     * @param userId
-     * @return
-     */
-    public HomeLoanVO getHomeLoanVO(Long userId);
 }
