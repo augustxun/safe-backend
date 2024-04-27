@@ -36,7 +36,7 @@ public class CheckingServiceImpl extends ServiceImpl<CheckingMapper, Checking>
     public BaseResponse<String> addCheckingAccount(Long newAccountNo) {
         Checking checking = new Checking();
         checking.setAcctNo(newAccountNo);
-        checking.setServiceFee(new BigDecimal("300.00"));
+        checking.setServiceFee(new BigDecimal("3.00"));
         checking.setBalance(new BigDecimal("0"));
         //        CheckingQueryRequest.setCustomerId(userCustomerId);
         this.save(checking); // 保存账户信息到 CheckingQueryRequest 表

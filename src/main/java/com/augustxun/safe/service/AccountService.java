@@ -44,7 +44,7 @@ public interface AccountService extends IService<Account> {
 
     /**
      * 删除各级子表账户
-     * @param acctNo
+     * @param deleteRequest
      * @return
      */
     boolean deleteAccounts(DeleteRequest deleteRequest);

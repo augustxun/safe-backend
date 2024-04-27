@@ -117,7 +117,6 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         Account oldAccount = this.getById(acctNo);
         String type = oldAccount.getType();
         boolean b;
-        b = this.removeById(acctNo);
         if (type.equals(CHECKING_ACCOUNT)) {
             b = checkingService.removeById(acctNo);
         } else if (type.equals(SAVINGS_ACCOUNT)) {
@@ -125,13 +124,14 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         } else {
             Loan loan = loanService.getById(acctNo);
             String loanType = loan.getLoanType();
-            b = loanService.removeById(acctNo);
             if (loanType.equals(STUDENT_LOAN)) {
                 b = studentService.removeById(acctNo);
             } else if (loanType.equals(HOME_LOAN)) {
                 b = homeService.removeById(acctNo);
             } else b = personalService.removeById(acctNo);
+            b = loanService.removeById(acctNo);
         }
+        b = this.removeById(acctNo);
         return b;
     }
 
