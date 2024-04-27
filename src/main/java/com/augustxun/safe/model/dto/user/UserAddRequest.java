@@ -1,5 +1,6 @@
 package com.augustxun.safe.model.dto.user;
 
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
  *
  */
 @Data
+@ApiModel
 public class UserAddRequest implements Serializable {
 
     /**

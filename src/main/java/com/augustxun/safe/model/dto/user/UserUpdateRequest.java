@@ -1,6 +1,7 @@
 package com.augustxun.safe.model.dto.user;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 
  */
 @Data
+@ApiModel
 public class UserUpdateRequest implements Serializable {
     /**
      * id
