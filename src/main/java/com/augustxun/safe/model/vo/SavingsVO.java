@@ -22,9 +22,8 @@ public class SavingsVO {
     private String city;
     private String state;
     private Date dateOpened;
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long userId;
     // Saving 独有属性
     private BigDecimal balance;
     private BigDecimal interestRate;
+    private String userName;
 }

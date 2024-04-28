@@ -21,8 +21,6 @@ public class PersonalLoanVO implements Serializable {
     private String city;
     private String state;
     private Date dateOpened;
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long userId;
     // Loan 属性
     private BigDecimal rate;
     private BigDecimal amount;
@@ -32,9 +30,6 @@ public class PersonalLoanVO implements Serializable {
     private BigDecimal income;
     private BigDecimal creditScore;
     private String purpose;
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
+    //
+    private String userName;
 }

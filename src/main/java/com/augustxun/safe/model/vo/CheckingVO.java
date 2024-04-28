@@ -25,9 +25,9 @@ public class CheckingVO {
     private String city;
     private String state;
     private Date dateOpened;
-    @JsonSerialize(using = ToStringSerializer.class)
-    private Long userId;
     // Checking 独有属性
     private BigDecimal balance;
     private BigDecimal serviceFee;
+    private String userName;
+
 }

@@ -16,6 +16,7 @@
         <result property="state" column="state" jdbcType="VARCHAR"/>
         <result property="serviceFee" column="serviceFee" jdbcType="DECIMAL"/>
         <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+        <result property="userName" column="userName" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="SavingsVOMap" type="com.augustxun.safe.model.vo.SavingsVO">
         <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
@@ -27,6 +28,7 @@
         <result property="state" column="state" jdbcType="VARCHAR"/>
         <result property="interestRate" column="interestRate" jdbcType="DECIMAL"/>
         <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+        <result property="userName" column="userName" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="HomeLoanVOMap" type="com.augustxun.safe.model.vo.HomeLoanVO">
         <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
@@ -45,6 +47,7 @@
         <result property="yearlyPremium" column="yearlyPremium" jdbcType="DECIMAL"/>
         <result property="insureComId" column="InsureComId" jdbcType="BIGINT"/>
         <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+        <result property="userName" column="userName" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="StudentLoanVOMap" type="com.augustxun.safe.model.vo.StudentLoanVO">
         <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
@@ -63,6 +66,7 @@
         <result property="gradMonth" column="gradMonth" jdbcType="DECIMAL"/>
         <result property="gradYear" column="gradYear" jdbcType="DECIMAL"/>
         <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+        <result property="userName" column="userName" jdbcType="VARCHAR"/>
     </resultMap>
     <resultMap id="PersonalVOMap" type="com.augustxun.safe.model.vo.PersonalLoanVO">
         <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
@@ -80,6 +84,7 @@
         <result property="creditScore" column="creditScore" jdbcType="DECIMAL"/>
         <result property="purpose" column="purpose" jdbcType="VARCHAR"/>
         <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+        <result property="userName" column="userName" jdbcType="VARCHAR"/>
     </resultMap>
 
     <select id="listCheckingVO" resultMap="CheckingVOMap">
