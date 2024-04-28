@@ -25,7 +25,14 @@ public class UserVO implements Serializable {
      * 用户昵称
      */
     private String userName;
-
+    /**
+     * 用户账户名
+     */
+    private String userAccount;
+    /**
+     * 用户手机号
+     */
+    private String userPhone;
     /**
      * 用户头像
      */
