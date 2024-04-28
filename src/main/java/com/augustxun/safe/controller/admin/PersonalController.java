@@ -33,8 +33,8 @@ public class PersonalController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Personal>> listPersonalByPage(@RequestBody PersonalQueryRequest personalQueryRequest) {
-        long current = personalQueryRequest.getCurrent();
-        long size = personalQueryRequest.getPageSize();
+        int current = personalQueryRequest.getCurrent();
+        int size = personalQueryRequest.getPageSize();
         Page<Personal> personalPage = personalService.page(new Page<>(current, size), personalService.getQueryWrapper(personalQueryRequest));
         return ResultUtils.success(personalPage);
     }

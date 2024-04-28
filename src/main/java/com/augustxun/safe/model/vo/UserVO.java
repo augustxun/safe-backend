@@ -1,5 +1,7 @@
 package com.augustxun.safe.model.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,6 +18,7 @@ public class UserVO implements Serializable {
     /**
      * id
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
     /**
@@ -42,6 +45,9 @@ public class UserVO implements Serializable {
      * 创建时间
      */
     private Date createTime;
-
+    /**
+     * 用户名
+     */
+    CustomerVO customerVO;
     private static final long serialVersionUID = 1L;
 }

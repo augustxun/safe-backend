@@ -147,8 +147,8 @@ public class CustomerController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Customer>> listCustomerByPage(@RequestBody CustomerQueryRequest customerQueryRequest) {
-        long current = customerQueryRequest.getCurrent();
-        long size = customerQueryRequest.getPageSize();
+        int current = customerQueryRequest.getCurrent();
+        int size = customerQueryRequest.getPageSize();
         Page<Customer> customerPage = customerService.page(new Page<>(current, size), customerService.getQueryWrapper(customerQueryRequest));
         return ResultUtils.success(customerPage);
     }

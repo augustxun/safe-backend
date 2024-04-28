@@ -11,8 +11,13 @@ import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.model.dto.user.UserAddRequest;
 import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.dto.user.UserUpdateRequest;
+import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.CustomerVO;
+import com.augustxun.safe.model.vo.UserVO;
+import com.augustxun.safe.service.CustomerService;
 import com.augustxun.safe.service.UserService;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,6 +29,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
 
@@ -34,7 +42,8 @@ import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
 public class AdminUserController {
     @Resource
     private UserService userService;
-
+@Resource
+private CustomerService customerService;
     /**
      * 新建用户
      *
@@ -137,10 +146,57 @@ public class AdminUserController {
     @Operation(summary = "用户信息分页查询")
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest, HttpServletRequest request) {
-        long current = userQueryRequest.getCurrent();
-        long size = userQueryRequest.getPageSize();
+    public BaseResponse<Page<UserVO>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest, HttpServletRequest request) {
+        int current = userQueryRequest.getCurrent();
+        int size = userQueryRequest.getPageSize();
         Page<User> userPage = userService.page(new Page<>(current, size), userService.getQueryWrapper(userQueryRequest));
-        return ResultUtils.success(userPage);
+        List<UserVO> userVOList = userPage.getRecords().stream().map(item -> {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(item, userVO);
+            Long userId = item.getId();
+            QueryWrapper<Customer> queryWrapper = new QueryWrapper<Customer>().eq("userId", userId);
+            Customer customer = customerService.getOne(queryWrapper);
+            CustomerVO customerVO = CustomerVO.objToVo(customer);
+            userVO.setCustomerVO(customerVO);
+            return userVO;
+        }).collect(Collectors.toList());
+        return ResultUtils.success(getPages(current,size,userVOList));
     }
+
+    /**
+     * 分页函数
+     *
+     * @param currentPage 当前页数
+     * @param pageSize    每一页的数据条数
+     * @param list        要进行分页的数据列表
+     * @return 当前页要展示的数据
+     * @author pochettino
+     */
+    private Page<UserVO> getPages(Integer currentPage, Integer pageSize, List<UserVO> list) {
+        Page<UserVO> page = new Page<>();
+        if (list == null) {
+            return null;
+        }
+        int size = list.size();
+        if (pageSize > size) {
+            pageSize = size;
+        }
+        if (pageSize != 0) {
+            // 求出最大页数，防止currentPage越界
+            int maxPage = size % pageSize == 0 ? size / pageSize : size / pageSize + 1;
+            if (currentPage > maxPage) {
+                currentPage = maxPage;
+            }
+        }
+        // 当前页第一条数据的下标
+        int curIdx = currentPage > 1 ? (currentPage - 1) * pageSize : 0;
+        List<UserVO> pageList = new ArrayList<>();
+        // 将当前页的数据放进pageList
+        for (int i = 0; i < pageSize && curIdx + i < size; i++) {
+            pageList.add(list.get(curIdx + i));
+        }
+        page.setCurrent(currentPage).setSize(pageSize).setTotal(list.size()).setRecords(pageList);
+        return page;
+    }
+
 }

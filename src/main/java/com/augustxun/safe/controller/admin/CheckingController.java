@@ -33,8 +33,8 @@ public class CheckingController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Checking>> listCheckingByPage(@RequestBody CheckingQueryRequest checkingQueryRequest) {
-        long current = checkingQueryRequest.getCurrent();
-        long size = checkingQueryRequest.getPageSize();
+        int current = checkingQueryRequest.getCurrent();
+        int size = checkingQueryRequest.getPageSize();
         Page<Checking> checkingPage = checkingService.page(new Page<>(current, size), checkingService.getQueryWrapper(checkingQueryRequest));
         return ResultUtils.success(checkingPage);
     }

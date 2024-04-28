@@ -152,8 +152,8 @@ public class AccountController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Account>> listAccountByPage(@RequestBody AccountQueryRequest accountQueryRequest) {
-        long current = accountQueryRequest.getCurrent();
-        long size = accountQueryRequest.getPageSize();
+        int current = accountQueryRequest.getCurrent();
+        int size = accountQueryRequest.getPageSize();
         Page<Account> accountPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
         return ResultUtils.success(accountPage);
     }

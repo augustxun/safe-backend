@@ -33,8 +33,8 @@ public class StudentController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Student>> listStudentByPage(@RequestBody StudentQueryRequest studentQueryRequest) {
-        long current = studentQueryRequest.getCurrent();
-        long size = studentQueryRequest.getPageSize();
+        int current = studentQueryRequest.getCurrent();
+        int size = studentQueryRequest.getPageSize();
         Page<Student> studentPage = studentService.page(new Page<>(current, size), studentService.getQueryWrapper(studentQueryRequest));
         return ResultUtils.success(studentPage);
     }

@@ -33,8 +33,8 @@ public class SavingsController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Savings>> listSavingsByPage(@RequestBody SavingsQueryRequest savingsQueryRequest) {
-        long current = savingsQueryRequest.getCurrent();
-        long size = savingsQueryRequest.getPageSize();
+        int current = savingsQueryRequest.getCurrent();
+        int size = savingsQueryRequest.getPageSize();
         Page<Savings> savingsPage = savingsService.page(new Page<>(current, size), savingsService.getQueryWrapper(savingsQueryRequest));
         return ResultUtils.success(savingsPage);
     }

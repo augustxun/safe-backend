@@ -33,8 +33,8 @@ public class HomeController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Home>> listHomeByPage(@RequestBody HomeQueryRequest homeQueryRequest) {
-        long current = homeQueryRequest.getCurrent();
-        long size = homeQueryRequest.getPageSize();
+        int current = homeQueryRequest.getCurrent();
+        int size = homeQueryRequest.getPageSize();
         Page<Home> homePage = homeService.page(new Page<>(current, size), homeService.getQueryWrapper(homeQueryRequest));
         return ResultUtils.success(homePage);
     }

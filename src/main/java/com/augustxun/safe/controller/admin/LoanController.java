@@ -33,8 +33,8 @@ public class LoanController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Loan>> listLoanByPage(@RequestBody LoanQueryRequest loanQueryRequest) {
-        long current = loanQueryRequest.getCurrent();
-        long size = loanQueryRequest.getPageSize();
+        int current = loanQueryRequest.getCurrent();
+        int size = loanQueryRequest.getPageSize();
         Page<Loan> loanPage = loanService.page(new Page<>(current, size), loanService.getQueryWrapper(loanQueryRequest));
         return ResultUtils.success(loanPage);
     }

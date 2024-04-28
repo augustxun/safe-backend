@@ -13,7 +13,6 @@ import org.springframework.beans.BeanUtils;
 
 @Data
 public class CustomerVO {
-    @TableId(type = IdType.AUTO)
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
 
@@ -31,11 +30,6 @@ public class CustomerVO {
 
     private String state;
 
-    /**
-     * 是否删除
-     */
-    @TableLogic
-    private Integer isDelete;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
