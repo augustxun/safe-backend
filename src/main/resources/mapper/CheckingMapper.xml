@@ -7,7 +7,6 @@
     <resultMap id="BaseResultMap" type="com.augustxun.safe.model.entity.Checking">
             <id property="acctNo" column="acctNo" jdbcType="BIGINT"/>
             <result property="serviceFee" column="serviceFee" jdbcType="DECIMAL"/>
-            <result property="customerId" column="customerId" jdbcType="BIGINT"/>
     </resultMap>
 
     <sql id="Base_Column_List">

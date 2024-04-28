@@ -16,7 +16,6 @@ import java.util.Date;
 @Data
 @ApiModel
 public class AccountUpdateRequest implements Serializable {
-
     private String acctNo;
     private String acctName;
     private String zipcode;

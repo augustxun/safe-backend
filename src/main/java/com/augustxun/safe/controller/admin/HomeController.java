@@ -2,14 +2,20 @@ package com.augustxun.safe.controller.admin;
 
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.UserConstant;
+import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
+import com.augustxun.safe.model.dto.home.HomeUpdateRequest;
 import com.augustxun.safe.model.dto.home.HomeQueryRequest;
+import com.augustxun.safe.model.entity.Home;
 import com.augustxun.safe.model.entity.Home;
 import com.augustxun.safe.service.HomeService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +43,30 @@ public class HomeController {
         int size = homeQueryRequest.getPageSize();
         Page<Home> homePage = homeService.page(new Page<>(current, size), homeService.getQueryWrapper(homeQueryRequest));
         return ResultUtils.success(homePage);
+    }
+
+    /**
+     * 更新
+     *
+     * @param homeUpdateRequest
+     * @return
+     */
+    @Operation(summary = "更新Home表账户数据")
+    @PostMapping("/update")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> updateHome(@RequestBody HomeUpdateRequest homeUpdateRequest) {
+        long acctNo = Long.parseLong(homeUpdateRequest.getAcctNo());
+
+        if (homeUpdateRequest == null || acctNo <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Home home = new Home();
+        BeanUtils.copyProperties(homeUpdateRequest, home);
+        home.setAcctNo(acctNo);
+        // 判断是否存在
+        Home oldHome = homeService.getById(acctNo);
+        ThrowUtils.throwIf(oldHome == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = homeService.updateById(home);
+        return ResultUtils.success(result);
     }
 }

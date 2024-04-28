@@ -5,7 +5,7 @@ import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.dto.checking.CheckingQueryRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Checking;
-import com.augustxun.safe.model.vo.CheckingAccountVO;
+import com.augustxun.safe.model.vo.CheckingVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 

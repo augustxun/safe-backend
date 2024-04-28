@@ -2,14 +2,20 @@ package com.augustxun.safe.controller.admin;
 
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
+import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.UserConstant;
+import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
+import com.augustxun.safe.model.dto.savings.SavingsUpdateRequest;
 import com.augustxun.safe.model.dto.savings.SavingsQueryRequest;
+import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.service.SavingsService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +43,31 @@ public class SavingsController {
         int size = savingsQueryRequest.getPageSize();
         Page<Savings> savingsPage = savingsService.page(new Page<>(current, size), savingsService.getQueryWrapper(savingsQueryRequest));
         return ResultUtils.success(savingsPage);
+    }
+
+
+    /**
+     * 更新
+     *
+     * @param savingsUpdateRequest
+     * @return
+     */
+    @Operation(summary = "更新Savings表账户数据")
+    @PostMapping("/update")
+    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    public BaseResponse<Boolean> updateSavings(@RequestBody SavingsUpdateRequest savingsUpdateRequest) {
+        long acctNo = Long.parseLong(savingsUpdateRequest.getAcctNo());
+
+        if (savingsUpdateRequest == null || acctNo <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Savings savings = new Savings();
+        BeanUtils.copyProperties(savingsUpdateRequest, savings);
+        savings.setAcctNo(acctNo);
+        // 判断是否存在
+        Savings oldSavings = savingsService.getById(acctNo);
+        ThrowUtils.throwIf(oldSavings == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = savingsService.updateById(savings);
+        return ResultUtils.success(result);
     }
 }

@@ -10,12 +10,14 @@ import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.UserConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.exception.ThrowUtils;
+import com.augustxun.safe.mapper.AccountMapper;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Loan;
 import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.*;
 import com.augustxun.safe.service.*;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -25,10 +27,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +42,8 @@ public class AccountController {
     @Resource
     private AccountService accountService;
 
-
+@Resource
+private AccountMapper accountMapper;
     @Resource
     private UserService userService;
 
@@ -148,7 +148,7 @@ public class AccountController {
      * @param accountQueryRequest
      * @return
      */
-    @Operation(summary = "账户信息分页查询")
+    @Operation(summary = "Account表信息分页查询")
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Account>> listAccountByPage(@RequestBody AccountQueryRequest accountQueryRequest) {
@@ -157,7 +157,45 @@ public class AccountController {
         Page<Account> accountPage = accountService.page(new Page<>(current, size), accountService.getQueryWrapper(accountQueryRequest));
         return ResultUtils.success(accountPage);
     }
-
-
+    @Operation(summary = "CheckingVO信息分页查询")
+    @PostMapping("/list/checking/vo/page")
+    public BaseResponse<Page<CheckingVO>> getCheckingVOByPage(@RequestBody AccountQueryRequest accountQueryRequest){
+        int current = accountQueryRequest.getCurrent();
+        int pageSize = accountQueryRequest.getPageSize();
+        Page<CheckingVO> checkingVOPage = accountService.listCheckingVOByPage(current, pageSize);
+        return ResultUtils.success(checkingVOPage);
+    }
+    @Operation(summary = "SavingsVO信息分页查询")
+    @PostMapping("/list/saving/vo/page")
+    public BaseResponse<Page<SavingsVO>> getSavingsVOByPage(@RequestBody AccountQueryRequest accountQueryRequest){
+        int current = accountQueryRequest.getCurrent();
+        int pageSize = accountQueryRequest.getPageSize();
+        Page<SavingsVO> savingsVOPage = accountService.listSavingsVOByPage(current, pageSize);
+        return ResultUtils.success(savingsVOPage);
+    }
+    @Operation(summary = "HomeLoanVO信息分页查询")
+    @PostMapping("/list/home/loan/vo/page")
+    public BaseResponse<Page<HomeLoanVO>> getHomeLoanVOByPage(@RequestBody AccountQueryRequest accountQueryRequest){
+        int current = accountQueryRequest.getCurrent();
+        int pageSize = accountQueryRequest.getPageSize();
+        Page<HomeLoanVO> homeLoanVOPage = accountService.listHomeLoanVOByPage(current, pageSize);
+        return ResultUtils.success(homeLoanVOPage);
+    }
+    @Operation(summary = "StudentLoanVO信息分页查询")
+    @PostMapping("/list/student/loan/vo/page")
+    public BaseResponse<Page<StudentLoanVO>> getStudentLoanVOByPage(@RequestBody AccountQueryRequest accountQueryRequest){
+        int current = accountQueryRequest.getCurrent();
+        int pageSize = accountQueryRequest.getPageSize();
+        Page<StudentLoanVO> studentLoanVOPage = accountService.listStudentLoanVOByPage(current, pageSize);
+        return ResultUtils.success(studentLoanVOPage);
+    }
+    @Operation(summary = "PersonalLoanVO信息分页查询")
+    @PostMapping("/list/personal/loan/vo/page")
+    public BaseResponse<Page<PersonalLoanVO>> getPersonalLoanVOByPage(@RequestBody AccountQueryRequest accountQueryRequest){
+        int current = accountQueryRequest.getCurrent();
+        int pageSize = accountQueryRequest.getPageSize();
+        Page<PersonalLoanVO> checkingVOPage = accountService.listPersonalLoanVOByPage(current, pageSize);
+        return ResultUtils.success(checkingVOPage);
+    }
 
 }

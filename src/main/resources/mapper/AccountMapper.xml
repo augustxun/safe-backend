@@ -4,21 +4,131 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.augustxun.safe.mapper.AccountMapper">
 
-    <resultMap id="BaseResultMap" type="com.augustxun.safe.model.entity.Account">
-            <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
-            <result property="acctName" column="acctName" jdbcType="VARCHAR"/>
-            <result property="zipcode" column="zipcode" jdbcType="VARCHAR"/>
-            <result property="unit" column="unit" jdbcType="VARCHAR"/>
-            <result property="street" column="street" jdbcType="VARCHAR"/>
-            <result property="city" column="city" jdbcType="VARCHAR"/>
-            <result property="state" column="state" jdbcType="VARCHAR"/>
-            <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
-            <result property="type" column="type" jdbcType="VARCHAR"/>
+
+
+    <resultMap id="CheckingVOMap" type="com.augustxun.safe.model.vo.CheckingVO">
+        <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
+        <result property="acctName" column="acctName" jdbcType="VARCHAR"/>
+        <result property="zipcode" column="zipcode" jdbcType="VARCHAR"/>
+        <result property="unit" column="unit" jdbcType="VARCHAR"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="serviceFee" column="serviceFee" jdbcType="DECIMAL"/>
+        <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+    </resultMap>
+    <resultMap id="SavingsVOMap" type="com.augustxun.safe.model.vo.SavingsVO">
+        <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
+        <result property="acctName" column="acctName" jdbcType="VARCHAR"/>
+        <result property="zipcode" column="zipcode" jdbcType="VARCHAR"/>
+        <result property="unit" column="unit" jdbcType="VARCHAR"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="interestRate" column="interestRate" jdbcType="DECIMAL"/>
+        <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+    </resultMap>
+    <resultMap id="HomeLoanVOMap" type="com.augustxun.safe.model.vo.HomeLoanVO">
+        <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
+        <result property="acctName" column="acctName" jdbcType="VARCHAR"/>
+        <result property="zipcode" column="zipcode" jdbcType="VARCHAR"/>
+        <result property="unit" column="unit" jdbcType="VARCHAR"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="rate" column="rate" jdbcType="DECIMAL"/>
+        <result property="amount" column="amount" jdbcType="DECIMAL"/>
+        <result property="months" column="months" jdbcType="INTEGER"/>
+        <result property="payment" column="payment" jdbcType="DECIMAL"/>
+        <result property="builtYear" column="builtYear" jdbcType="DECIMAL"/>
+        <result property="insureAcctNo" column="insureAcctNo" jdbcType="DECIMAL"/>
+        <result property="yearlyPremium" column="yearlyPremium" jdbcType="DECIMAL"/>
+        <result property="insureComId" column="InsureComId" jdbcType="BIGINT"/>
+        <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+    </resultMap>
+    <resultMap id="StudentLoanVOMap" type="com.augustxun.safe.model.vo.StudentLoanVO">
+        <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
+        <result property="acctName" column="acctName" jdbcType="VARCHAR"/>
+        <result property="zipcode" column="zipcode" jdbcType="VARCHAR"/>
+        <result property="unit" column="unit" jdbcType="VARCHAR"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="rate" column="rate" jdbcType="DECIMAL"/>
+        <result property="amount" column="amount" jdbcType="DECIMAL"/>
+        <result property="months" column="months" jdbcType="INTEGER"/>
+        <result property="payment" column="payment" jdbcType="DECIMAL"/>
+        <result property="universityName" column="universityName" jdbcType="VARCHAR"/>
+        <result property="stuId" column="stuId" jdbcType="VARCHAR"/>
+        <result property="gradMonth" column="gradMonth" jdbcType="DECIMAL"/>
+        <result property="gradYear" column="gradYear" jdbcType="DECIMAL"/>
+        <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
+    </resultMap>
+    <resultMap id="PersonalVOMap" type="com.augustxun.safe.model.vo.PersonalLoanVO">
+        <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
+        <result property="acctName" column="acctName" jdbcType="VARCHAR"/>
+        <result property="zipcode" column="zipcode" jdbcType="VARCHAR"/>
+        <result property="unit" column="unit" jdbcType="VARCHAR"/>
+        <result property="street" column="street" jdbcType="VARCHAR"/>
+        <result property="city" column="city" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="VARCHAR"/>
+        <result property="rate" column="rate" jdbcType="DECIMAL"/>
+        <result property="amount" column="amount" jdbcType="DECIMAL"/>
+        <result property="months" column="months" jdbcType="INTEGER"/>
+        <result property="payment" column="payment" jdbcType="DECIMAL"/>
+        <result property="income" column="income" jdbcType="DECIMAL"/>
+        <result property="creditScore" column="creditScore" jdbcType="DECIMAL"/>
+        <result property="purpose" column="purpose" jdbcType="VARCHAR"/>
+        <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        acctNo,acctname,azipcode,
-        unit,street,city,
-        state,dateopened,type
-    </sql>
+    <select id="listCheckingVO" resultMap="CheckingVOMap">
+        SELECT * FROM safe_db.account a,
+             safe_db.checking c,
+             safe_db.user u
+        where a.acctNo = c.acctNo
+          AND a.userId = u.id
+    </select>
+
+    <select id="listSavingsVO" resultMap="SavingsVOMap">
+        SELECT * FROM safe_db.account a,
+                      safe_db.savings s,
+                      safe_db.user u
+        where a.acctNo = s.acctNo
+          AND a.userId = u.id
+    </select>
+
+    <select id="listHomeLoanVO" resultMap="HomeLoanVOMap">
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.loan l,
+             safe_db.home h,
+             safe_db.user u
+        where a.acctNo = l.acctNo
+          AND l.acctNo = h.acctNo
+          AND a.userId = u.id
+    </select>
+
+    <select id="listStudentLoanVO" resultMap="StudentLoanVOMap">
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.loan l,
+             safe_db.student s,
+             safe_db.user u
+        where a.acctNo = l.acctNo
+          AND l.acctNo = s.acctNo
+          AND a.userId = u.id
+    </select>
+    <select id="listPersonalLoanVO" resultMap="PersonalVOMap">
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.loan l,
+             safe_db.personal p,
+             safe_db.user u
+        where a.acctNo = l.acctNo
+          AND l.acctNo = p.acctNo
+          AND a.userId = u.id
+    </select>
+
+
 </mapper>

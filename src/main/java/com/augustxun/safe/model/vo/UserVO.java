@@ -51,6 +51,7 @@ public class UserVO implements Serializable {
     /**
      * 创建时间
      */
+    @JsonSerialize(using = ToStringSerializer.class)
     private Date createTime;
     /**
      * 用户名

@@ -56,6 +56,7 @@ public class User implements Serializable {
     /**
      * 更新时间
      */
+
     private Date updateTime;
     /**
      * 客户主键

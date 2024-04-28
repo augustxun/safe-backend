@@ -9,7 +9,7 @@ import com.augustxun.safe.mapper.SavingsMapper;
 import com.augustxun.safe.model.dto.savings.SavingsQueryRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Savings;
-import com.augustxun.safe.model.vo.SavingsAccountVO;
+import com.augustxun.safe.model.vo.SavingsVO;
 import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.SavingsService;
 import com.augustxun.safe.utils.SqlUtils;

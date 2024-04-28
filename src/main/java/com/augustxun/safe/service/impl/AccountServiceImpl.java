@@ -13,8 +13,10 @@ import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.entity.*;
 import com.augustxun.safe.model.vo.*;
 import com.augustxun.safe.service.*;
+import com.augustxun.safe.utils.PageUtils;
 import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -46,6 +48,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     private StudentService studentService;
     @Resource
     private HomeService homeService;
+    @Resource
+    private AccountMapper accountMapper;
 
     public void validAccount(Account account, boolean add) {
         if (account == null) {
@@ -136,26 +140,26 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
-    public CheckingAccountVO getCheckingVO(Long userId) {
+    public CheckingVO getCheckingVO(Long userId) {
         Account checkingAccount = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", CHECKING_ACCOUNT));
         if (checkingAccount != null) {
             Checking checking = checkingService.getById(checkingAccount.getAcctNo());
-            CheckingAccountVO checkingAccountVO = new CheckingAccountVO();
-            BeanUtils.copyProperties(checking, checkingAccountVO);
-            BeanUtils.copyProperties(checkingAccount, checkingAccountVO);
-            return checkingAccountVO;
+            CheckingVO CheckingVO = new CheckingVO();
+            BeanUtils.copyProperties(checking, CheckingVO);
+            BeanUtils.copyProperties(checkingAccount, CheckingVO);
+            return CheckingVO;
         } else return null;
     }
 
     @Override
-    public SavingsAccountVO getSavingsVO(Long userId) {
+    public SavingsVO getSavingsVO(Long userId) {
         Account savingsAccount = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", SAVINGS_ACCOUNT));
         if (savingsAccount != null) {
             Savings savings = savingsService.getById(savingsAccount.getAcctNo());
-            SavingsAccountVO savingsAccountVO = new SavingsAccountVO();
-            BeanUtils.copyProperties(savingsAccount, savingsAccountVO);
-            BeanUtils.copyProperties(savings, savingsAccountVO);
-            return savingsAccountVO;
+            SavingsVO SavingsVO = new SavingsVO();
+            BeanUtils.copyProperties(savingsAccount, SavingsVO);
+            BeanUtils.copyProperties(savings, SavingsVO);
+            return SavingsVO;
         } else return null;
     }
 
@@ -211,11 +215,11 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             String type = account.getType();
             Long userId = account.getUserId();
             if (type.equals(CHECKING_ACCOUNT)) {
-                CheckingAccountVO checkingAccountVO = getCheckingVO(userId);
-                accountVOList.add(checkingAccountVO);
+                CheckingVO CheckingVO = getCheckingVO(userId);
+                accountVOList.add(CheckingVO);
             } else if (type.equals(SAVINGS_ACCOUNT)) {
-                SavingsAccountVO savingsAccountVO = getSavingsVO(userId);
-                accountVOList.add(savingsAccountVO);
+                SavingsVO SavingsVO = getSavingsVO(userId);
+                accountVOList.add(SavingsVO);
             } else {
                 Long acctNo = account.getAcctNo();
                 String loanType = loanService.getById(acctNo).getLoanType();
@@ -251,6 +255,38 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             }
         }
     }
+
+    @Override
+    public Page<CheckingVO> listCheckingVOByPage(int current, int pageSize) {
+        List<CheckingVO> checkingVOList = accountMapper.listCheckingVO();
+        return PageUtils.getPages(current, pageSize, checkingVOList);
+    }
+
+    @Override
+    public Page<SavingsVO> listSavingsVOByPage(int current, int pageSize) {
+        List<SavingsVO> savingsVOList = accountMapper.listSavingsVO();
+        return PageUtils.getPages(current, pageSize, savingsVOList);
+    }
+
+    @Override
+    public Page<HomeLoanVO> listHomeLoanVOByPage(int current, int pageSize) {
+        List<HomeLoanVO> homeLoanVOList = accountMapper.listHomeLoanVO();
+        return PageUtils.getPages(current, pageSize, homeLoanVOList);
+    }
+
+    @Override
+    public Page<StudentLoanVO> listStudentLoanVOByPage(int current, int pageSize) {
+        List<StudentLoanVO> studentLoanVOList = accountMapper.listStudentLoanVO();
+        return PageUtils.getPages(current, pageSize, studentLoanVOList);
+    }
+
+    @Override
+    public Page<PersonalLoanVO> listPersonalLoanVOByPage(int current, int pageSize) {
+        List<PersonalLoanVO> personalLoanVOList = accountMapper.listPersonalLoanVO();
+        return PageUtils.getPages(current, pageSize, personalLoanVOList);
+    }
+
+
 }
 
 

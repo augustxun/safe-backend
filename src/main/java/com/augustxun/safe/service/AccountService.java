@@ -7,6 +7,7 @@ import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -53,14 +54,14 @@ public interface AccountService extends IService<Account> {
      * @param userId
      * @return
      */
-    public CheckingAccountVO getCheckingVO(Long userId);
+    public CheckingVO getCheckingVO(Long userId);
 
     /**
      * 获取 Savings 账户视图
      * @param userId
      * @return
      */
-    public SavingsAccountVO getSavingsVO(Long userId);
+    public SavingsVO getSavingsVO(Long userId);
 
     /**
      * 获取 HomeLoan 账户视图
@@ -97,4 +98,15 @@ public interface AccountService extends IService<Account> {
      * @return
      */
     Object getAccountVO(Long acctNo,Long userId, String type);
+
+
+    Page<CheckingVO> listCheckingVOByPage(int current, int pageSize);
+
+    Page<SavingsVO> listSavingsVOByPage(int current, int pageSize);
+
+    Page<HomeLoanVO> listHomeLoanVOByPage(int current, int pageSize);
+
+    Page<StudentLoanVO> listStudentLoanVOByPage(int current, int pageSize);
+
+    Page<PersonalLoanVO> listPersonalLoanVOByPage(int current, int pageSize);
 }
