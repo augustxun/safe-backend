@@ -158,6 +158,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return savingsAccountVO;
         } else return null;
     }
+
     @Override
     public StudentLoanVO getStudentLoanVO(Long userId) {
         Account account = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", LOAN_ACCOUNT));
@@ -172,6 +173,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return studentLoanVO;
         } else return null;
     }
+
     @Override
     public HomeLoanVO getHomeLoanVO(Long userId) {
         Account account = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", LOAN_ACCOUNT));
@@ -186,6 +188,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return homeLoanVO;
         } else return null;
     }
+
     @Override
     public PersonalLoanVO getPersonalLoanVO(Long userId) {
         Account account = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", LOAN_ACCOUNT));
@@ -200,6 +203,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return personalLoanVO;
         } else return null;
     }
+
     @Override
     public List<Object> getAccountVOList(List<Account> list) {
         List<Object> accountVOList = new ArrayList<>();
@@ -228,6 +232,24 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             }
         }
         return accountVOList;
+    }
+
+    @Override
+    public Object getAccountVO(Long acctNo, Long userId, String type) {
+        if (type.equals(CHECKING_ACCOUNT)) {
+            return getCheckingVO(userId);
+        } else if (type.equals(SAVINGS_ACCOUNT)) {
+            return getSavingsVO(userId);
+        } else {
+            String loanType = loanService.getById(acctNo).getLoanType();
+            if (loanType.equals(PERSONAL_LOAN)) {
+                return getPersonalLoanVO(userId);
+            } else if (loanType.equals(STUDENT_LOAN)) {
+                return getStudentLoanVO(userId);
+            } else {
+                return getHomeLoanVO(userId);
+            }
+        }
     }
 }
 

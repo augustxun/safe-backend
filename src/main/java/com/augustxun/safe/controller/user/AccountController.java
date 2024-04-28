@@ -9,6 +9,7 @@ import com.augustxun.safe.constant.UserConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
+import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.User;
@@ -56,7 +57,7 @@ public class AccountController {
             return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先登陆");
         }
         Long customerId = loginUser.getCustomerId();
-        if(customerId == null) {
+        if (customerId == null) {
             return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先填写个人信息");
         }
         if (accountAddRequest == null) {
@@ -142,5 +143,29 @@ public class AccountController {
         List<Account> list = accountService.list(lambdaQueryWrapper);
         List<Object> accountVOList = accountService.getAccountVOList(list);
         return ResultUtils.success(accountVOList);
+    }
+
+    /**
+     * 用户端根据 acctNo 获取账户数据视图
+     *
+     * @param acctId
+     * @return
+     */
+    @Operation(summary = "根据 acctNo 获取账号VO")
+    @GetMapping("get/vo")
+    public BaseResponse<Object> getAccountVO(String acctId) {
+
+        long acctNo = Long.parseLong(acctId);
+        Account account = accountService.getById(acctNo);
+        if (account == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "当前账户不存在");
+        }
+        String type = account.getType();
+        Long userId = account.getUserId();
+        Object accountVO = accountService.getAccountVO(acctNo, userId, type);
+        if (accountVO == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "查询失败");
+        }
+        return ResultUtils.success(accountVO);
     }
 }

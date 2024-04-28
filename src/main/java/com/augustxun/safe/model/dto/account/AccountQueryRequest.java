@@ -9,6 +9,7 @@ import java.io.Serializable;
 @Data
 @ApiModel
 public class AccountQueryRequest extends PageRequest implements Serializable {
+    private String acctNo;
     private String acctName;
     private String city;
     private String state;

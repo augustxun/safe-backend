@@ -84,9 +84,17 @@ public interface AccountService extends IService<Account> {
     public PersonalLoanVO getPersonalLoanVO(Long userId);
 
     /**
-     * 获取账户视图列表
+     * 获取账户 VO 视图列表
      * @param list
      * @param list
      */
     List<Object> getAccountVOList(List<Account> list);
+
+    /**
+     *
+     * @param userId
+     * @param type
+     * @return
+     */
+    Object getAccountVO(Long acctNo,Long userId, String type);
 }
