@@ -14,8 +14,6 @@ import java.util.Date;
 
 @Data
 public class CheckingVO {
-
-    private static final long serialVersionUID = 1L;
     @JsonSerialize(using = ToStringSerializer.class)
     private Long acctNo;
     private String acctName;
@@ -29,5 +27,4 @@ public class CheckingVO {
     private BigDecimal balance;
     private BigDecimal serviceFee;
     private String userName;
-
 }

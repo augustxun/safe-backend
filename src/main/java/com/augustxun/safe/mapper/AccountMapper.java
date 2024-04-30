@@ -1,6 +1,8 @@
 package com.augustxun.safe.mapper;
 
 import com.augustxun.safe.model.entity.Account;
+import com.augustxun.safe.model.entity.Personal;
+import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.model.vo.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -13,11 +15,17 @@ import java.util.List;
 * @Entity com.augustxun.safe.model.entity.Account
 */
 public interface AccountMapper extends BaseMapper<Account> {
+    CheckingVO selectCheckingVOById(Long id);
+    SavingsVO selectSavingsVOById(Long id);
+    HomeLoanVO selectHomeLoanVOById(Long id);
+    StudentLoanVO selectStudentLoanVOById(Long id);
+    PersonalLoanVO selectPersonalLoanVOById(Long id);
     List<CheckingVO> listCheckingVO();
     List<SavingsVO> listSavingsVO();
     List<HomeLoanVO> listHomeLoanVO();
     List<StudentLoanVO> listStudentLoanVO();
     List<PersonalLoanVO> listPersonalLoanVO();
+
 }
 
 

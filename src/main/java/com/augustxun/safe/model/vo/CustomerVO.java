@@ -1,43 +1,25 @@
 package com.augustxun.safe.model.vo;
 
 import com.augustxun.safe.model.entity.Customer;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
-import org.elasticsearch.search.aggregations.bucket.terms.LongTerms;
 import org.springframework.beans.BeanUtils;
 
 @Data
 public class CustomerVO {
     @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
-
     private String lastName;
-
     private String firstName;
-
     private String zipcode;
-
     private String unit;
-
     private String street;
-
     private String city;
-
     private String state;
 
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
-
     public static CustomerVO objToVo(Customer customer) {
-        if (customer == null) {
-            return null;
-        }
+        if (customer == null) return null;
         CustomerVO customerVO = new CustomerVO();
         BeanUtils.copyProperties(customer, customerVO);
         return customerVO;

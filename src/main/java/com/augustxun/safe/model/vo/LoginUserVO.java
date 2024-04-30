@@ -11,7 +11,6 @@ import java.util.Date;
 public class LoginUserVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    CustomerVO customerInfo;
     /**
      * 用户 id
      */
@@ -41,4 +40,14 @@ public class LoginUserVO implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long customerId;
+    private String lastName;
+    private String firstName;
+    private String zipcode;
+    private String unit;
+    private String street;
+    private String city;
+    private String state;
 }

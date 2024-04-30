@@ -102,10 +102,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             }
             // 2. 加密
             String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
-            // 3. 分配 accessKey, secretKey
-            String accessKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(5));
-            String secretKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(8));
-            // 4. 插入数据
+            // 3. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
@@ -194,7 +191,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         CustomerVO customerVO = CustomerVO.objToVo(customer);
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
-        loginUserVO.setCustomerInfo(customerVO);
+        BeanUtils.copyProperties(customerVO, loginUserVO);
+        loginUserVO.setId(user.getId());
+        loginUserVO.setCustomerId(customerVO.getId());
         return loginUserVO;
     }
 

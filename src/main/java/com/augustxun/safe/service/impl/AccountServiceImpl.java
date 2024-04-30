@@ -10,7 +10,10 @@ import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.mapper.AccountMapper;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountQueryRequest;
-import com.augustxun.safe.model.entity.*;
+import com.augustxun.safe.model.entity.Account;
+import com.augustxun.safe.model.entity.Checking;
+import com.augustxun.safe.model.entity.Loan;
+import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.model.vo.*;
 import com.augustxun.safe.service.*;
 import com.augustxun.safe.utils.PageUtils;
@@ -141,71 +144,27 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     @Override
     public CheckingVO getCheckingVO(Long userId) {
-        Account checkingAccount = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", CHECKING_ACCOUNT));
-        if (checkingAccount != null) {
-            Checking checking = checkingService.getById(checkingAccount.getAcctNo());
-            CheckingVO CheckingVO = new CheckingVO();
-            BeanUtils.copyProperties(checking, CheckingVO);
-            BeanUtils.copyProperties(checkingAccount, CheckingVO);
-            return CheckingVO;
-        } else return null;
+        return accountMapper.selectCheckingVOById(userId);
     }
 
     @Override
     public SavingsVO getSavingsVO(Long userId) {
-        Account savingsAccount = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", SAVINGS_ACCOUNT));
-        if (savingsAccount != null) {
-            Savings savings = savingsService.getById(savingsAccount.getAcctNo());
-            SavingsVO SavingsVO = new SavingsVO();
-            BeanUtils.copyProperties(savingsAccount, SavingsVO);
-            BeanUtils.copyProperties(savings, SavingsVO);
-            return SavingsVO;
-        } else return null;
+        return accountMapper.selectSavingsVOById(userId);
     }
 
     @Override
     public StudentLoanVO getStudentLoanVO(Long userId) {
-        Account account = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", LOAN_ACCOUNT));
-        if (account != null) {
-            Long acctNo = account.getAcctNo();
-            Loan loan = loanService.getById(acctNo);
-            Student student = studentService.getById(acctNo);
-            StudentLoanVO studentLoanVO = new StudentLoanVO();
-            BeanUtils.copyProperties(account, studentLoanVO);
-            BeanUtils.copyProperties(loan, studentLoanVO);
-            BeanUtils.copyProperties(student, studentLoanVO);
-            return studentLoanVO;
-        } else return null;
+        return accountMapper.selectStudentLoanVOById(userId);
     }
 
     @Override
     public HomeLoanVO getHomeLoanVO(Long userId) {
-        Account account = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", LOAN_ACCOUNT));
-        if (account != null) {
-            Long acctNo = account.getAcctNo();
-            Loan loan = loanService.getById(acctNo);
-            Home home = homeService.getById(acctNo);
-            HomeLoanVO homeLoanVO = new HomeLoanVO();
-            BeanUtils.copyProperties(account, homeLoanVO);
-            BeanUtils.copyProperties(loan, homeLoanVO);
-            BeanUtils.copyProperties(home, homeLoanVO);
-            return homeLoanVO;
-        } else return null;
+        return accountMapper.selectHomeLoanVOById(userId);
     }
 
     @Override
     public PersonalLoanVO getPersonalLoanVO(Long userId) {
-        Account account = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", LOAN_ACCOUNT));
-        if (account != null) {
-            Long acctNo = account.getAcctNo();
-            Loan loan = loanService.getById(acctNo);
-            Personal personal = personalService.getById(acctNo);
-            PersonalLoanVO personalLoanVO = new PersonalLoanVO();
-            BeanUtils.copyProperties(account, personalLoanVO);
-            BeanUtils.copyProperties(loan, personalLoanVO);
-            BeanUtils.copyProperties(personal, personalLoanVO);
-            return personalLoanVO;
-        } else return null;
+        return accountMapper.selectPersonalLoanVOById(userId);
     }
 
     @Override

@@ -138,7 +138,7 @@ public class AccountController {
     @GetMapping("/list/vo")
     public BaseResponse<List<Object>> getAccountVOList(HttpServletRequest httpServletRequest) {
         Long userId = userService.getLoginUser(httpServletRequest).getId();
-        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper();
+        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Account::getUserId, userId);
         List<Account> list = accountService.list(lambdaQueryWrapper);
         List<Object> accountVOList = accountService.getAccountVOList(list);

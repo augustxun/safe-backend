@@ -1,7 +1,10 @@
 package com.augustxun.safe.mapper;
 
 import com.augustxun.safe.model.entity.User;
+import com.augustxun.safe.model.vo.UserVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
  * @author augustxun
@@ -10,6 +13,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Entity generator.domain.User
  */
 public interface UserMapper extends BaseMapper<User> {
+    List<UserVO> selectUserVO();
 
 }
 

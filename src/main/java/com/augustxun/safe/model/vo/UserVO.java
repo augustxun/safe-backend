@@ -51,11 +51,19 @@ public class UserVO implements Serializable {
     /**
      * 创建时间
      */
-    @JsonSerialize(using = ToStringSerializer.class)
     private Date createTime;
     /**
-     * 用户名
+     * 客户资料 Customer 属性
      */
-    CustomerVO customerVO;
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long customerId;
+    private String lastName;
+    private String firstName;
+    private String zipcode;
+    private String unit;
+    private String street;
+    private String city;
+    private String state;
+
     private static final long serialVersionUID = 1L;
 }

@@ -42,15 +42,12 @@ public class AccountController {
     @Resource
     private AccountService accountService;
 
-@Resource
-private AccountMapper accountMapper;
     @Resource
     private UserService userService;
 
 
 
     // region 增删改查
-
     /**
      * 管理员端新建账户
      *
@@ -98,9 +95,6 @@ private AccountMapper accountMapper;
         Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", CHECKING_ACCOUNT)).getAcctNo();
         return accountService.saveAccounts(newAccountNo, type, accountAddRequest);
     }
-
-
-
     /**
      * 删除
      *

@@ -8,17 +8,15 @@ import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.UserConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.exception.ThrowUtils;
+import com.augustxun.safe.mapper.UserMapper;
 import com.augustxun.safe.model.dto.user.UserAddRequest;
 import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.dto.user.UserUpdateRequest;
-import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
-import com.augustxun.safe.model.vo.CustomerVO;
 import com.augustxun.safe.model.vo.UserVO;
 import com.augustxun.safe.service.CustomerService;
 import com.augustxun.safe.service.UserService;
 import com.augustxun.safe.utils.PageUtils;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,9 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
 
@@ -43,8 +39,11 @@ import static com.augustxun.safe.service.impl.UserServiceImpl.SALT;
 public class AdminUserController {
     @Resource
     private UserService userService;
-@Resource
-private CustomerService customerService;
+    @Resource
+    private UserMapper userMapper;
+    @Resource
+    private CustomerService customerService;
+
     /**
      * 新建用户
      *
@@ -150,20 +149,7 @@ private CustomerService customerService;
     public BaseResponse<Page<UserVO>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest, HttpServletRequest request) {
         int current = userQueryRequest.getCurrent();
         int size = userQueryRequest.getPageSize();
-        Page<User> userPage = userService.page(new Page<>(current, size), userService.getQueryWrapper(userQueryRequest));
-        List<UserVO> userVOList = userPage.getRecords().stream().map(item -> {
-            UserVO userVO = new UserVO();
-            BeanUtils.copyProperties(item, userVO);
-            Long userId = item.getId();
-            QueryWrapper<Customer> queryWrapper = new QueryWrapper<Customer>().eq("userId", userId);
-            Customer customer = customerService.getOne(queryWrapper);
-            CustomerVO customerVO = CustomerVO.objToVo(customer);
-            userVO.setCustomerVO(customerVO);
-            return userVO;
-        }).collect(Collectors.toList());
-        return ResultUtils.success(PageUtils.getPages(current,size,userVOList));
+        List<UserVO> userVOList = userMapper.selectUserVO();
+        return ResultUtils.success(PageUtils.getPages(current, size, userVOList));
     }
-
-
-
 }

@@ -86,15 +86,6 @@
         <result property="dateOpened" column="dateOpened" jdbcType="DATE"/>
         <result property="userName" column="userName" jdbcType="VARCHAR"/>
     </resultMap>
-
-    <select id="listCheckingVO" resultMap="CheckingVOMap">
-        SELECT * FROM safe_db.account a,
-             safe_db.checking c,
-             safe_db.user u
-        where a.acctNo = c.acctNo
-          AND a.userId = u.id
-    </select>
-
     <select id="listSavingsVO" resultMap="SavingsVOMap">
         SELECT * FROM safe_db.account a,
                       safe_db.savings s,
@@ -135,5 +126,45 @@
           AND a.userId = u.id
     </select>
 
-
+    <select id="listCheckingVO" resultMap="CheckingVOMap">
+        SELECT * FROM safe_db.account a,
+                      safe_db.checking c,
+                      safe_db.user u
+        where a.acctNo = c.acctNo
+          AND a.userId = u.id
+    </select>
+    <select id="selectCheckingVOById" resultMap="CheckingVOMap">
+        SELECT *FROM safe_db.account a,
+                     safe_db.checking c
+        WHERE a.acctNo=c.acctNo
+          AND a.userId=#{id};
+    </select>
+    <select id="selectSavingsVOById" resultMap="SavingsVOMap">
+        SELECT *FROM safe_db.account a,
+                     safe_db.savings s
+        WHERE a.acctNo=s.acctNo
+          AND a.userId=#{id};
+    </select>
+    <select id="selectHomeLoanVOById" resultMap="HomeLoanVOMap">
+        SELECT *FROM safe_db.account a,
+                     safe_db.loan l,
+                     safe_db.home h
+        WHERE a.acctNo=l.acctNo AND a.acctNo=h.acctNo
+          AND a.userId=#{id};
+    </select>
+    <select id="selectStudentLoanVOById" resultMap="StudentLoanVOMap">
+        SELECT *FROM safe_db.account a,
+                     safe_db.student s,
+                     safe_db.loan l
+        WHERE a.acctNo=l.acctNo
+          AND a.acctNo=s.acctNo
+          AND a.userId=#{id};
+    </select>
+    <select id="selectPersonalLoanVOById" resultMap="PersonalVOMap">
+        SELECT *FROM safe_db.account a,
+                     safe_db.loan l,
+                     safe_db.personal p
+        WHERE a.acctNo=l.acctNo AND a.acctNo=p.acctNo
+          AND a.userId=#{id};
+    </select>
 </mapper>
