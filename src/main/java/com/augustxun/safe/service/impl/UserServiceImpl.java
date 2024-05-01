@@ -191,8 +191,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         loginUserVO.setId(user.getId());
         Long customerId = user.getCustomerId();
         Customer customer = customerService.query().eq("id", customerId).one();
-        CustomerVO customerVO = CustomerVO.objToVo(customer);
-        if (customerVO!=null) {
+        if (customer!=null) {
+            CustomerVO customerVO = CustomerVO.objToVo(customer);
             BeanUtils.copyProperties(customerVO, loginUserVO);
             loginUserVO.setCustomerId(customerVO.getId());
         }
