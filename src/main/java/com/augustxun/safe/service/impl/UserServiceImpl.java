@@ -188,7 +188,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
-        loginUserVO.setId(user.getId());
         Long customerId = user.getCustomerId();
         Customer customer = customerService.query().eq("id", customerId).one();
         if (customer!=null) {
@@ -196,6 +195,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             BeanUtils.copyProperties(customerVO, loginUserVO);
             loginUserVO.setCustomerId(customerVO.getId());
         }
+        loginUserVO.setId(user.getId());
         return loginUserVO;
     }
 
