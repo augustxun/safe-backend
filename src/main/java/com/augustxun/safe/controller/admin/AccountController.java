@@ -92,7 +92,8 @@ public class AccountController {
         // 未被创建，创建账户
         account.setUserId(userId); // 保存指定的用户 UserId 到 Account 中
         accountService.save(account); // 保存账户信息到 account 表
-        Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", CHECKING_ACCOUNT)).getAcctNo();
+        Long newAccountNo =
+                accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", type)).getAcctNo();
         return accountService.saveAccounts(newAccountNo, type, accountAddRequest);
     }
     /**
