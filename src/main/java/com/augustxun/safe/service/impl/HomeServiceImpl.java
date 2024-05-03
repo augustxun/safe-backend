@@ -37,7 +37,7 @@ public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements Ho
         home.setBuiltYear(1900);
         home.setYearlyPremium(new BigDecimal("0.0"));
         home.setInsureAcctNo(0L);
-        home.setInsureComId(0L);
+        home.setInsureComId(1L);
         this.save(home);
         return ResultUtils.success("创建成功");
     }
