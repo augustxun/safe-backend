@@ -1,6 +1,5 @@
 package com.augustxun.safe.model.vo;
 
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
@@ -22,7 +21,7 @@ public class HomeLoanVO implements Serializable {
     private String state;
     private Date dateOpened;
     private String type;
-private String loanType;
+    private String loanType;
     // Loan 属性
     private BigDecimal rate;
     private BigDecimal amount;
