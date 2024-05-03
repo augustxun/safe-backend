@@ -52,38 +52,33 @@ public class CustomerController {
     @Operation(summary = "新建客户信息")
     @PostMapping("/add")
     public BaseResponse<String> addCustomer(@RequestBody CustomerAddRequest customerAddRequest, HttpServletRequest request) {
-        if (customerAddRequest == null) {
+        // 1.检查请求体
+        if (customerAddRequest == null) { // 请求体为 null 时直接返回
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerAddRequest, customer);
-        // 校验
-        customerService.validCustomer(customer, true);
+        // 2.获取当前登录用户信息
         User loginUser = userService.getLoginUser(request);
-        if (loginUser == null) return ResultUtils.error(ErrorCode.OPERATION_ERROR, "请先登录");
-        // 1.当前为管理员操作
-        if (loginUser.getUserRole().equals("admin")) {
-            boolean result = customerService.save(customer);
-            if (!result) {
-                throw new BusinessException(ErrorCode.OPERATION_ERROR);
-            }
-            return ResultUtils.success("用户信息添加成功");
+        if (loginUser == null) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "请先登录！");
         }
-        // 2.当前为普通用户在操作
+        // 3.检查该用户是否已经创建客户信息
         Long userId = loginUser.getId();
         Customer oldCustomer = customerMapper.selectOne(new QueryWrapper<Customer>().eq("userId", userId));
-        if (oldCustomer != null) { //2.1 数据表中已经有客户信息
+        // 3.1 数据表中已经有客户信息
+        if (oldCustomer != null) {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "已存在，不可重复创建");
         }
-        // 2.2 数据表中尚没有客户信息
+
+        // 3.2 用 customer 对象保存客户信息, 将customer 对象的userId 属性设置为当前用户的 userId
+        Customer customer = new Customer();
+        BeanUtils.copyProperties(customerAddRequest, customer);
         customer.setUserId(userId);
-        boolean result = customerService.save(customer);
-        if (!result) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR);
-        }
+        customerService.save(customer);
+        // 3.3 将当前用户的 customerId 也设置为customer表中数据的id
         Long newCustomerId = customerMapper.selectOne(new QueryWrapper<Customer>().eq("userId", userId)).getId();
         loginUser.setCustomerId(newCustomerId);
         userService.updateById(loginUser);
+        // 4.返回结果
         return ResultUtils.success("用户信息添加成功");
     }
 
@@ -95,21 +90,7 @@ public class CustomerController {
      */
     @Operation(summary = "更新客户信息")
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateCustomer(@RequestBody CustomerUpdateRequest customerUpdateRequest) {
-        long id = Long.parseLong(customerUpdateRequest.getId());
-        if (customerUpdateRequest == null || id <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerUpdateRequest, customer);
-        customer.setId(id);
-        // 参数校验
-        customerService.validCustomer(customer, false);
-
-        // 判断是否存在
-        Customer oldCustomer = customerService.getById(id);
-        ThrowUtils.throwIf(oldCustomer == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = customerService.updateById(customer);
-        return ResultUtils.success(result);
+    public BaseResponse<String> updateCustomer(@RequestBody CustomerUpdateRequest customerUpdateRequest) {
+        return customerService.updateCustomer(customerUpdateRequest);
     }
 }

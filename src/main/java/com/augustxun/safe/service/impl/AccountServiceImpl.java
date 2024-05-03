@@ -2,22 +2,22 @@ package com.augustxun.safe.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.augustxun.safe.common.BaseResponse;
-import com.augustxun.safe.common.DeleteRequest;
 import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.mapper.AccountMapper;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountQueryRequest;
+import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
-import com.augustxun.safe.model.entity.Checking;
 import com.augustxun.safe.model.entity.Loan;
-import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.model.vo.*;
 import com.augustxun.safe.service.*;
 import com.augustxun.safe.utils.PageUtils;
 import com.augustxun.safe.utils.SqlUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -89,7 +89,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         queryWrapper.like(StringUtils.isNotBlank(city), "city", city);
         queryWrapper.like(StringUtils.isNotBlank(state), "state", state);
         queryWrapper.like(StringUtils.isNotBlank(type), "type", type);
-        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
+        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
+                sortField);
         return queryWrapper;
     }
 
@@ -116,9 +117,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
-    public boolean deleteAccounts(DeleteRequest deleteRequest) {
-        long acctNo = Long.parseLong(deleteRequest.getId());
-        if (deleteRequest == null || acctNo <= 0) {
+    public boolean deleteAccounts(Long acctNo) {
+        if (acctNo == null || acctNo <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         Account oldAccount = this.getById(acctNo);
@@ -243,6 +243,32 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     public Page<PersonalLoanVO> listPersonalLoanVOByPage(int current, int pageSize) {
         List<PersonalLoanVO> personalLoanVOList = accountMapper.listPersonalLoanVO();
         return PageUtils.getPages(current, pageSize, personalLoanVOList);
+    }
+
+    @Override
+    public BaseResponse<Boolean> updateAccount(AccountUpdateRequest accountUpdateRequest) {
+        long acctNo = Long.parseLong(accountUpdateRequest.getAcctNo());
+        // 1.判断旧的 account 信息是否存在
+        Account oldAccount = this.getById(acctNo);
+        ThrowUtils.throwIf(oldAccount == null, ErrorCode.NOT_FOUND_ERROR);
+        // 2.根据 id 更新account 表
+        Account account = new Account();
+        BeanUtils.copyProperties(accountUpdateRequest, account);
+        account.setAcctNo(acctNo);
+        boolean result = this.updateById(account);
+
+        return ResultUtils.success(result);
+    }
+
+    public boolean queryIfExistsAccount(Long userId, String type) {
+        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Account::getUserId, userId).eq(Account::getType, type);
+        Account accountServiceOne = this.getOne(queryWrapper);
+        // 已被创建，操作失败
+        if (accountServiceOne != null) {
+            return true;
+        }
+        return false;
     }
 
 

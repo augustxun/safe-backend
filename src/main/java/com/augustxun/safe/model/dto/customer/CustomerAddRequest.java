@@ -32,6 +32,7 @@ public class CustomerAddRequest implements Serializable {
 
     private String state;
 
+    private String userId;
 
 
     @TableField(exist = false)

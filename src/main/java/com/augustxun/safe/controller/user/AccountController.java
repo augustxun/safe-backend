@@ -52,23 +52,23 @@ public class AccountController {
     @PostMapping("/add")
     @Transactional
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
+        // 1.检查当前用户是否已登录
         User loginUser = userService.getLoginUser(request);
         if (loginUser == null) {
             return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先登陆");
         }
+        // 2.检查当前用户是否具备客户信息
         Long customerId = loginUser.getCustomerId();
         if (customerId == null) {
             return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先填写个人信息");
         }
+        // 3.检查请求体
         if (accountAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        // 1.校验参数是否合规
-        Account account = new Account();
-        BeanUtils.copyProperties(accountAddRequest, account);
-        accountService.validAccount(account, true);
+
         // 2.添加账户
-        String type = account.getType(); // 账户类型
+        String type = accountAddRequest.getType(); // 账户类型
         Long userId = loginUser.getId(); // 账户 userId
         // 3.检查该类型账户是否已经被创建
         LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
@@ -79,8 +79,12 @@ public class AccountController {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "该用户已有" + type + "类账户，请勿重复创建");
         }
         // 3.2 未被创建，创建账户
-        account.setUserId(userId);
-        accountService.save(account); // 保存账户信息到 account 表
+        Account account = new Account();
+        BeanUtils.copyProperties(accountAddRequest, account);
+        accountAddRequest.setUserId(String.valueOf(userId));
+        // 4.保存账户信息到 account 表
+        accountService.save(account);
+        // 5.在子表中插入一条数据
         Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", type)).getAcctNo();
         return accountService.saveAccounts(newAccountNo, type, accountAddRequest);
     }
@@ -96,7 +100,8 @@ public class AccountController {
     @PostMapping("/delete")
     @Transactional
     public BaseResponse<Boolean> deleteAccount(@RequestBody DeleteRequest deleteRequest) {
-        boolean b = accountService.deleteAccounts(deleteRequest);
+        long acctNo = Long.parseLong(deleteRequest.getId());
+        boolean b = accountService.deleteAccounts(acctNo);
         return ResultUtils.success(b);
     }
 
@@ -110,21 +115,14 @@ public class AccountController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateAccount(@RequestBody AccountUpdateRequest accountUpdateRequest) {
-        long acctNo = Long.parseLong(accountUpdateRequest.getAcctNo());
-
-        if (accountUpdateRequest == null || acctNo <= 0) {
+        if (accountUpdateRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        Account account = new Account();
-        BeanUtils.copyProperties(accountUpdateRequest, account);
-        account.setAcctNo(acctNo);
-        // 参数校验
-        accountService.validAccount(account, false);
-        // 判断是否存在
-        Account oldAccount = accountService.getById(acctNo);
-        ThrowUtils.throwIf(oldAccount == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = accountService.updateById(account);
-        return ResultUtils.success(result);
+        long acctNo = Long.parseLong(accountUpdateRequest.getAcctNo());
+        if (acctNo <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        return accountService.updateAccount(accountUpdateRequest);
     }
 
 

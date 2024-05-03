@@ -12,14 +12,18 @@ import com.augustxun.safe.mapper.UserMapper;
 import com.augustxun.safe.model.dto.user.UserAddRequest;
 import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.dto.user.UserUpdateRequest;
+import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.UserVO;
+import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.CustomerService;
 import com.augustxun.safe.service.UserService;
 import com.augustxun.safe.utils.PageUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import kotlin.jvm.internal.Lambda;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -43,6 +47,8 @@ public class AdminUserController {
     private UserMapper userMapper;
     @Resource
     private CustomerService customerService;
+    @Resource
+    private AccountService accountService;
 
     /**
      * 新建用户
@@ -78,19 +84,34 @@ public class AdminUserController {
      * 删除用户
      *
      * @param deleteRequest
-     * @param request
      * @return
      */
     @Operation(summary = "删除用户")
     @PostMapping("/delete")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest, HttpServletRequest request) {
-        long id = Long.parseLong(deleteRequest.getId());
-        if (deleteRequest == null || id <= 0) {
+    public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
+        // 1.校验请求体是否为空
+        if (deleteRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        boolean b = userService.removeById(id);
-        return ResultUtils.success(b);
+        // 2.校验 id 合法性
+        long id = Long.parseLong(deleteRequest.getId());
+        if (id <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 3.删除user 和 customer 表的相关数据
+        User user = userService.getById(id);
+        Long customerId = user.getCustomerId();
+        customerService.removeById(customerId);
+        userService.removeById(id);
+        // 4.删除 account 表相关数据
+        LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        List<Account> list = accountService.list(lambdaQueryWrapper);
+        for (Account account : list) {
+            Long acctNo = account.getAcctNo();
+            accountService.deleteAccounts(acctNo);
+        }
+        return ResultUtils.success(true);
     }
 
     /**
@@ -102,7 +123,8 @@ public class AdminUserController {
      */
     @Operation(summary = "更新用户")
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest, HttpServletRequest request) {
+    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
+                                            HttpServletRequest request) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -146,7 +168,8 @@ public class AdminUserController {
     @Operation(summary = "用户信息分页查询")
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Page<UserVO>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest, HttpServletRequest request) {
+    public BaseResponse<Page<UserVO>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
+                                                     HttpServletRequest request) {
         int current = userQueryRequest.getCurrent();
         int size = userQueryRequest.getPageSize();
         List<UserVO> userVOList = userMapper.selectUserVO();

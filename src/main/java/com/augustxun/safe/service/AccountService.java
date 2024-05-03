@@ -4,6 +4,7 @@ import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.DeleteRequest;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountQueryRequest;
+import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.vo.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -45,10 +46,10 @@ public interface AccountService extends IService<Account> {
 
     /**
      * 删除各级子表账户
-     * @param deleteRequest
+     * @param acctNo
      * @return
      */
-    boolean deleteAccounts(DeleteRequest deleteRequest);
+    boolean deleteAccounts(Long acctNo);
     /**
      * 获取 Checking 账户视图
      * @param userId
@@ -109,4 +110,14 @@ public interface AccountService extends IService<Account> {
     Page<StudentLoanVO> listStudentLoanVOByPage(int current, int pageSize);
 
     Page<PersonalLoanVO> listPersonalLoanVOByPage(int current, int pageSize);
+
+    BaseResponse<Boolean> updateAccount(AccountUpdateRequest accountUpdateRequest);
+
+    /**
+     * 检查用户是否存在
+     * @param userId
+     * @param type
+     * @return
+     */
+    boolean queryIfExistsAccount(Long userId, String type);
 }
