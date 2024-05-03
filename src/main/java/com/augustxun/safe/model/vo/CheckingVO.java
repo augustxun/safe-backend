@@ -23,6 +23,7 @@ public class CheckingVO {
     private String city;
     private String state;
     private Date dateOpened;
+    private String type;
     // Checking 独有属性
     private BigDecimal balance;
     private BigDecimal serviceFee;

@@ -40,7 +40,6 @@ public class LoginUserVO implements Serializable {
      * 更新时间
      */
     private Date updateTime;
-
     @JsonSerialize(using = ToStringSerializer.class)
     private Long customerId;
     private String lastName;

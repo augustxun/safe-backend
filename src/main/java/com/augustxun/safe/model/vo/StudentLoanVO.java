@@ -25,6 +25,8 @@ public class StudentLoanVO implements Serializable {
     private String city;
     private String state;
     private Date dateOpened;
+    private String type;
+    private String loanType;
     // Loan 属性
     private BigDecimal rate;
     private BigDecimal amount;

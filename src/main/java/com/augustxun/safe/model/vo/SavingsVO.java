@@ -22,6 +22,7 @@ public class SavingsVO {
     private String city;
     private String state;
     private Date dateOpened;
+    private String type;
     // Saving 独有属性
     private BigDecimal balance;
     private BigDecimal interestRate;
