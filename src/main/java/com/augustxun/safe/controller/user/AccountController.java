@@ -131,12 +131,13 @@ public class AccountController {
     /**
      * 用户端根据当前 loginUser 获取账户列表
      *
-     * @param userId
+     * @param Id
      * @return
      */
     @Operation(summary = "获取账户列表")
     @GetMapping("/list/vo")
-    public BaseResponse<List<Object>> getAccountVOList(@RequestParam Long userId) {
+    public BaseResponse<List<Object>> getAccountVOList(@RequestParam String Id) {
+        Long userId = Long.parseLong(Id);
         LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(Account::getUserId, userId);
         List<Account> list = accountService.list(lambdaQueryWrapper);
