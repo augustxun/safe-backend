@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -120,4 +121,11 @@ public interface AccountService extends IService<Account> {
      * @return
      */
     boolean queryIfExistsAccount(Long userId, String type);
+
+    /**
+     * 管理员新建账户接口
+     * @param accountAddRequest
+     * @return
+     */
+    BaseResponse<String> addAccountByAdmin(AccountAddRequest accountAddRequest, HttpServletRequest request);
 }

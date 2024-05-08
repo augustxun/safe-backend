@@ -46,7 +46,7 @@ public class LoanController {
     }
 
     /**
-     * 更新
+     * 更新 LOAN 账户
      *
      * @param loanUpdateRequest
      * @return
@@ -55,18 +55,6 @@ public class LoanController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateLoan(@RequestBody LoanUpdateRequest loanUpdateRequest) {
-        long acctNo = Long.parseLong(loanUpdateRequest.getAcctNo());
-
-        if (loanUpdateRequest == null || acctNo <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        Loan loan = new Loan();
-        BeanUtils.copyProperties(loanUpdateRequest, loan);
-        loan.setAcctNo(acctNo);
-        // 判断是否存在
-        Loan oldLoan = loanService.getById(acctNo);
-        ThrowUtils.throwIf(oldLoan == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = loanService.updateById(loan);
-        return ResultUtils.success(result);
+        return loanService.updateLoan(loanUpdateRequest);
     }
 }

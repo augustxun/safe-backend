@@ -55,18 +55,7 @@ public class HomeController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateHome(@RequestBody HomeUpdateRequest homeUpdateRequest) {
-        long acctNo = Long.parseLong(homeUpdateRequest.getAcctNo());
+        return homeService.updateHome(homeUpdateRequest);
 
-        if (homeUpdateRequest == null || acctNo <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        Home home = new Home();
-        BeanUtils.copyProperties(homeUpdateRequest, home);
-        home.setAcctNo(acctNo);
-        // 判断是否存在
-        Home oldHome = homeService.getById(acctNo);
-        ThrowUtils.throwIf(oldHome == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = homeService.updateById(home);
-        return ResultUtils.success(result);
     }
 }

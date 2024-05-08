@@ -58,18 +58,6 @@ public class CheckingController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateChecking(@RequestBody CheckingUpdateRequest checkingUpdateRequest) {
-        long acctNo = Long.parseLong(checkingUpdateRequest.getAcctNo());
-
-        if (checkingUpdateRequest == null || acctNo <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        Checking checking = new Checking();
-        BeanUtils.copyProperties(checkingUpdateRequest, checking);
-        checking.setAcctNo(acctNo);
-        // 判断是否存在
-        Checking oldChecking = checkingService.getById(acctNo);
-        ThrowUtils.throwIf(oldChecking == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = checkingService.updateById(checking);
-        return ResultUtils.success(result);
+return checkingService.updateChecking(checkingUpdateRequest);
     }
 }

@@ -2,6 +2,7 @@ package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.dto.loan.LoanQueryRequest;
+import com.augustxun.safe.model.dto.loan.LoanUpdateRequest;
 import com.augustxun.safe.model.entity.Loan;
 import com.augustxun.safe.model.vo.StudentLoanVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -30,4 +31,11 @@ public interface LoanService extends IService<Loan> {
      * @return
      */
     public QueryWrapper<Loan> getQueryWrapper(LoanQueryRequest loanQueryRequest);
+
+    /**
+     * 更新 Loan 账户
+     * @param loanUpdateRequest
+     * @return
+     */
+    BaseResponse<Boolean> updateLoan(LoanUpdateRequest loanUpdateRequest);
 }

@@ -57,42 +57,7 @@ public class AccountController {
     @Transactional
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest,
                                            HttpServletRequest request) {
-        // 1.检查当前用户是否已登录
-        User loginUser = userService.getLoginUser(request);
-        if (loginUser == null) {
-            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先登陆");
-        }
-        // 2.检查请求体
-        if (accountAddRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        // 2.创建账户
-        String type = accountAddRequest.getType(); // 账户类型
-        // 2.1 检查该类型账户是否已经被创建
-        String uId = accountAddRequest.getUserId();
-        if (uId == null) {
-            return ResultUtils.error(ErrorCode.PARAMS_ERROR, "管理员操作，请指定账户所属用户");
-        }
-        // 3.查询当前用户是否存在
-        Long userId = Long.parseLong(uId);
-        User user = userService.getById(userId);
-        if (user == null) {
-            return ResultUtils.error(ErrorCode.PARAMS_ERROR, "用户不存在");
-        }
-        // 4.检查账号是否存在
-        boolean b = accountService.queryIfExistsAccount(userId, type);
-        if (b) {
-            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "该用户已有" + type + "类账户，请勿重复创建");
-        }
-        // 5.保存账户信息到 account 表
-        Account account = new Account();
-        BeanUtils.copyProperties(accountAddRequest, account);
-        account.setUserId(userId);
-        accountService.save(account);
-        // 6.插入数据到子表
-        Long newAccountNo =
-                accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", type)).getAcctNo();
-        return accountService.saveAccounts(newAccountNo, type, accountAddRequest);
+        return accountService.addAccountByAdmin(accountAddRequest, request);
     }
 
     /**
@@ -133,6 +98,7 @@ public class AccountController {
         return accountService.updateAccount(accountUpdateRequest);
     }
 
+    // region 各类账户信息分页查询
     /**
      * 账户信息分页查询
      *

@@ -5,8 +5,10 @@ import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.mapper.HomeMapper;
 import com.augustxun.safe.model.dto.home.HomeQueryRequest;
+import com.augustxun.safe.model.dto.home.HomeUpdateRequest;
 import com.augustxun.safe.model.entity.*;
 import com.augustxun.safe.model.vo.HomeLoanVO;
 import com.augustxun.safe.model.vo.PersonalLoanVO;
@@ -51,6 +53,23 @@ public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements Ho
         QueryWrapper<Home> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
+    }
+
+    @Override
+    public BaseResponse<Boolean> updateHome(HomeUpdateRequest homeUpdateRequest) {
+        long acctNo = Long.parseLong(homeUpdateRequest.getAcctNo());
+
+        if (homeUpdateRequest == null || acctNo <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Home home = new Home();
+        BeanUtils.copyProperties(homeUpdateRequest, home);
+        home.setAcctNo(acctNo);
+        // 判断是否存在
+        Home oldHome = this.getById(acctNo);
+        ThrowUtils.throwIf(oldHome == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = this.updateById(home);
+        return ResultUtils.success(result);
     }
 }
 

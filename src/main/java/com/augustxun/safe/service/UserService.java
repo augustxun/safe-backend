@@ -2,6 +2,7 @@ package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.dto.user.UserQueryRequest;
+import com.augustxun.safe.model.dto.user.UserUpdateRequest;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.LoginUserVO;
 import com.augustxun.safe.model.vo.UserVO;
@@ -83,4 +84,5 @@ public interface UserService extends IService<User> {
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
+    BaseResponse<Boolean> updateUser(UserUpdateRequest userUpdateRequest);
 }

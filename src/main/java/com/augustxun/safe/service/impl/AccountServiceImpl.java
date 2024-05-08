@@ -13,6 +13,7 @@ import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Loan;
+import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.*;
 import com.augustxun.safe.service.*;
 import com.augustxun.safe.utils.PageUtils;
@@ -26,6 +27,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +55,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     private HomeService homeService;
     @Resource
     private AccountMapper accountMapper;
+    @Resource
+    private UserService userService;
 
     public void validAccount(Account account, boolean add) {
         if (account == null) {
@@ -135,7 +139,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                 b = studentService.removeById(acctNo);
             } else if (loanType.equals(HOME_LOAN)) {
                 b = homeService.removeById(acctNo);
-            } else b = personalService.removeById(acctNo);
+            } else {b = personalService.removeById(acctNo);}
             b = loanService.removeById(acctNo);
         }
         b = this.removeById(acctNo);
@@ -269,6 +273,45 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             return true;
         }
         return false;
+    }
+
+    @Override
+    public BaseResponse<String> addAccountByAdmin(AccountAddRequest accountAddRequest, HttpServletRequest request) {
+        // 1.检查当前用户是否已登录
+        User loginUser = userService.getLoginUser(request);
+        if (loginUser == null) {
+            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先登陆");
+        }
+        // 2.检查请求体
+        if (accountAddRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        // 2.创建账户
+        String type = accountAddRequest.getType(); // 账户类型
+        // 2.1 检查该类型账户是否已经被创建
+        String uId = accountAddRequest.getUserId();
+        if (uId == null) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR, "管理员操作，请指定账户所属用户");
+        }
+        // 3.查询当前用户是否存在
+        Long userId = Long.parseLong(uId);
+        User user = userService.getById(userId);
+        if (user == null) {
+            return ResultUtils.error(ErrorCode.PARAMS_ERROR, "用户不存在");
+        }
+        // 4.检查账号是否存在
+        boolean b = this.queryIfExistsAccount(userId, type);
+        if (b) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "该用户已有" + type + "类账户，请勿重复创建");
+        }
+        // 5.保存账户信息到 account 表
+        Account account = new Account();
+        BeanUtils.copyProperties(accountAddRequest, account);
+        account.setUserId(userId);
+        this.save(account);
+        // 6.插入数据到子表
+        Long newAccountNo = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", type)).getAcctNo();
+        return this.saveAccounts(newAccountNo, type, accountAddRequest);
     }
 
 

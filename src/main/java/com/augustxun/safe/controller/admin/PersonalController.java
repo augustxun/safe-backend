@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Api(tags = "B端-PersonalLoan账户管理接口")
@@ -53,19 +54,8 @@ public class PersonalController {
     @Operation(summary = "更新Personal表账户数据")
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Boolean> updatePersonal(@RequestBody PersonalUpdateRequest personalUpdateRequest) {
-        long acctNo = Long.parseLong(personalUpdateRequest.getAcctNo());
-
-        if (personalUpdateRequest == null || acctNo <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        Personal personal = new Personal();
-        BeanUtils.copyProperties(personalUpdateRequest, personal);
-        personal.setAcctNo(acctNo);
-        // 判断是否存在
-        Personal oldPersonal = personalService.getById(acctNo);
-        ThrowUtils.throwIf(oldPersonal == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = personalService.updateById(personal);
-        return ResultUtils.success(result);
+    public BaseResponse<Boolean> updatePersonal(@RequestBody PersonalUpdateRequest personalUpdateRequest,
+                                                HttpServletRequest request) {
+        return personalService.updatePersonal(personalUpdateRequest);
     }
 }

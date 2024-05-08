@@ -56,18 +56,6 @@ public class SavingsController {
     @PostMapping("/update")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateSavings(@RequestBody SavingsUpdateRequest savingsUpdateRequest) {
-        long acctNo = Long.parseLong(savingsUpdateRequest.getAcctNo());
-
-        if (savingsUpdateRequest == null || acctNo <= 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        Savings savings = new Savings();
-        BeanUtils.copyProperties(savingsUpdateRequest, savings);
-        savings.setAcctNo(acctNo);
-        // 判断是否存在
-        Savings oldSavings = savingsService.getById(acctNo);
-        ThrowUtils.throwIf(oldSavings == null, ErrorCode.NOT_FOUND_ERROR);
-        boolean result = savingsService.updateById(savings);
-        return ResultUtils.success(result);
+return savingsService.updateSavings(savingsUpdateRequest);
     }
 }

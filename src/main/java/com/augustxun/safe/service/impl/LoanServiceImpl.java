@@ -5,7 +5,9 @@ import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.model.dto.loan.LoanQueryRequest;
+import com.augustxun.safe.model.dto.loan.LoanUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.vo.StudentLoanVO;
 import com.augustxun.safe.service.AccountService;
@@ -53,6 +55,23 @@ public class LoanServiceImpl extends ServiceImpl<LoanMapper, Loan>
         QueryWrapper<Loan> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
+    }
+
+    @Override
+    public BaseResponse<Boolean> updateLoan(LoanUpdateRequest loanUpdateRequest) {
+        long acctNo = Long.parseLong(loanUpdateRequest.getAcctNo());
+
+        if (loanUpdateRequest == null || acctNo <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Loan loan = new Loan();
+        BeanUtils.copyProperties(loanUpdateRequest, loan);
+        loan.setAcctNo(acctNo);
+        // 判断是否存在
+        Loan oldLoan = this.getById(acctNo);
+        ThrowUtils.throwIf(oldLoan == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = this.updateById(loan);
+        return ResultUtils.success(result);
     }
 }
 

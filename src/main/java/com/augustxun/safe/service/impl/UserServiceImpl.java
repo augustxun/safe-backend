@@ -7,8 +7,10 @@ import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.mapper.UserMapper;
 import com.augustxun.safe.model.dto.user.UserQueryRequest;
+import com.augustxun.safe.model.dto.user.UserUpdateRequest;
 import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.CustomerVO;
@@ -213,6 +215,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.like(StringUtils.isNotBlank(userName), "userName", userName);
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
+    }
+
+    @Override
+    public BaseResponse<Boolean> updateUser(UserUpdateRequest userUpdateRequest) {
+        if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        User user = new User();
+        BeanUtils.copyProperties(userUpdateRequest, user);
+        // 将 String 转为 Long
+        user.setId(Long.parseLong(userUpdateRequest.getId()));
+        boolean result = this.updateById(user);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return ResultUtils.success(true);
     }
 
 

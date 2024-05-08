@@ -3,6 +3,7 @@ package com.augustxun.safe.service;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.dto.account.AccountQueryRequest;
 import com.augustxun.safe.model.dto.checking.CheckingQueryRequest;
+import com.augustxun.safe.model.dto.checking.CheckingUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Checking;
 import com.augustxun.safe.model.vo.CheckingVO;
@@ -28,4 +29,11 @@ public interface CheckingService extends IService<Checking> {
      * @return
      */
     public QueryWrapper<Checking> getQueryWrapper(CheckingQueryRequest checkingQueryRequest);
+
+    /**
+     * 更新 Checking 账户
+     * @param checkingUpdateRequest
+     * @return
+     */
+    BaseResponse<Boolean> updateChecking(CheckingUpdateRequest checkingUpdateRequest);
 }

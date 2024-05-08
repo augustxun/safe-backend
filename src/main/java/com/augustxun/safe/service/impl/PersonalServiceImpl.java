@@ -5,7 +5,9 @@ import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.model.dto.personal.PersonalQueryRequest;
+import com.augustxun.safe.model.dto.personal.PersonalUpdateRequest;
 import com.augustxun.safe.model.entity.*;
 import com.augustxun.safe.model.vo.PersonalLoanVO;
 import com.augustxun.safe.model.vo.PersonalLoanVO;
@@ -52,6 +54,23 @@ public class PersonalServiceImpl extends ServiceImpl<PersonalMapper, Personal>
         personal.setCreditScore(new BigDecimal("0.0"));
         this.save(personal);
         return ResultUtils.success("创建成功");
+    }
+
+    @Override
+    public BaseResponse<Boolean> updatePersonal(PersonalUpdateRequest personalUpdateRequest) {
+        long acctNo = Long.parseLong(personalUpdateRequest.getAcctNo());
+
+        if (personalUpdateRequest == null || acctNo <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Personal personal = new Personal();
+        BeanUtils.copyProperties(personalUpdateRequest, personal);
+        personal.setAcctNo(acctNo);
+        // 判断是否存在
+        Personal oldPersonal = this.getById(acctNo);
+        ThrowUtils.throwIf(oldPersonal == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = this.updateById(personal);
+        return ResultUtils.success(result);
     }
 }
 

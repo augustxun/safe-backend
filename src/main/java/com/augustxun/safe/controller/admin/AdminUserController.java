@@ -118,23 +118,12 @@ public class AdminUserController {
      * 更新用户
      *
      * @param userUpdateRequest
-     * @param request
      * @return
      */
     @Operation(summary = "更新用户")
     @PostMapping("/update")
-    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest,
-                                            HttpServletRequest request) {
-        if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        User user = new User();
-        BeanUtils.copyProperties(userUpdateRequest, user);
-        // 将 String 转为 Long
-        user.setId(Long.parseLong(userUpdateRequest.getId()));
-        boolean result = userService.updateById(user);
-        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(true);
+    public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
+        return userService.updateUser(userUpdateRequest);
     }
 
     /**

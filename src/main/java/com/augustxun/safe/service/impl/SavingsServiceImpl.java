@@ -5,8 +5,10 @@ import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.mapper.SavingsMapper;
 import com.augustxun.safe.model.dto.savings.SavingsQueryRequest;
+import com.augustxun.safe.model.dto.savings.SavingsUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.model.vo.SavingsVO;
@@ -47,6 +49,23 @@ public class SavingsServiceImpl extends ServiceImpl<SavingsMapper, Savings> impl
         QueryWrapper<Savings> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
+    }
+
+    @Override
+    public BaseResponse<Boolean> updateSavings(SavingsUpdateRequest savingsUpdateRequest) {
+        long acctNo = Long.parseLong(savingsUpdateRequest.getAcctNo());
+
+        if (savingsUpdateRequest == null || acctNo <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Savings savings = new Savings();
+        BeanUtils.copyProperties(savingsUpdateRequest, savings);
+        savings.setAcctNo(acctNo);
+        // 判断是否存在
+        Savings oldSavings = this.getById(acctNo);
+        ThrowUtils.throwIf(oldSavings == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = this.updateById(savings);
+        return ResultUtils.success(result);
     }
 }
 

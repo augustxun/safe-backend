@@ -5,8 +5,10 @@ import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
+import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.mapper.CheckingMapper;
 import com.augustxun.safe.model.dto.checking.CheckingQueryRequest;
+import com.augustxun.safe.model.dto.checking.CheckingUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Checking;
 import com.augustxun.safe.model.vo.CheckingVO;
@@ -52,6 +54,23 @@ public class CheckingServiceImpl extends ServiceImpl<CheckingMapper, Checking>
         QueryWrapper<Checking> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         return queryWrapper;
+    }
+
+    @Override
+    public BaseResponse<Boolean> updateChecking(CheckingUpdateRequest checkingUpdateRequest) {
+        long acctNo = Long.parseLong(checkingUpdateRequest.getAcctNo());
+
+        if (checkingUpdateRequest == null || acctNo <= 0) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+        Checking checking = new Checking();
+        BeanUtils.copyProperties(checkingUpdateRequest, checking);
+        checking.setAcctNo(acctNo);
+        // 判断是否存在
+        Checking oldChecking = this.getById(acctNo);
+        ThrowUtils.throwIf(oldChecking == null, ErrorCode.NOT_FOUND_ERROR);
+        boolean result = this.updateById(checking);
+        return ResultUtils.success(result);
     }
 }
 

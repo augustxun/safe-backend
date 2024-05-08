@@ -37,8 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 public class CustomerController {
     @Resource
     private CustomerService customerService;
-    @Resource
-    private UserService userService;
 
     // region 增删改查
 
@@ -51,27 +49,7 @@ public class CustomerController {
     @Operation(summary = "增加客户")
     @PostMapping("/add")
     public BaseResponse<String> addCustomer(@RequestBody CustomerAddRequest customerAddRequest) {
-        if (customerAddRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        // 获取请求体的 userId
-        String uId = customerAddRequest.getUserId();
-        if (StrUtil.isBlank(uId)) { // 检查 userId 是否为空
-            return ResultUtils.error(ErrorCode.PARAMS_ERROR,"管理员操作时，userId 参数不可为空");
-        }
-        Long userId = Long.parseLong(uId);
-        // 查看是否有 userId 对应的用户
-        User user = userService.getById(userId);
-        if (user == null) {
-            return ResultUtils.error(ErrorCode.OPERATION_ERROR,"创建失败，该User不存在");
-        }
-        Customer customer = new Customer();
-        BeanUtils.copyProperties(customerAddRequest, customer);
-        customer.setId(userId);
-        // 校验
-        customerService.validCustomer(customer, true);
-        customerService.save(customer);
-        return ResultUtils.success("用户信息添加成功");
+        return customerService.addCustomerByAdmin(customerAddRequest);
     }
 
 

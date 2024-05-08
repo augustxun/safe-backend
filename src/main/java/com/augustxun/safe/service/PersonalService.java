@@ -3,6 +3,7 @@ package com.augustxun.safe.service;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.dto.loan.LoanQueryRequest;
 import com.augustxun.safe.model.dto.personal.PersonalQueryRequest;
+import com.augustxun.safe.model.dto.personal.PersonalUpdateRequest;
 import com.augustxun.safe.model.entity.Loan;
 import com.augustxun.safe.model.entity.Personal;
 import com.augustxun.safe.model.vo.PersonalLoanVO;
@@ -24,6 +25,17 @@ public interface PersonalService extends IService<Personal> {
      */
     public QueryWrapper<Personal> getQueryWrapper(PersonalQueryRequest personalQueryRequest);
 
-
+    /**
+     * 添加一个 PERSONAL 账户
+     * @param newAccountNo
+     * @return
+     */
     BaseResponse<String> addPersonalAccount(Long newAccountNo);
+
+    /**
+     * 更新 PERSONAL 账户
+     * @param personalUpdateRequest
+     * @return
+     */
+    BaseResponse<Boolean> updatePersonal(PersonalUpdateRequest personalUpdateRequest);
 }
