@@ -314,6 +314,45 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         return this.saveAccounts(newAccountNo, type, accountAddRequest);
     }
 
+    @Override
+    public BaseResponse<String> addAccountByUser(AccountAddRequest accountAddRequest, HttpServletRequest request) {
+        // 1.检查当前用户是否已登录
+        User loginUser = userService.getLoginUser(request);
+        if (loginUser == null) {
+            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先登陆");
+        }
+        // 2.检查当前用户是否具备客户信息
+        Long customerId = loginUser.getCustomerId();
+        if (customerId == null) {
+            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先填写个人信息");
+        }
+        // 3.检查请求体
+        if (accountAddRequest == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        // 2.添加账户
+        String type = accountAddRequest.getType(); // 账户类型
+        Long userId = loginUser.getId(); // 账户 userId
+        // 3.检查该类型账户是否已经被创建
+        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Account::getUserId, userId).eq(Account::getType, type);
+        Account accountServiceOne = this.getOne(queryWrapper);
+        // 3.1 已被创建，返回失败
+        if (accountServiceOne != null) {
+            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "该用户已有" + type + "类账户，请勿重复创建");
+        }
+        // 3.2 未被创建，创建账户
+        Account account = new Account();
+        BeanUtils.copyProperties(accountAddRequest, account);
+        account.setUserId(userId);
+        // 4.保存账户信息到 account 表
+        this.save(account);
+        // 5.在子表中插入一条数据
+        Long newAccountNo = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", type)).getAcctNo();
+        return this.saveAccounts(newAccountNo, type, accountAddRequest);
+    }
+
 
 }
 

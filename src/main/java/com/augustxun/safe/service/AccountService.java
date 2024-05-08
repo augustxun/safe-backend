@@ -127,4 +127,12 @@ public interface AccountService extends IService<Account> {
      * @return
      */
     BaseResponse<String> addAccountByAdmin(AccountAddRequest accountAddRequest, HttpServletRequest request);
+
+    /**
+     * 用户端新建账户接口
+     * @param accountAddRequest
+     * @param request
+     * @return
+     */
+    BaseResponse<String> addAccountByUser(AccountAddRequest accountAddRequest, HttpServletRequest request);
 }

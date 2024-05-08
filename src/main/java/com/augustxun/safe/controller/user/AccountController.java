@@ -10,15 +10,12 @@ import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.model.dto.account.AccountAddRequest;
 import com.augustxun.safe.model.dto.account.AccountUpdateRequest;
 import com.augustxun.safe.model.entity.Account;
-import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.UserService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,41 +47,7 @@ public class AccountController {
     @PostMapping("/add")
     @Transactional
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
-        // 1.检查当前用户是否已登录
-        User loginUser = userService.getLoginUser(request);
-        if (loginUser == null) {
-            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先登陆");
-        }
-        // 2.检查当前用户是否具备客户信息
-        Long customerId = loginUser.getCustomerId();
-        if (customerId == null) {
-            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "请先填写个人信息");
-        }
-        // 3.检查请求体
-        if (accountAddRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-
-        // 2.添加账户
-        String type = accountAddRequest.getType(); // 账户类型
-        Long userId = loginUser.getId(); // 账户 userId
-        // 3.检查该类型账户是否已经被创建
-        LambdaQueryWrapper<Account> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Account::getUserId, userId).eq(Account::getType, type);
-        Account accountServiceOne = accountService.getOne(queryWrapper);
-        // 3.1 已被创建，返回失败
-        if (accountServiceOne != null) {
-            return ResultUtils.error(ErrorCode.OPERATION_ERROR, "该用户已有" + type + "类账户，请勿重复创建");
-        }
-        // 3.2 未被创建，创建账户
-        Account account = new Account();
-        accountAddRequest.setUserId(String.valueOf(userId));
-        BeanUtils.copyProperties(accountAddRequest, account);
-        // 4.保存账户信息到 account 表
-        accountService.save(account);
-        // 5.在子表中插入一条数据
-        Long newAccountNo = accountService.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", type)).getAcctNo();
-        return accountService.saveAccounts(newAccountNo, type, accountAddRequest);
+        return accountService.addAccountByUser(accountAddRequest, request);
     }
 
 
