@@ -1,6 +1,7 @@
 package com.augustxun.safe.mapper;
 
 import com.augustxun.safe.model.entity.Personal;
+import com.augustxun.safe.model.vo.PersonalLoanVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
@@ -10,7 +11,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @Entity generator.domain.Personal
  */
 public interface PersonalMapper extends BaseMapper<Personal> {
-
 }
 
 

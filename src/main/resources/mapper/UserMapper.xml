@@ -39,6 +39,7 @@
         SELECT *
         FROM safe_db.user u,
              safe_db.customer c
-        WHERE u.customerId = c.id;
+        WHERE u.customerId = c.id
+          AND u.isDelete = 0;
     </select>
 </mapper>
