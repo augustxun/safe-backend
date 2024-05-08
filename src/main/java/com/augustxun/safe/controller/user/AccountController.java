@@ -80,8 +80,8 @@ public class AccountController {
         }
         // 3.2 未被创建，创建账户
         Account account = new Account();
-        BeanUtils.copyProperties(accountAddRequest, account);
         accountAddRequest.setUserId(String.valueOf(userId));
+        BeanUtils.copyProperties(accountAddRequest, account);
         // 4.保存账户信息到 account 表
         accountService.save(account);
         // 5.在子表中插入一条数据

@@ -24,7 +24,7 @@ public class CorsConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         //处理静态资源无法访问
-        registry.addResourceHandler("/**")
+        registry.addResourceHandler("/static/**")
                 .addResourceLocations("classpath:/static/");
         //处理Swagger无法访问
         registry.addResourceHandler("/swagger-ui.html")
