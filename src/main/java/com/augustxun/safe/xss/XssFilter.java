@@ -12,7 +12,7 @@ import java.io.IOException;
 @Slf4j
 @WebFilter(filterName = "xssFilter", urlPatterns = "/*")
 public class XssFilter implements Filter {
-
+    private static final String ACCOUNT_LIST_URI="/api/user/account/list/vo";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -26,7 +26,6 @@ public class XssFilter implements Filter {
         String enctype = request.getContentType();
         String requestURI = request.getRequestURI();
 
-
         //todo 通过配置指定url来过滤不经过xss过滤
 
         /**
@@ -34,7 +33,11 @@ public class XssFilter implements Filter {
          */
         if (StrUtil.isNotBlank(enctype) && enctype.contains("multipart/form-data")) {
             filterChain.doFilter(request, servletResponse);
-        } else {
+        }
+        else if (requestURI.equals(ACCOUNT_LIST_URI)) {
+            filterChain.doFilter(request, servletResponse);
+        }
+        else {
             try {
                 XssHttpServletRequestWrapper xssRequestWapper = new XssHttpServletRequestWrapper(request);
                 filterChain.doFilter(xssRequestWapper, servletResponse);

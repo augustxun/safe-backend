@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 
@@ -33,7 +34,7 @@ public class CheckingController {
      * @return
      */
     @Operation(summary = "Checking信息分页查询")
-    @Hidden
+    @ApiIgnore
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Checking>> listCheckingByPage(@RequestBody CheckingQueryRequest checkingQueryRequest) {
