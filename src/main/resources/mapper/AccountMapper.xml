@@ -5,7 +5,6 @@
 <mapper namespace="com.augustxun.safe.mapper.AccountMapper">
 
 
-
     <resultMap id="CheckingVOMap" type="com.augustxun.safe.model.vo.CheckingVO">
         <id property="acctNo" column="acctNo" jdbcType="DECIMAL"/>
         <result property="acctName" column="acctName" jdbcType="VARCHAR"/>
@@ -95,11 +94,13 @@
         <result property="userName" column="userName" jdbcType="VARCHAR"/>
     </resultMap>
     <select id="listSavingsVO" resultMap="SavingsVOMap">
-        SELECT * FROM safe_db.account a,
-                      safe_db.savings s,
-                      safe_db.user u
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.savings s,
+             safe_db.user u
         where a.acctNo = s.acctNo
-          AND a.userId = u.id AND a.isDelete=0
+          AND a.userId = u.id
+          AND a.isDelete = 0
     </select>
 
     <select id="listHomeLoanVO" resultMap="HomeLoanVOMap">
@@ -110,7 +111,8 @@
              safe_db.user u
         where a.acctNo = l.acctNo
           AND l.acctNo = h.acctNo
-          AND a.userId = u.id AND a.isDelete=0
+          AND a.userId = u.id
+          AND a.isDelete = 0
     </select>
 
     <select id="listStudentLoanVO" resultMap="StudentLoanVOMap">
@@ -121,7 +123,8 @@
              safe_db.user u
         where a.acctNo = l.acctNo
           AND l.acctNo = s.acctNo
-          AND a.userId = u.id AND a.isDelete=0
+          AND a.userId = u.id
+          AND a.isDelete = 0
     </select>
     <select id="listPersonalLoanVO" resultMap="PersonalVOMap">
         SELECT *
@@ -131,48 +134,63 @@
              safe_db.user u
         where a.acctNo = l.acctNo
           AND l.acctNo = p.acctNo
-          AND a.userId = u.id AND a.isDelete=0
+          AND a.userId = u.id
+          AND a.isDelete = 0
     </select>
 
     <select id="listCheckingVO" resultMap="CheckingVOMap">
-        SELECT * FROM safe_db.account a,
-                      safe_db.checking c,
-                      safe_db.user u
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.checking c,
+             safe_db.user u
         where a.acctNo = c.acctNo
-          AND a.userId = u.id AND a.isDelete=0
+          AND a.userId = u.id
+          AND a.isDelete = 0
     </select>
     <select id="selectCheckingVOById" resultMap="CheckingVOMap">
-        SELECT *FROM safe_db.account a,
-                     safe_db.checking c
-        WHERE a.acctNo=c.acctNo
-          AND a.userId=#{id} AND a.isDelete=0;
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.checking c
+        WHERE a.acctNo = c.acctNo
+          AND a.userId = #{id}
+          AND a.isDelete = 0;
     </select>
     <select id="selectSavingsVOById" resultMap="SavingsVOMap">
-        SELECT *FROM safe_db.account a,
-                     safe_db.savings s
-        WHERE a.acctNo=s.acctNo
-          AND a.userId=#{id} AND a.isDelete=0;
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.savings s
+        WHERE a.acctNo = s.acctNo
+          AND a.userId = #{id}
+          AND a.isDelete = 0;
     </select>
     <select id="selectHomeLoanVOById" resultMap="HomeLoanVOMap">
-        SELECT *FROM safe_db.account a,
-                     safe_db.loan l,
-                     safe_db.home h
-        WHERE a.acctNo=l.acctNo AND a.acctNo=h.acctNo
-          AND a.userId=#{id} AND a.isDelete=0
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.loan l,
+             safe_db.home h
+        WHERE a.acctNo = l.acctNo
+          AND a.acctNo = h.acctNo
+          AND a.userId = #{id}
+          AND a.isDelete = 0
     </select>
     <select id="selectStudentLoanVOById" resultMap="StudentLoanVOMap">
-        SELECT *FROM safe_db.account a,
-                     safe_db.student s,
-                     safe_db.loan l
-        WHERE a.acctNo=l.acctNo
-          AND a.acctNo=s.acctNo
-          AND a.userId=#{id} AND a.isDelete=0
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.student s,
+             safe_db.loan l
+        WHERE a.acctNo = l.acctNo
+          AND a.acctNo = s.acctNo
+          AND a.userId = #{id}
+          AND a.isDelete = 0
     </select>
     <select id="selectPersonalLoanVOById" resultMap="PersonalVOMap">
-        SELECT *FROM safe_db.account a,
-                     safe_db.loan l,
-                     safe_db.personal p
-        WHERE a.acctNo=l.acctNo AND a.acctNo=p.acctNo
-          AND a.userId=#{id} AND a.isDelete=0
+        SELECT *
+        FROM safe_db.account a,
+             safe_db.loan l,
+             safe_db.personal p
+        WHERE a.acctNo = l.acctNo
+          AND a.acctNo = p.acctNo
+          AND a.userId = #{id}
+          AND a.isDelete = 0
     </select>
 </mapper>
