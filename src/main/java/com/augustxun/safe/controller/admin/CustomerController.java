@@ -1,34 +1,24 @@
 package com.augustxun.safe.controller.admin;
 
-import cn.hutool.core.util.StrUtil;
 import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
-import com.augustxun.safe.common.DeleteRequest;
-import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.UserConstant;
-import com.augustxun.safe.exception.BusinessException;
-import com.augustxun.safe.exception.ThrowUtils;
-import com.augustxun.safe.mapper.CustomerMapper;
 import com.augustxun.safe.model.dto.customer.CustomerAddRequest;
 import com.augustxun.safe.model.dto.customer.CustomerQueryRequest;
 import com.augustxun.safe.model.dto.customer.CustomerUpdateRequest;
 import com.augustxun.safe.model.entity.Customer;
-import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.service.CustomerService;
-import com.augustxun.safe.service.UserService;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
 @RestController("AdminCustomerController")
 @RequestMapping("admin/customer")

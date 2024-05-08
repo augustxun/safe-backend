@@ -9,21 +9,14 @@ import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.mapper.CheckingMapper;
 import com.augustxun.safe.model.dto.checking.CheckingQueryRequest;
 import com.augustxun.safe.model.dto.checking.CheckingUpdateRequest;
-import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Checking;
-import com.augustxun.safe.model.vo.CheckingVO;
-import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.CheckingService;
-import com.augustxun.safe.service.UserService;
 import com.augustxun.safe.utils.SqlUtils;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 
 /**

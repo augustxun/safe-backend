@@ -6,22 +6,17 @@ import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.exception.ThrowUtils;
+import com.augustxun.safe.mapper.PersonalMapper;
 import com.augustxun.safe.model.dto.personal.PersonalQueryRequest;
 import com.augustxun.safe.model.dto.personal.PersonalUpdateRequest;
-import com.augustxun.safe.model.entity.*;
-import com.augustxun.safe.model.vo.PersonalLoanVO;
-import com.augustxun.safe.model.vo.PersonalLoanVO;
-import com.augustxun.safe.service.AccountService;
-import com.augustxun.safe.service.LoanService;
+import com.augustxun.safe.model.entity.Personal;
+import com.augustxun.safe.service.PersonalService;
 import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.augustxun.safe.service.PersonalService;
-import com.augustxun.safe.mapper.PersonalMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 
 /**

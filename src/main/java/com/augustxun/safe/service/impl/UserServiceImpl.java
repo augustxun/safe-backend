@@ -1,13 +1,13 @@
 package com.augustxun.safe.service.impl;
 
 import cn.hutool.core.util.RandomUtil;
-import cn.hutool.crypto.digest.DigestUtil;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
 import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.exception.ThrowUtils;
+import com.augustxun.safe.mapper.CustomerMapper;
 import com.augustxun.safe.mapper.UserMapper;
 import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.dto.user.UserUpdateRequest;
@@ -15,17 +15,14 @@ import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.CustomerVO;
 import com.augustxun.safe.model.vo.LoginUserVO;
-import com.augustxun.safe.service.CustomerService;
 import com.augustxun.safe.service.UserService;
 import com.augustxun.safe.utils.RegexUtils;
 import com.augustxun.safe.utils.SqlUtils;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
@@ -35,8 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.concurrent.TimeUnit;
 
-import static com.augustxun.safe.constant.RedisConstant.LOGIN_CODE_KEY;
-import static com.augustxun.safe.constant.RedisConstant.LOGIN_CODE_TTL;
+import static com.augustxun.safe.constant.RedisConstants.LOGIN_CODE_KEY;
+import static com.augustxun.safe.constant.RedisConstants.LOGIN_CODE_TTL;
 import static com.augustxun.safe.constant.UserConstant.ADMIN_ROLE;
 import static com.augustxun.safe.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -58,7 +55,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     private StringRedisTemplate stringRedisTemplate;
 
     @Resource
-    private CustomerService customerService;
+    private CustomerMapper customerMapper;
 
 
     @Override
@@ -191,7 +188,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
         Long customerId = user.getCustomerId();
-        Customer customer = customerService.query().eq("id", customerId).one();
+        Customer customer = customerMapper.selectOne(new QueryWrapper<Customer>().eq("id", customerId));
         if (customer != null) {
             CustomerVO customerVO = CustomerVO.objToVo(customer);
             BeanUtils.copyProperties(customerVO, loginUserVO);

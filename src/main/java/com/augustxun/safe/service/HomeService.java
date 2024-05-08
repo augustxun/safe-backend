@@ -3,11 +3,7 @@ package com.augustxun.safe.service;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.dto.home.HomeQueryRequest;
 import com.augustxun.safe.model.dto.home.HomeUpdateRequest;
-import com.augustxun.safe.model.dto.personal.PersonalQueryRequest;
 import com.augustxun.safe.model.entity.Home;
-import com.augustxun.safe.model.entity.Personal;
-import com.augustxun.safe.model.vo.HomeLoanVO;
-import com.augustxun.safe.model.vo.StudentLoanVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 

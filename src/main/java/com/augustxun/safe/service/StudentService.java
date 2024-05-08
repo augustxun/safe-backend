@@ -1,11 +1,9 @@
 package com.augustxun.safe.service;
 
 import com.augustxun.safe.common.BaseResponse;
-import com.augustxun.safe.model.dto.home.HomeQueryRequest;
 import com.augustxun.safe.model.dto.student.StudentQueryRequest;
-import com.augustxun.safe.model.entity.Home;
+import com.augustxun.safe.model.dto.student.StudentUpdateRequest;
 import com.augustxun.safe.model.entity.Student;
-import com.augustxun.safe.model.vo.StudentLoanVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -29,6 +27,13 @@ public interface StudentService extends IService<Student> {
      * @return
      */
     public QueryWrapper<Student> getQueryWrapper(StudentQueryRequest studentQueryRequest);
+
+    /**
+     * 更新 Student 账户
+     * @param studentUpdateRequest
+     * @return
+     */
+    BaseResponse<Boolean> updateStudent(StudentUpdateRequest studentUpdateRequest);
 
     /**
      * 根据 userId 获取 StudentLoan 账户视图

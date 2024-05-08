@@ -4,7 +4,6 @@ import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.dto.loan.LoanQueryRequest;
 import com.augustxun.safe.model.dto.loan.LoanUpdateRequest;
 import com.augustxun.safe.model.entity.Loan;
-import com.augustxun.safe.model.vo.StudentLoanVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 

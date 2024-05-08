@@ -5,7 +5,6 @@ import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.dto.user.UserUpdateRequest;
 import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.LoginUserVO;
-import com.augustxun.safe.model.vo.UserVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 

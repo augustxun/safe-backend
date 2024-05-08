@@ -9,10 +9,7 @@ import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.mapper.SavingsMapper;
 import com.augustxun.safe.model.dto.savings.SavingsQueryRequest;
 import com.augustxun.safe.model.dto.savings.SavingsUpdateRequest;
-import com.augustxun.safe.model.entity.Account;
 import com.augustxun.safe.model.entity.Savings;
-import com.augustxun.safe.model.vo.SavingsVO;
-import com.augustxun.safe.service.AccountService;
 import com.augustxun.safe.service.SavingsService;
 import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -20,7 +17,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 
 /**

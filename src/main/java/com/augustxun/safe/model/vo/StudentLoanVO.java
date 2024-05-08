@@ -1,13 +1,8 @@
 package com.augustxun.safe.model.vo;
 
-import com.augustxun.safe.model.entity.Account;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
-import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

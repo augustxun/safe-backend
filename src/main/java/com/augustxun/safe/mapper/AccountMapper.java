@@ -1,8 +1,6 @@
 package com.augustxun.safe.mapper;
 
 import com.augustxun.safe.model.entity.Account;
-import com.augustxun.safe.model.entity.Personal;
-import com.augustxun.safe.model.entity.Savings;
 import com.augustxun.safe.model.vo.*;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
