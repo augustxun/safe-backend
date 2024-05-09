@@ -115,7 +115,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
         }
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerAddRequest, customer);
-        customer.setId(userId);
+        customer.setUserId(userId);
         this.save(customer);
         return ResultUtils.success("用户信息添加成功");
     }
