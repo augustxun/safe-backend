@@ -40,6 +40,13 @@
         FROM safe_db.user u,
              safe_db.customer c
         WHERE u.customerId = c.id
-          AND u.isDelete = 0;
+          AND u.isDelete = 0
+        <if test="userQueryRequest!= null and userQueryRequest.userName!=null">
+            AND u.userName LIKE #{userQueryRequest.userName}
+        </if>
+        <if test="userQueryRequest !=null and userQueryRequest.userRole !=null">
+            AND u.userRole LIKE #{userQueryRequest.userRole}
+        </if>
+
     </select>
 </mapper>

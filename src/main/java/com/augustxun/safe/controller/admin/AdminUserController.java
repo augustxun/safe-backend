@@ -149,16 +149,14 @@ public class AdminUserController {
      * 用户信息分页查询
      *
      * @param userQueryRequest
-     * @param request
      * @return
      */
     @Operation(summary = "用户信息分页查询")
     @PostMapping("/list/page")
-    public BaseResponse<Page<UserVO>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
-                                                     HttpServletRequest request) {
+    public BaseResponse<Page<UserVO>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest) {
         int current = userQueryRequest.getCurrent();
         int size = userQueryRequest.getPageSize();
-        List<UserVO> userVOList = userMapper.selectUserVO();
+        List<UserVO> userVOList = userMapper.selectUserVO(userQueryRequest);
         return ResultUtils.success(PageUtils.getPages(current, size, userVOList));
     }
 }
