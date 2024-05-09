@@ -107,6 +107,7 @@ public class AdminUserController {
         userService.removeById(id);
         // 4.删除 account 表相关数据
         LambdaQueryWrapper<Account> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Account::getUserId, id);
         List<Account> list = accountService.list(lambdaQueryWrapper);
         for (Account account : list) {
             Long acctNo = account.getAcctNo();
