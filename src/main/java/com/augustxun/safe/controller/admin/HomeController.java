@@ -1,9 +1,7 @@
 package com.augustxun.safe.controller.admin;
 
-import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.ResultUtils;
-import com.augustxun.safe.constant.UserConstant;
 import com.augustxun.safe.model.dto.home.HomeQueryRequest;
 import com.augustxun.safe.model.dto.home.HomeUpdateRequest;
 import com.augustxun.safe.model.entity.Home;
@@ -25,6 +23,7 @@ import javax.annotation.Resource;
 public class HomeController {
     @Resource
     private HomeService homeService;
+
     /**
      * HOME账户信息分页查询
      *
@@ -34,7 +33,6 @@ public class HomeController {
     @Operation(summary = "HOME账户信息分页查询")
     @ApiIgnore
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Home>> listHomeByPage(@RequestBody HomeQueryRequest homeQueryRequest) {
         int current = homeQueryRequest.getCurrent();
         int size = homeQueryRequest.getPageSize();
@@ -50,7 +48,6 @@ public class HomeController {
      */
     @Operation(summary = "更新Home表账户数据")
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Boolean> updateHome(@RequestBody HomeUpdateRequest homeUpdateRequest) {
         return homeService.updateHome(homeUpdateRequest);
 

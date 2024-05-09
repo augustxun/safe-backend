@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -28,6 +29,7 @@ import java.math.BigDecimal;
 public class CheckingServiceImpl extends ServiceImpl<CheckingMapper, Checking>
         implements CheckingService {
     @Override
+    @Transactional
     public BaseResponse<String> addCheckingAccount(Long newAccountNo) {
         Checking checking = new Checking();
         checking.setAcctNo(newAccountNo);

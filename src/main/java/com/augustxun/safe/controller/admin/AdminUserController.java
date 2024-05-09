@@ -26,6 +26,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,8 +59,7 @@ public class AdminUserController {
      */
     @Operation(summary = "新建用户")
     @PostMapping("/add")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
-    public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
+    public BaseResponse<String> addUser(@RequestBody UserAddRequest userAddRequest, HttpServletRequest request) {
         if (userAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -76,7 +76,7 @@ public class AdminUserController {
         user.setUserPassword(encryptPassword);
         boolean result = userService.save(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
-        return ResultUtils.success(user.getId());
+        return ResultUtils.success(String.valueOf(user.getId()));
     }
 
     /**
@@ -87,7 +87,7 @@ public class AdminUserController {
      */
     @Operation(summary = "删除用户")
     @PostMapping("/delete")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @Transactional
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
         // 1.校验请求体是否为空
         if (deleteRequest == null) {
@@ -134,7 +134,6 @@ public class AdminUserController {
      */
     @Operation(summary = "根据 ID 查询用户接口")
     @GetMapping("/get")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<User> getUserById(@RequestParam String userId, HttpServletRequest request) {
         long id = Long.parseLong(userId);
         if (id <= 0) {
@@ -155,7 +154,6 @@ public class AdminUserController {
      */
     @Operation(summary = "用户信息分页查询")
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<UserVO>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest,
                                                      HttpServletRequest request) {
         int current = userQueryRequest.getCurrent();

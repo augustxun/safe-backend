@@ -11,13 +11,17 @@ import com.augustxun.safe.model.dto.loan.LoanQueryRequest;
 import com.augustxun.safe.model.dto.loan.LoanUpdateRequest;
 import com.augustxun.safe.model.entity.Loan;
 import com.augustxun.safe.service.LoanService;
+import com.augustxun.safe.service.PersonalService;
 import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
 * @author augustxun
@@ -27,6 +31,7 @@ import java.math.BigDecimal;
 @Service
 public class LoanServiceImpl extends ServiceImpl<LoanMapper, Loan>
     implements LoanService{
+    @Transactional
     @Override
     public BaseResponse<String> addLoanAccount(Long newAccountNo, String loanType){
         Loan loan = new Loan();
@@ -51,6 +56,7 @@ public class LoanServiceImpl extends ServiceImpl<LoanMapper, Loan>
         return queryWrapper;
     }
 
+    @Transactional
     @Override
     public BaseResponse<Boolean> updateLoan(LoanUpdateRequest loanUpdateRequest) {
         long acctNo = Long.parseLong(loanUpdateRequest.getAcctNo());
@@ -67,6 +73,7 @@ public class LoanServiceImpl extends ServiceImpl<LoanMapper, Loan>
         boolean result = this.updateById(loan);
         return ResultUtils.success(result);
     }
+
 }
 
 

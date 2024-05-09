@@ -135,4 +135,5 @@ public interface AccountService extends IService<Account> {
      * @return
      */
     BaseResponse<String> addAccountByUser(AccountAddRequest accountAddRequest, HttpServletRequest request);
+
 }

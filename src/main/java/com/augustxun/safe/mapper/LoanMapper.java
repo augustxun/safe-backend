@@ -1,7 +1,10 @@
 package com.augustxun.safe.mapper;
 
+import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.model.entity.Loan;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+
+import java.util.List;
 
 /**
 * @author augustxun
@@ -11,6 +14,9 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface LoanMapper extends BaseMapper<Loan> {
 
+    List<Object> queryPersonalData();
+
+    List<Object> queryHomeData();
 }
 
 

@@ -35,7 +35,7 @@ public class LoanController {
     @Operation(summary = "Loan账户信息分页查询")
     @ApiIgnore
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Page<Loan>> listLoanByPage(@RequestBody LoanQueryRequest loanQueryRequest) {
         int current = loanQueryRequest.getCurrent();
         int size = loanQueryRequest.getPageSize();
@@ -51,7 +51,7 @@ public class LoanController {
      */
     @Operation(summary = "更新Loan表账户数据")
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Boolean> updateLoan(@RequestBody LoanUpdateRequest loanUpdateRequest) {
         return loanService.updateLoan(loanUpdateRequest);
     }

@@ -35,7 +35,7 @@ public class PersonalController {
     @Operation(summary = "Personal账户信息分页查询")
     @ApiIgnore
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Page<Personal>> listPersonalByPage(@RequestBody PersonalQueryRequest personalQueryRequest) {
         int current = personalQueryRequest.getCurrent();
         int size = personalQueryRequest.getPageSize();
@@ -50,7 +50,7 @@ public class PersonalController {
      */
     @Operation(summary = "更新Personal表账户数据")
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Boolean> updatePersonal(@RequestBody PersonalUpdateRequest personalUpdateRequest,
                                                 HttpServletRequest request) {
         return personalService.updatePersonal(personalUpdateRequest);

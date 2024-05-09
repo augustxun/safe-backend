@@ -64,7 +64,6 @@ public class CustomerController {
      */
     @Operation(summary = "客户信息分页查询")
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Customer>> listCustomerByPage(@RequestBody CustomerQueryRequest customerQueryRequest) {
         int current = customerQueryRequest.getCurrent();
         int size = customerQueryRequest.getPageSize();

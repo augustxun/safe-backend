@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -40,6 +41,7 @@ public class PersonalServiceImpl extends ServiceImpl<PersonalMapper, Personal>
         return queryWrapper;
     }
 
+    @Transactional
     @Override
     public BaseResponse<String> addPersonalAccount(Long newAccountNo) {
         Personal personal = new Personal();
@@ -51,6 +53,7 @@ public class PersonalServiceImpl extends ServiceImpl<PersonalMapper, Personal>
         return ResultUtils.success("创建成功");
     }
 
+    @Transactional
     @Override
     public BaseResponse<Boolean> updatePersonal(PersonalUpdateRequest personalUpdateRequest) {
         long acctNo = Long.parseLong(personalUpdateRequest.getAcctNo());

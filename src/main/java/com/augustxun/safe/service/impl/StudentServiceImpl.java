@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author augustxun
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> implements StudentService {
+    @Transactional
     @Override
     public BaseResponse<String> addStudentLoanAccount(Long acctNo) {
         Student student = new Student();
@@ -47,6 +49,7 @@ public class StudentServiceImpl extends ServiceImpl<StudentMapper, Student> impl
         return queryWrapper;
     }
 
+    @Transactional
     @Override
     public BaseResponse<Boolean> updateStudent(StudentUpdateRequest studentUpdateRequest) {
         long acctNo = Long.parseLong(studentUpdateRequest.getAcctNo());

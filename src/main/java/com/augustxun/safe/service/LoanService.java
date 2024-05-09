@@ -7,6 +7,8 @@ import com.augustxun.safe.model.entity.Loan;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * @author augustxun
  * @description 针对表【loan】的数据库操作Service
@@ -37,4 +39,5 @@ public interface LoanService extends IService<Loan> {
      * @return
      */
     BaseResponse<Boolean> updateLoan(LoanUpdateRequest loanUpdateRequest);
+
 }

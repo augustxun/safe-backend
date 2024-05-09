@@ -25,6 +25,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -99,6 +100,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
+    @Transactional
     public BaseResponse<String> saveAccounts(Long newAccountNo, String type, AccountAddRequest accountAddRequest) {
         if (type.equals(CHECKING_ACCOUNT)) {
             return checkingService.addCheckingAccount(newAccountNo);
@@ -121,6 +123,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
+    @Transactional
     public boolean deleteAccounts(Long acctNo) {
         if (acctNo == null || acctNo <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -250,6 +253,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
+    @Transactional
     public BaseResponse<Boolean> updateAccount(AccountUpdateRequest accountUpdateRequest) {
         long acctNo = Long.parseLong(accountUpdateRequest.getAcctNo());
         // 1.判断旧的 account 信息是否存在
@@ -276,6 +280,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
+    @Transactional
     public BaseResponse<String> addAccountByAdmin(AccountAddRequest accountAddRequest, HttpServletRequest request) {
         // 1.检查当前用户是否已登录
         User loginUser = userService.getLoginUser(request);
@@ -315,6 +320,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     }
 
     @Override
+    @Transactional
     public BaseResponse<String> addAccountByUser(AccountAddRequest accountAddRequest, HttpServletRequest request) {
         // 1.检查当前用户是否已登录
         User loginUser = userService.getLoginUser(request);
@@ -352,6 +358,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         Long newAccountNo = this.getOne(new QueryWrapper<Account>().eq("userId", userId).eq("type", type)).getAcctNo();
         return this.saveAccounts(newAccountNo, type, accountAddRequest);
     }
+
 
 
 }

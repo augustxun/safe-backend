@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -26,6 +27,7 @@ import java.math.BigDecimal;
  */
 @Service
 public class SavingsServiceImpl extends ServiceImpl<SavingsMapper, Savings> implements SavingsService {
+    @Transactional
     @Override
     public BaseResponse<String> addSavingsAccount(Long newAccountNo) {
         Savings savings = new Savings();
@@ -47,6 +49,7 @@ public class SavingsServiceImpl extends ServiceImpl<SavingsMapper, Savings> impl
         return queryWrapper;
     }
 
+    @Transactional
     @Override
     public BaseResponse<Boolean> updateSavings(SavingsUpdateRequest savingsUpdateRequest) {
         long acctNo = Long.parseLong(savingsUpdateRequest.getAcctNo());

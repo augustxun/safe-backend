@@ -34,7 +34,7 @@ public class StudentController {
     @Operation(summary = "Student账户信息分页查询")
     @ApiIgnore
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Page<Student>> listStudentByPage(@RequestBody StudentQueryRequest studentQueryRequest) {
         int current = studentQueryRequest.getCurrent();
         int size = studentQueryRequest.getPageSize();
@@ -49,7 +49,7 @@ public class StudentController {
      */
     @Operation(summary = "更新Student表账户数据")
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Boolean> updateStudent(@RequestBody StudentUpdateRequest studentUpdateRequest) {
 return studentService.updateStudent(studentUpdateRequest);
     }

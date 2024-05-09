@@ -21,6 +21,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -72,6 +73,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
         return queryWrapper;
     }
 
+    @Transactional
     @Override
     public BaseResponse<String> updateCustomer(CustomerUpdateRequest customerUpdateRequest) {
         if (customerUpdateRequest == null) {
@@ -94,6 +96,8 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
     }
 
     @Override
+    @Transactional
+
     public BaseResponse<String> addCustomerByAdmin(CustomerAddRequest customerAddRequest) {
         if (customerAddRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
@@ -117,6 +121,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
     }
 
     @Override
+    @Transactional
     public BaseResponse<String> addCustomerByUser(CustomerAddRequest customerAddRequest, HttpServletRequest request) {
         // 1.检查请求体
         if (customerAddRequest == null) { // 请求体为 null 时直接返回

@@ -45,7 +45,6 @@ public class AccountController {
      */
     @Operation(summary = "新建账户")
     @PostMapping("/add")
-    @Transactional
     public BaseResponse<String> addAccount(@RequestBody AccountAddRequest accountAddRequest, HttpServletRequest request) {
         return accountService.addAccountByUser(accountAddRequest, request);
     }
@@ -74,7 +73,7 @@ public class AccountController {
      */
     @Operation(summary = "更新账户")
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Boolean> updateAccount(@RequestBody AccountUpdateRequest accountUpdateRequest) {
         if (accountUpdateRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);

@@ -34,7 +34,7 @@ public class SavingsController {
     @Operation(summary = "Savings账户信息分页查询")
     @ApiIgnore
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Page<Savings>> listSavingsByPage(@RequestBody SavingsQueryRequest savingsQueryRequest) {
         int current = savingsQueryRequest.getCurrent();
         int size = savingsQueryRequest.getPageSize();
@@ -51,7 +51,7 @@ public class SavingsController {
      */
     @Operation(summary = "更新Savings表账户数据")
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    
     public BaseResponse<Boolean> updateSavings(@RequestBody SavingsUpdateRequest savingsUpdateRequest) {
 return savingsService.updateSavings(savingsUpdateRequest);
     }

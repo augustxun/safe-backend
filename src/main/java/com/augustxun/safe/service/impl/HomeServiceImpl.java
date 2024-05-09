@@ -16,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -26,6 +27,7 @@ import java.math.BigDecimal;
  */
 @Service
 public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements HomeService {
+    @Transactional
     @Override
     public BaseResponse<String> addHomeAccount(Long acctNo) {
         Home home = new Home();
@@ -49,6 +51,7 @@ public class HomeServiceImpl extends ServiceImpl<HomeMapper, Home> implements Ho
         return queryWrapper;
     }
 
+    @Transactional
     @Override
     public BaseResponse<Boolean> updateHome(HomeUpdateRequest homeUpdateRequest) {
         long acctNo = Long.parseLong(homeUpdateRequest.getAcctNo());

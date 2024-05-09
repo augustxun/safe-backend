@@ -12,10 +12,37 @@
             <result property="payment" column="payment" jdbcType="DECIMAL"/>
             <result property="loanType" column="type" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="PersonalData" type="com.augustxun.safe.model.vo.PersonalLoanVO">
+        <result property="rate" column="rate" jdbcType="DECIMAL"/>
+        <result property="amount" column="amount" jdbcType="DECIMAL"/>
+        <result property="months" column="months" jdbcType="INTEGER"/>
+        <result property="payment" column="payment" jdbcType="DECIMAL"/>
+        <result property="income" column="income" jdbcType="DECIMAL"/>
+        <result property="creditScore" column="creditScore" jdbcType="DECIMAL"/>
+    </resultMap>
 
-    <sql id="Base_Column_List">
-        acctNo,rate,amount,
-        months,payment,loanType,
-        customerId
-    </sql>
+    <resultMap id="HomeData" type="com.augustxun.safe.model.vo.HomeLoanVO">
+        <result property="builtYear" column="builtYear" jdbcType="DECIMAL"/>
+        <result property="rate" column="rate" jdbcType="DECIMAL"/>
+        <result property="amount" column="amount" jdbcType="DECIMAL"/>
+        <result property="months" column="months" jdbcType="INTEGER"/>
+        <result property="payment" column="payment" jdbcType="DECIMAL"/>
+        <result property="yearlyPremium" column="yearlyPremium" jdbcType="DECIMAL"/>
+    </resultMap>
+    <select id="queryPersonalData" resultMap="PersonalData">
+        SELECT creditScore, income, rate, amount, months, payment
+        FROM safe_db.loan l,
+             safe_db.personal p
+        WHERE l.acctNo = p.acctNo
+          AND l.isDelete = 0;
+    </select>
+    <select id="queryHomeData" resultMap="HomeData">
+        SELECT builtYear, rate, amount, months, payment, yearlyPremium
+        FROM safe_db.loan l,
+             safe_db.home h
+        WHERE l.acctNo = h.acctNo
+          AND l.isDelete = 0;
+    </select>
+
+
 </mapper>
