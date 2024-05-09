@@ -17,6 +17,7 @@ import com.augustxun.safe.model.entity.User;
 import com.augustxun.safe.model.vo.CustomerVO;
 import com.augustxun.safe.model.vo.LoginUserVO;
 import com.augustxun.safe.service.UserService;
+import com.augustxun.safe.utils.RedisUtils;
 import com.augustxun.safe.utils.RegexUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -145,14 +146,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 4.将用户信息保存到 Redis 中去
         String token = UUID.randomUUID().toString(true);
         String tokenKey = LOGIN_USER_KEY + token;
-//        // 5. 将User对象作为Hash存储
-//        Map<String, Object> userMap=new HashMap<>();
-//        userMap.put("Id", user.getId());
-//        userMap.put("userAccount", user.getUserAccount());
-//        userMap.put("userRole", user.getUserRole());
-//        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
-//        // 6. 设置token有效期
-//        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.SECONDS);
+        // 5. 将User对象作为Hash存储
+        Map<String, Object> userMap= RedisUtils.objectToMap(user);
+        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+        // 6. 设置token有效期
+        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.SECONDS);
         return this.getLoginUserVO(user);
     }
 
