@@ -1,5 +1,7 @@
 package com.augustxun.safe.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import com.augustxun.safe.common.BaseResponse;
@@ -29,6 +31,8 @@ import org.springframework.util.DigestUtils;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.augustxun.safe.constant.RedisConstants.*;
@@ -141,7 +145,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 4.将用户信息保存到 Redis 中去
         String token = UUID.randomUUID().toString(true);
         String tokenKey = LOGIN_USER_KEY + token;
-//        stringRedisTemplate.opsForValue().set(tokenKey, );
+//        // 5. 将User对象作为Hash存储
+//        Map<String, Object> userMap=new HashMap<>();
+//        userMap.put("Id", user.getId());
+//        userMap.put("userAccount", user.getUserAccount());
+//        userMap.put("userRole", user.getUserRole());
+//        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+//        // 6. 设置token有效期
+//        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.SECONDS);
         return this.getLoginUserVO(user);
     }
 
