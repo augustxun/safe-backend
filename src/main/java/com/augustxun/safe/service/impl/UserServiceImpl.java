@@ -143,14 +143,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 3. 记录用户的登录态
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
-        // 4.将用户信息保存到 Redis 中去
-        String token = UUID.randomUUID().toString(true);
-        String tokenKey = LOGIN_USER_KEY + token;
-        // 5. 将User对象作为Hash存储
-        Map<String, Object> userMap= RedisUtils.objectToMap(user);
-        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
-        // 6. 设置token有效期
-        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.SECONDS);
+//        // 4.将用户信息保存到 Redis 中去
+//        String token = UUID.randomUUID().toString(true);
+//        String tokenKey = LOGIN_USER_KEY + token;
+//        // 5. 将User对象作为Hash存储
+//        Map<String, Object> userMap= RedisUtils.objectToMap(user);
+//        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+//        // 6. 设置token有效期
+//        stringRedisTemplate.expire(tokenKey, LOGIN_USER_TTL, TimeUnit.SECONDS);
         return this.getLoginUserVO(user);
     }
 

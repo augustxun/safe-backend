@@ -9,6 +9,7 @@ import com.augustxun.safe.service.HomeService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import javax.annotation.Resource;
 @RestController
 @Api(tags = "B端-HomeLoan账户接口")
 @RequestMapping("admin/home")
+@Slf4j
 public class HomeController {
     @Resource
     private HomeService homeService;

@@ -11,6 +11,7 @@ import com.augustxun.safe.service.PersonalService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @Api(tags = "B端-PersonalLoan账户管理接口")
 @RequestMapping("admin/personal")
+@Slf4j
 public class PersonalController {
     @Resource
     private PersonalService personalService;
