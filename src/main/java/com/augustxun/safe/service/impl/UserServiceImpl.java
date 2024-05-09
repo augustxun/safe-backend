@@ -63,11 +63,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Override
     public BaseResponse<String> sendCode(String phone, HttpSession session) {
-        // 1.校验手机号
-        if (RegexUtils.isPhoneInvalid(phone)) {
-            // 2.如果不符合，返回错误信息
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "手机号格式错误");
-        }
+//        // 1.校验手机号
+//        if (RegexUtils.isPhoneInvalid(phone)) {
+//            // 2.如果不符合，返回错误信息
+//            throw new BusinessException(ErrorCode.PARAMS_ERROR, "手机号格式错误");
+//        }
         // 3. 符合，生成验证码
         String code = RandomUtil.randomNumbers(6);
         // 4.保存验证码到Redis, 并设置有效期
