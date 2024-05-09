@@ -73,7 +73,9 @@ public class AdminUserController {
         } else {
             encryptPassword = DigestUtils.md5DigestAsHex((SALT + user.getUserPassword()).getBytes());
         }
+        String phone = userAddRequest.getUserPhone();
         user.setUserPassword(encryptPassword);
+        user.setUserPhone(phone);
         boolean result = userService.save(user);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(String.valueOf(user.getId()));
