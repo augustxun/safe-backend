@@ -30,6 +30,10 @@ public class LoginUserVO implements Serializable {
      */
     private String userProfile;
     /**
+     * 手机号
+     */
+    private String userPhone;
+    /**
      * 用户角色：user/admin/ban
      */
     private String userRole;
@@ -46,6 +50,7 @@ public class LoginUserVO implements Serializable {
     private Long customerId;
     private String lastName;
     private String firstName;
+
     private String zipcode;
     private String unit;
     private String street;
