@@ -1,5 +1,6 @@
 package com.augustxun.safe.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
@@ -39,6 +40,7 @@ public class LoginUserVO implements Serializable {
     /**
      * 更新时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date updateTime;
     @JsonSerialize(using = ToStringSerializer.class)
     private Long customerId;

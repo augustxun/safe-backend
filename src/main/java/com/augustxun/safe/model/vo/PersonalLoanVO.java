@@ -1,5 +1,6 @@
 package com.augustxun.safe.model.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class PersonalLoanVO implements Serializable {
     private String street;
     private String city;
     private String state;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date dateOpened;
     private String type;
     private String loanType;
