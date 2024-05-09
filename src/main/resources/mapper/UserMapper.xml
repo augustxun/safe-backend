@@ -49,4 +49,11 @@
         </if>
 
     </select>
+    <select id="selectEmp" resultType="com.augustxun.safe.model.entity.User">
+        SELECT *
+        FROM safe_db.user
+        WHERE userRole = 'admin'
+          AND isDelete = 0;
+    </select>
+
 </mapper>

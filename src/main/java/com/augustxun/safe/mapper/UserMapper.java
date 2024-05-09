@@ -17,6 +17,12 @@ import java.util.List;
 public interface UserMapper extends BaseMapper<User> {
     List<UserVO> selectUserVO(@Param("userQueryRequest") UserQueryRequest userQueryRequest);
 
+    /**
+     * 查询所有的管理员
+     * @param userQueryRequest
+     * @return
+     */
+    List<User> selectEmp(UserQueryRequest userQueryRequest);
 }
 
 
