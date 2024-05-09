@@ -90,6 +90,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
         // 1.2 存在，用 customer 对象去更新
         Customer customer = new Customer();
         BeanUtils.copyProperties(customerUpdateRequest, customer);
+        customer.setId(id);
         // 2.更新数据库，返回结果
         boolean result = this.updateById(customer);
         return ResultUtils.success("更新成功！");
