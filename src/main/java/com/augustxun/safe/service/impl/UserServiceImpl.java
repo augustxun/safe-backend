@@ -1,15 +1,14 @@
 package com.augustxun.safe.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.RandomUtil;
 import com.augustxun.safe.common.BaseResponse;
 import com.augustxun.safe.common.ErrorCode;
 import com.augustxun.safe.common.ResultUtils;
-import com.augustxun.safe.constant.CommonConstant;
 import com.augustxun.safe.exception.BusinessException;
 import com.augustxun.safe.exception.ThrowUtils;
 import com.augustxun.safe.mapper.CustomerMapper;
 import com.augustxun.safe.mapper.UserMapper;
-import com.augustxun.safe.model.dto.user.UserQueryRequest;
 import com.augustxun.safe.model.dto.user.UserUpdateRequest;
 import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.model.entity.User;
@@ -17,7 +16,6 @@ import com.augustxun.safe.model.vo.CustomerVO;
 import com.augustxun.safe.model.vo.LoginUserVO;
 import com.augustxun.safe.service.UserService;
 import com.augustxun.safe.utils.RegexUtils;
-import com.augustxun.safe.utils.SqlUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -33,8 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.concurrent.TimeUnit;
 
-import static com.augustxun.safe.constant.RedisConstants.LOGIN_CODE_KEY;
-import static com.augustxun.safe.constant.RedisConstants.LOGIN_CODE_TTL;
+import static com.augustxun.safe.constant.RedisConstants.*;
 import static com.augustxun.safe.constant.UserConstant.ADMIN_ROLE;
 import static com.augustxun.safe.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -140,8 +137,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "用户不存在或密码错误");
         }
         // 3. 记录用户的登录态
-        log.debug("登陆时的 Session:", request.getSession());
         request.getSession().setAttribute(USER_LOGIN_STATE, user);
+        // 4.将用户信息保存到 Redis 中去
+        String token = UUID.randomUUID().toString(true);
+        String tokenKey = LOGIN_USER_KEY + token;
+//        stringRedisTemplate.opsForValue().set(tokenKey, );
         return this.getLoginUserVO(user);
     }
 

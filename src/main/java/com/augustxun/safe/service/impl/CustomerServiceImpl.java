@@ -92,6 +92,7 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
         Long userId = Long.parseLong(uId);
         // 查看是否有 userId 对应的用户
         User user = userService.getById(userId);
+        userService.updateById(user);
         if (user == null) {
             return ResultUtils.error(ErrorCode.OPERATION_ERROR, "创建失败，该User不存在");
         }
@@ -99,6 +100,10 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
         BeanUtils.copyProperties(customerAddRequest, customer);
         customer.setUserId(userId);
         this.save(customer);
+        Customer newCustomer = this.query().eq("userId", userId).one();
+
+        user.setCustomerId(newCustomer.getId());
+        userService.updateById(user);
         return ResultUtils.success("用户信息添加成功");
     }
 
