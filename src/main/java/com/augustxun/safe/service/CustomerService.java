@@ -16,9 +16,11 @@ import javax.servlet.http.HttpServletRequest;
  * @createDate 2024-04-18 21:42:59
  */
 public interface CustomerService extends IService<Customer> {
-    public void validCustomer(Customer customer, boolean add);
-    public QueryWrapper<Customer> getQueryWrapper(CustomerQueryRequest customerQueryRequest);
-
+    /**
+     * 更新客户信息接口
+     * @param customerUpdateRequest
+     * @return
+     */
     BaseResponse<String> updateCustomer(CustomerUpdateRequest customerUpdateRequest);
 
     /**

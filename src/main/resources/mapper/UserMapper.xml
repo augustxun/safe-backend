@@ -25,7 +25,7 @@
         <result property="userProfile" column="userProfile" jdbcType="VARCHAR"/>
         <result property="userRole" column="userRole" jdbcType="VARCHAR"/>
         <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
-        <result property="customerId" column="id" jdbcType="DECIMAL"/>
+        <result property="customerId" column="customerId" jdbcType="DECIMAL"/>
         <result property="lastName" column="lastName" jdbcType="VARCHAR"/>
         <result property="firstName" column="firstName" jdbcType="VARCHAR"/>
         <result property="zipcode" column="zipcode" jdbcType="VARCHAR"/>

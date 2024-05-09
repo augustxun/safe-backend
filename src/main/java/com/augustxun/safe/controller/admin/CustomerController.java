@@ -1,15 +1,9 @@
 package com.augustxun.safe.controller.admin;
 
-import com.augustxun.safe.annotation.AuthCheck;
 import com.augustxun.safe.common.BaseResponse;
-import com.augustxun.safe.common.ResultUtils;
-import com.augustxun.safe.constant.UserConstant;
 import com.augustxun.safe.model.dto.customer.CustomerAddRequest;
-import com.augustxun.safe.model.dto.customer.CustomerQueryRequest;
 import com.augustxun.safe.model.dto.customer.CustomerUpdateRequest;
-import com.augustxun.safe.model.entity.Customer;
 import com.augustxun.safe.service.CustomerService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.annotations.Api;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +23,6 @@ public class CustomerController {
     private CustomerService customerService;
 
     // region 增删改查
-
     /**
      * 创建
      *
@@ -41,10 +34,8 @@ public class CustomerController {
     public BaseResponse<String> addCustomer(@RequestBody CustomerAddRequest customerAddRequest) {
         return customerService.addCustomerByAdmin(customerAddRequest);
     }
-
-
     /**
-     * 更新
+     * 更新客户
      *
      * @param customerUpdateRequest
      * @return
@@ -54,21 +45,4 @@ public class CustomerController {
     public BaseResponse<String> updateCustomer(@RequestBody CustomerUpdateRequest customerUpdateRequest) {
         return customerService.updateCustomer(customerUpdateRequest);
     }
-
-
-    /**
-     * 分页获取列表（仅管理员）
-     *
-     * @param customerQueryRequest
-     * @return
-     */
-    @Operation(summary = "客户信息分页查询")
-    @PostMapping("/list/page")
-    public BaseResponse<Page<Customer>> listCustomerByPage(@RequestBody CustomerQueryRequest customerQueryRequest) {
-        int current = customerQueryRequest.getCurrent();
-        int size = customerQueryRequest.getPageSize();
-        Page<Customer> customerPage = customerService.page(new Page<>(current, size), customerService.getQueryWrapper(customerQueryRequest));
-        return ResultUtils.success(customerPage);
-    }
-
 }
