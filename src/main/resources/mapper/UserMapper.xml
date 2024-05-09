@@ -44,9 +44,7 @@
         <if test="userQueryRequest!= null and userQueryRequest.userName!=null">
             AND u.userName LIKE #{userQueryRequest.userName}
         </if>
-        <if test="userQueryRequest !=null and userQueryRequest.userRole !=null">
-            AND u.userRole LIKE #{userQueryRequest.userRole}
-        </if>
+            AND u.userRole='user'
 
     </select>
     <select id="selectEmp" resultType="com.augustxun.safe.model.entity.User">

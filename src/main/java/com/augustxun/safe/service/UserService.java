@@ -76,12 +76,10 @@ public interface UserService extends IService<User> {
     LoginUserVO getLoginUserVO(User user);
 
     /**
-     * 获取查询条件
-     *
-     * @param userQueryRequest
+     * 更新用户信息
+     * @param userUpdateRequest
      * @return
      */
-    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
     BaseResponse<Boolean> updateUser(UserUpdateRequest userUpdateRequest);
 }

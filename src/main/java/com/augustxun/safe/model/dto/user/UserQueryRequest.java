@@ -19,8 +19,4 @@ public class UserQueryRequest extends PageRequest implements Serializable {
      * 用户昵称
      */
     private String userName;
-    /**
-     * 用户角色: user, admin
-     */
-    private String userRole;
 }
