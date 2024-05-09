@@ -71,7 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         // 4.保存验证码到Redis, 并设置有效期
         stringRedisTemplate.opsForValue().set(LOGIN_CODE_KEY + phone, code, LOGIN_CODE_TTL, TimeUnit.MINUTES);
         // 5.发送验证码
-        log.debug("发送短信验证码成功，验证码:{}", code);
+        log.debug("Sent successfully, the Verification Code is:{}", code);
         // 返回OK
         return ResultUtils.success("成功");
     }
