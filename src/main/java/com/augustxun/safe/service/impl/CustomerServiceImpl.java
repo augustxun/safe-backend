@@ -53,25 +53,6 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerMapper, Customer>
         }
     }
 
-    @Override
-    public QueryWrapper<Customer> getQueryWrapper(CustomerQueryRequest customerQueryRequest) {
-        if (customerQueryRequest == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "请求参数为空");
-        }
-        String firstName = customerQueryRequest.getFirstName();
-        String lastName = customerQueryRequest.getLastName();
-        String city = customerQueryRequest.getCity();
-        String state = customerQueryRequest.getState();
-        String sortField = customerQueryRequest.getSortField();
-        String sortOrder = customerQueryRequest.getSortOrder();
-        QueryWrapper<Customer> queryWrapper = new QueryWrapper<>();
-        queryWrapper.like(StringUtils.isNotBlank(firstName), "firstName", firstName);
-        queryWrapper.like(StringUtils.isNotBlank(lastName), "lastName", lastName);
-        queryWrapper.like(StringUtils.isNotBlank(city), "city", city);
-        queryWrapper.like(StringUtils.isNotBlank(state), "state", state);
-        queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
-        return queryWrapper;
-    }
 
     @Transactional
     @Override
